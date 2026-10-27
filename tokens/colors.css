@@ -1,0 +1,72 @@
+/* WolOS design tokens. Generated alongside colors.json/colors.sh; keep in sync. */
+:root {
+  --wol-bg: #F5F5F7;
+  --wol-surface: #FFFFFF;
+  --wol-surface-2: #ECECEF;
+  --wol-menubar: rgba(246,246,248,0.72);
+  --wol-dock: rgba(255,255,255,0.55);
+  --wol-border: rgba(0,0,0,0.10);
+  --wol-text: #1C1C1E;
+  --wol-text-2: #6E6E73;
+  --wol-shadow: rgba(0,0,0,0.18);
+  --wol-red: #FF3B30;
+  --wol-orange: #FF9500;
+  --wol-yellow: #FFCC00;
+  --wol-green: #34C759;
+  --wol-blue: #007AFF;
+  --wol-accent: #7C5CFF;
+  --wol-accent-fg: #FFFFFF;
+  --wol-selection: rgba(124,92,255,0.22);
+  --wol-radius-sm: 6px;
+  --wol-radius-md: 10px;
+  --wol-radius-lg: 14px;
+  --wol-radius-window: 12px;
+  --wol-radius-dock: 18px;
+  --wol-radius-icon: 22.5%;
+  --wol-blur-menubar: 20px;
+  --wol-blur-dock: 24px;
+  --wol-blur-popover: 30px;
+  --wol-font-ui: Inter, Cantarell, "Noto Sans", "DejaVu Sans", sans-serif;
+  --wol-font-mono: "JetBrains Mono", "Fira Code", "DejaVu Sans Mono", monospace;
+  --wol-font-size: 13px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --wol-bg: #1C1C1E;
+    --wol-surface: #2C2C2E;
+    --wol-surface-2: #3A3A3C;
+    --wol-menubar: rgba(28,28,30,0.62);
+    --wol-dock: rgba(40,40,44,0.50);
+    --wol-border: rgba(255,255,255,0.10);
+    --wol-text: #F5F5F7;
+    --wol-text-2: #A1A1A6;
+    --wol-shadow: rgba(0,0,0,0.45);
+    --wol-red: #FF453A;
+    --wol-orange: #FF9F0A;
+    --wol-yellow: #FFD60A;
+    --wol-green: #30D158;
+    --wol-blue: #0A84FF;
+    --wol-accent: #8B6CFF;
+    --wol-accent-fg: #FFFFFF;
+    --wol-selection: rgba(155,133,255,0.30);
+  }
+}
+[data-theme="dark"] {
+  --wol-bg: #1C1C1E;
+  --wol-surface: #2C2C2E;
+  --wol-surface-2: #3A3A3C;
+  --wol-menubar: rgba(28,28,30,0.62);
+  --wol-dock: rgba(40,40,44,0.50);
+  --wol-border: rgba(255,255,255,0.10);
+  --wol-text: #F5F5F7;
+  --wol-text-2: #A1A1A6;
+  --wol-shadow: rgba(0,0,0,0.45);
+  --wol-red: #FF453A;
+  --wol-orange: #FF9F0A;
+  --wol-yellow: #FFD60A;
+  --wol-green: #30D158;
+  --wol-blue: #0A84FF;
+  --wol-accent: #8B6CFF;
+  --wol-accent-fg: #FFFFFF;
+  --wol-selection: rgba(155,133,255,0.30);
+}

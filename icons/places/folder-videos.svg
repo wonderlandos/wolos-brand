@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+<defs><linearGradient id="back" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3D9BF0"/><stop offset="1" stop-color="#2373D6"/></linearGradient>
+<linearGradient id="front" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7CCBFF"/><stop offset="1" stop-color="#3A97F2"/></linearGradient><style>.s * { fill: #000 !important; fill-opacity: 1 !important; stroke: none !important; }</style></defs>
+<g class="s" transform="translate(0 16)" opacity=".08">
+<path d="M120 250q0-50 50-50h220q24 0 40 18l40 46h384q50 0 50 50v420q0 50-50 50H170q-50 0-50-50z" fill="url(#back)"/>
+<rect x="148" y="300" width="728" height="120" rx="20" fill="#fff" fill-opacity=".9"/>
+<path d="M100 400q0-46 46-46h732q46 0 46 46v374q0 50-50 50H150q-50 0-50-50z" fill="url(#front)"/>
+<path d="M100 400q0-46 46-46h732q46 0 46 46v8q0-40-46-40H146q-46 0-46 40z" fill="#fff" fill-opacity=".45"/>
+</g><g class="s" transform="translate(0 8)" opacity=".12">
+<path d="M120 250q0-50 50-50h220q24 0 40 18l40 46h384q50 0 50 50v420q0 50-50 50H170q-50 0-50-50z" fill="url(#back)"/>
+<rect x="148" y="300" width="728" height="120" rx="20" fill="#fff" fill-opacity=".9"/>
+<path d="M100 400q0-46 46-46h732q46 0 46 46v374q0 50-50 50H150q-50 0-50-50z" fill="url(#front)"/>
+<path d="M100 400q0-46 46-46h732q46 0 46 46v8q0-40-46-40H146q-46 0-46 40z" fill="#fff" fill-opacity=".45"/>
+</g>
+<path d="M120 250q0-50 50-50h220q24 0 40 18l40 46h384q50 0 50 50v420q0 50-50 50H170q-50 0-50-50z" fill="url(#back)"/>
+<rect x="148" y="300" width="728" height="120" rx="20" fill="#fff" fill-opacity=".9"/>
+<path d="M100 400q0-46 46-46h732q46 0 46 46v374q0 50-50 50H150q-50 0-50-50z" fill="url(#front)"/>
+<path d="M100 400q0-46 46-46h732q46 0 46 46v8q0-40-46-40H146q-46 0-46 40z" fill="#fff" fill-opacity=".45"/>
+<g transform="translate(512 600) scale(1.05)" fill="#fff" fill-opacity=".55"><rect x="-140" y="-100" width="280" height="200" rx="30"/><path d="M-30-50v100l85-50z" fill="#000" fill-opacity=".35"/></g><g transform="translate(512 594) scale(1.05)" fill="#0b4fa8" fill-opacity=".45"><rect x="-140" y="-100" width="280" height="200" rx="30"/><path d="M-30-50v100l85-50z" fill="#000" fill-opacity=".35"/></g>
+</svg>

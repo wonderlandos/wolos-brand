@@ -1,0 +1,17 @@
+# wolos-<icon>\tfreedesktop/app icon names (tab-separated). install.sh symlinks these.
+files	org.gnome.Nautilus system-file-manager thunar org.xfce.thunar pcmanfm nemo
+terminal	utilities-terminal org.gnome.Terminal foot kitty Alacritty org.wezfurlong.wezterm xfce4-terminal
+browser	firefox web-browser org.mozilla.firefox chromium librewolf epiphany
+settings	preferences-system org.gnome.Settings gnome-control-center nwg-look
+software	system-software-install org.gnome.Software octopkg
+music	multimedia-audio-player org.gnome.Music audacious rhythmbox elisa
+photos	multimedia-photo-viewer org.gnome.eog org.gnome.Loupe org.gnome.Shotwell ristretto
+notes	accessories-notes org.gnome.gitlab.cheywood.Iotas xpad
+calendar	office-calendar org.gnome.Calendar
+mail	internet-mail mail-client thunderbird org.mozilla.Thunderbird evolution
+calculator	accessories-calculator org.gnome.Calculator galculator qalculate-gtk
+games	steam applications-games lutris
+text-editor	accessories-text-editor org.gnome.TextEditor org.gnome.gedit mousepad code codium
+system-monitor	utilities-system-monitor org.gnome.SystemMonitor htop btop
+trash	user-trash user-trash-full
+launcher	system-search fuzzel

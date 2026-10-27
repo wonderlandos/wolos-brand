@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+<defs><style>.s * { fill: #000 !important; fill-opacity: 1 !important; stroke: none !important; }</style></defs>
+<g class="s" transform="translate(0 16)" opacity=".08">
+<path d="M232 120h400l160 160v600q0 40-40 40H272q-40 0-40-40V160q0-40 40-40z" fill="#fff"/>
+<path d="M232 120h400l160 160v600q0 40-40 40H272q-40 0-40-40V160q0-40 40-40z" fill="none" stroke="#000" stroke-opacity=".10" stroke-width="6"/>
+<path d="M632 120v120q0 40 40 40h120z" fill="#E3E6EC"/>
+</g><g class="s" transform="translate(0 8)" opacity=".12">
+<path d="M232 120h400l160 160v600q0 40-40 40H272q-40 0-40-40V160q0-40 40-40z" fill="#fff"/>
+<path d="M232 120h400l160 160v600q0 40-40 40H272q-40 0-40-40V160q0-40 40-40z" fill="none" stroke="#000" stroke-opacity=".10" stroke-width="6"/>
+<path d="M632 120v120q0 40 40 40h120z" fill="#E3E6EC"/>
+</g>
+<path d="M232 120h400l160 160v600q0 40-40 40H272q-40 0-40-40V160q0-40 40-40z" fill="#fff"/>
+<path d="M232 120h400l160 160v600q0 40-40 40H272q-40 0-40-40V160q0-40 40-40z" fill="none" stroke="#000" stroke-opacity=".10" stroke-width="6"/>
+<path d="M632 120v120q0 40 40 40h120z" fill="#E3E6EC"/>
+
+<g transform="translate(512 470)" fill="#F0742E"><rect x="-140" y="-110" width="280" height="180" rx="16"/><rect x="-10" y="70" width="20" height="60"/></g><rect x="262" y="700" width="500" height="110" rx="24" fill="#F0742E"/><text x="512" y="782" font-family="Inter, sans-serif" font-weight="700" font-size="80" text-anchor="middle" fill="#fff">SLIDES</text>
+</svg>

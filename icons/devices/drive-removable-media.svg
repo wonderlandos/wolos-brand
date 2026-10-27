@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9B85FF"/><stop offset="1" stop-color="#5B3BE8"/></linearGradient><style>.s * { fill: #000 !important; fill-opacity: 1 !important; stroke: none !important; }</style></defs>
+<g class="s" transform="translate(0 16)" opacity=".08"><rect x="332" y="352" width="360" height="540" rx="60" fill="url(#g)"/>
+<rect x="392" y="152" width="240" height="220" rx="20" fill="#D5D8DF"/></g><g class="s" transform="translate(0 8)" opacity=".12"><rect x="332" y="352" width="360" height="540" rx="60" fill="url(#g)"/>
+<rect x="392" y="152" width="240" height="220" rx="20" fill="#D5D8DF"/></g><rect x="332" y="352" width="360" height="540" rx="60" fill="url(#g)"/>
+<rect x="392" y="152" width="240" height="220" rx="20" fill="#D5D8DF"/>
+<rect x="452" y="212" width="40" height="40" rx="6" fill="#8A90A0"/><rect x="532" y="212" width="40" height="40" rx="6" fill="#8A90A0"/>
+<circle cx="512" cy="640" r="60" fill="#fff" fill-opacity=".35"/>
+</svg>
