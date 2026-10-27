@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+<defs><style>.s * { fill: #000 !important; fill-opacity: 1 !important; stroke: none !important; }</style></defs>
+<g transform="rotate(-8 512 260)"><rect x="340" y="120" width="220" height="260" rx="14" fill="#fff" stroke="#c7cbd3" stroke-width="6"/></g><g transform="rotate(10 512 260)"><rect x="470" y="110" width="220" height="260" rx="14" fill="#EAF4FF" stroke="#c7cbd3" stroke-width="6"/></g><g class="s" transform="translate(0 16)" opacity=".08"><path d="M262 300h500l-40 520q-4 60-64 60H366q-60 0-64-60z" fill="#F4F5F8"/>
+<path d="M262 300h500l-40 520q-4 60-64 60H366q-60 0-64-60z" fill="none" stroke="#000" stroke-opacity=".12" stroke-width="6"/>
+<rect x="232" y="230" width="560" height="90" rx="30" fill="#D5D8DF"/></g><g class="s" transform="translate(0 8)" opacity=".12"><path d="M262 300h500l-40 520q-4 60-64 60H366q-60 0-64-60z" fill="#F4F5F8"/>
+<path d="M262 300h500l-40 520q-4 60-64 60H366q-60 0-64-60z" fill="none" stroke="#000" stroke-opacity=".12" stroke-width="6"/>
+<rect x="232" y="230" width="560" height="90" rx="30" fill="#D5D8DF"/></g><path d="M262 300h500l-40 520q-4 60-64 60H366q-60 0-64-60z" fill="#F4F5F8"/>
+<path d="M262 300h500l-40 520q-4 60-64 60H366q-60 0-64-60z" fill="none" stroke="#000" stroke-opacity=".12" stroke-width="6"/>
+<rect x="232" y="230" width="560" height="90" rx="30" fill="#D5D8DF"/>
+<path d="M400 400l20 380M512 400v380M624 400l-20 380" stroke="#B5BAC4" stroke-width="18" stroke-linecap="round"/>
+</svg>
