@@ -1,4 +1,5 @@
 #!/bin/bash
+# SPDX-License-Identifier: GPL-2.0-or-later
 # Prove third-party app theming on this host: `wol theme light|dark` into private HOMEs, render real
 # apps (nautilus, gnome-text-editor, loupe) under broadway with a focusing click, a Qt palette
 # harness, then a contact sheet. usage: run.sh <outdir>   (needs: cargo build -p controller)

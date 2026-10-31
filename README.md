@@ -21,4 +21,4 @@ Tokens: source `colors.sh` (`WOL_THEME=dark` selects dark), import `colors.css` 
 Fonts (ports): `x11-fonts/inter`, `x11-fonts/jetbrains-mono`, `x11-fonts/noto-basic`.
 Rules: SVG only (except `brand/wolos-splash.png`); app icons use the shared squircle template; symbolic icons are single-color `#2e3436` (GTK recolors).
 
-License: art is under the Wonderland Brand License 1.0 (`LICENSE`, `LicenseRef-Wonderland-Brand-1.0`); `tools/` is BSD-2-Clause; `icons/store/` keeps each icon's own license. WolOS, the WolOS logo and the WolOS characters are reserved marks of Julia Klee. © 2026 Julia Klee.
+License: art is under the Wonderland Brand License 1.0 (`LICENSE`, `LicenseRef-Wonderland-Brand-1.0`); `tools/` is GPL-2.0-or-later; `icons/store/` keeps each icon's own license. WolOS, the WolOS logo and the WolOS characters are reserved marks of Julia Klee. © 2026 Julia Klee.

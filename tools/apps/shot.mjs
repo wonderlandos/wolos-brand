@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
 // Screenshot a broadway session with headless Chromium over CDP; optional click (focus/select) first.
 // usage: CHROME=<chrome-headless-shell> node shot.mjs <url> <out.png> <w> <h> <waitms> [x,y | select-all ...]
 import { spawn } from 'node:child_process';

@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: BSD-2-Clause
+# SPDX-License-Identifier: GPL-2.0-or-later
 # Copyright (c) 2026 Julia Klee
 """Generate the WolOS illustrations and their PNG exports.
 usage: python3 -I design/tools/illus/build.py [OUT_DIR] [name...]

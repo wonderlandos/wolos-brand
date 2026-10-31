@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: BSD-2-Clause
+# SPDX-License-Identifier: GPL-2.0-or-later
 # Copyright (c) 2026 Julia Klee
 """The Mad Tea Party cup: clean, empty, still warm. Nothing here yet."""
 import math

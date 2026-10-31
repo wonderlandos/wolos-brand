@@ -1,3 +1,4 @@
+/* SPDX-License-Identifier: GPL-2.0-or-later */
 /* Live-test key injector: vk TEXT | vk -k KEYSYM_NAME [-m super|shift|...] ; zwp_virtual_keyboard_v1. */
 #define _GNU_SOURCE
 #include <stdio.h>

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-2.0-or-later
 """Open/close loops -> RSS growth. Run inside the session (in.sh). leak.py [N=200]
 Control Center and the switcher live in wol-shell: its RSS is compared before/after.
 Search is a process per open: checks every instance exited (no accumulation)."""

@@ -1,3 +1,4 @@
+/* SPDX-License-Identifier: GPL-2.0-or-later */
 /* Live-test pointer injector: vp move X Y | vp click X Y [n] | vp drag X1 Y1 X2 Y2  (output 1280x800). */
 #include <stdio.h>
 #include <stdlib.h>

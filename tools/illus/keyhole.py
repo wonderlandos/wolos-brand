@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: BSD-2-Clause
+# SPDX-License-Identifier: GPL-2.0-or-later
 # Copyright (c) 2026 Julia Klee
 """The Keyhole: the small door into Wonderland, with the light coming through."""
 import math

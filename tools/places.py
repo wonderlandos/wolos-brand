@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
 """WolOS places, devices and mimetype icons (Big Sur style: blue folder with an embossed glyph,
 paper documents with a dog-ear and a coloured glyph). 1024 grid, same shadow as the app icons.
 usage: python3 -I design/tools/places.py        writes design/icons/{places,devices,mimetypes}

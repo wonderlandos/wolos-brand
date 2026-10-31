@@ -1,3 +1,4 @@
+/* SPDX-License-Identifier: GPL-2.0-or-later */
 /* Frame-damage clock for latency tests: prints "MONO_MS x y w h" per damage rect of each frame; with "dmg X Y W H", "MONO_MS HASH" of that region per frame (wlr-screencopy
    copy_with_damage, cursor excluded). Run in background, inject input, take the first line after. */
 #define _GNU_SOURCE

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-2.0-or-later
 """Login -> first full desktop: session_start.py SHELL_LOG -- SESSION_CMD...
 Starts the session command (e.g. wol-session) with WOL_SHELL_TIMING=1, then waits for wol-shell's
 stderr (SHELL_LOG) to report menu bar, dock and wallpaper mapped; prints ms from launch to the

@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: BSD-2-Clause
+# SPDX-License-Identifier: GPL-2.0-or-later
 # Copyright (c) 2026 Julia Klee
 """Setup Assistant welcome, 480x320: dusk at the garden hedge. The little door is ajar, Wonderland
 light pours through it across the grass, and the Rabbit (late, of course) stands in it.

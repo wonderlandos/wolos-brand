@@ -1,4 +1,5 @@
 #!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-or-later
 # Render the Qt harness with the generated Kvantum theme inside the FreeBSD VM (Kvantum is not on
 # the Linux dev host). Needs the VM up (image/vm/up.sh) and `pkg install -y Kvantum qt6-base` there.
 # Uses /tmp/wol-kv in the VM only. usage: kvantum-vm.sh <outdir>   -> <outdir>/kv-{light,dark}.png

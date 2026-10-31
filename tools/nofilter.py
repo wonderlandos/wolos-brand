@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
 """Strip SVG filters from icons (GTK, Qt, Firefox clip the filter region into a grey box).
 usage: python3 -I design/tools/nofilter.py FILE.svg...   rewrites in place
 Elements drawn through a plain blur (shadow or glow copies) are removed; other filters
