@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-2.0-or-later
 """Input -> first visibly changed frame, per interaction, in a running session.
 Run inside the session (in.sh / WAYLAND_DISPLAY set) with `dmg`, `vk`, `vp` from build.sh on PATH.
 latency.py [RUNS] -> median and p95 ms.

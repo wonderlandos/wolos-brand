@@ -1,4 +1,5 @@
 #!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-or-later
 # Build the perf probes: dmg (screencopy frame hash clock), vk (virtual keyboard), vp (virtual pointer).
 # Output: design/tools/perf/bin. Needs cc, wayland-client and xkbcommon.
 set -eu

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
 """Contact sheet of run.sh renders: rows = apps, columns = light, dark. usage: sheet.py <dir> <out.png>"""
 import os
 import sys

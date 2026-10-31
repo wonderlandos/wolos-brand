@@ -1,4 +1,5 @@
 #!/bin/bash
+# SPDX-License-Identifier: GPL-2.0-or-later
 # Render a real GTK app under broadway with a private HOME and screenshot it (dev proof of app theming).
 # usage: render.sh <display-num> <out.png> <home> [--click x,y ...] -- <cmd...>
 # env: WAIT (s, default 5), EXTRA_ENV ("K=V ..."), CHROME (default: Playwright headless shell).

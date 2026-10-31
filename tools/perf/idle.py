@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-2.0-or-later
 """Idle cost per process: idle.py SECONDS NAME... -> CPU ms/s, children ms/s, wakeups/s, RSS MB.
 Children = cutime+cstime of reaped helper processes (pactl, nmcli, ...) the process spawned.
 CPU = sum of /proc/PID/task/*/schedstat run time (ns). Wakeups = voluntary + involuntary

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
 """Traffic lights in app renders must match kit AppWindow: diameter, colour, centre spacing, close-button inset from the window's left and top edge.
 usage: measure.py <kit.png> <app.png>...   exits 1 on mismatch (diameter/spacing > 1 px, colour > 12)."""
 import sys

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
 import math, os, json
 D = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 for s in ["brand","tokens","icons/apps","icons/symbolic","wallpapers","cursors"]:

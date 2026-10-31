@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
 // Applies a qt6ct config + colour scheme the way qt6ct does (21 roles per group, style, general
 // font) and grabs a representative window offscreen. Proof only; WolOS ships the real qt6ct.
 // build: g++ -std=c++17 -fPIC qtharness.cpp -o qtharness $(pkg-config --cflags --libs Qt6Widgets)

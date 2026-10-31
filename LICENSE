@@ -4,7 +4,7 @@ SPDX identifier: `LicenseRef-Wonderland-Brand-1.0`
 Licensor: Julia Klee and her company (with affiliates and successors)
 Copyright (c) 2026 Julia Klee. Everyone may copy and distribute this license text verbatim.
 
-Files in this tree under other licenses: `tools/` is BSD-2-Clause (each file's SPDX line); `icons/store/` keeps each icon's own license (`icons/store/LICENSES.md`).
+Files in this tree under other licenses: `tools/` is GPL-2.0-or-later (each file's SPDX line); `icons/store/` keeps each icon's own license (`icons/store/LICENSES.md`).
 
 ---
 
