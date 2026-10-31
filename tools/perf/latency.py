@@ -73,9 +73,9 @@ run('switcher Super+Tab', (340, 300, 600, 200), ['vk', '-k', 'Tab', 'super'],
 sh('vk', '-u', 'Super_L')
 sh('vp', 'move', '1140', '14')  # park the pointer: motion repaints the software cursor
 run('control center click', (800, 60, 440, 320), ['vp', 'click', '1140', '14'], lambda: sh('vk', '-k', 'Escape'), 1.0)
-run('mission control', (100, 100, 1080, 500), ['vk', '-k', 'Up', 'super'], lambda: sh('vk', '-k', 'Escape'), 1.0)
+run('overview', (100, 100, 1080, 500), ['vk', '-k', 'Up', 'super'], lambda: sh('vk', '-k', 'Escape'), 1.0)
 run('volume OSD', (515, 552, 250, 34), ['wol', 'shell', 'show', 'osd'], lambda: sh('wol', 'shell', 'hide', 'osd'), 2.0)
 sh('vk', '-k', 'space', 'super')
 time.sleep(1.5)
-run('spotlight keystroke', (333, 270, 614, 360), ['vk', 't'], lambda: sh('vk', '-k', 'BackSpace'), 0.4)
+run('searchbar keystroke', (333, 270, 614, 360), ['vk', 't'], lambda: sh('vk', '-k', 'BackSpace'), 0.4)
 sh('vk', '-k', 'Escape')
