@@ -102,7 +102,9 @@ def store(cv):
     # front panel
     front = f'M{L} {T}H{R-62}V{B}H{L+30}A30 30 0 0 1 {L} {B-30}Z'
     body += f'<path d="{front}" fill="url(#s-paper)"/>'
-    body += f'<path d="{front}" fill="#000" filter="url(#grain)" opacity="1"/>'
+    gd, gm = grained("s-grain", f'<path d="{front}" fill="#000"/>')
+    defs += gd
+    body += gm
     # fold crease between front and gusset
     body += f'<rect x="{R-66}" y="{T}" width="8" height="{B-T}" fill="#fff" opacity=".35" filter="url(#s-b3)"/>'
     body += f'<rect x="{R-60}" y="{T}" width="10" height="{B-T}" fill="#7A4A12" opacity=".18" filter="url(#s-b3)"/>'
@@ -152,9 +154,13 @@ def files(cv):
     body += f'<path d="{back}" fill="url(#f-back)"/>'
     body += f'<path d="M240 290H390a44 44 0 0 1 33 15L440 324H196V334a44 44 0 0 1 44-44Z" fill="#fff" opacity=".16"/>'
     # papers
+    grains = []
+
     def paper(x, y, w, h, rot, lines, accent):
         g = f'<g transform="rotate({rot} {x+w/2} {y+h/2})"><g filter="url(#f-psh)"><rect x="{x}" y="{y}" width="{w}" height="{h}" rx="14" fill="url(#f-paper)"/></g>'
-        g += f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="14" fill="#000" filter="url(#grain)"/>'
+        gd, gm = grained(f"f-grain{len(grains)}", f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="14" fill="#000"/>')
+        grains.append(gd)
+        g += gm
         g += f'<rect x="{x}" y="{y}" width="{w}" height="3" fill="#fff"/>'
         g += f'<rect x="{x+36}" y="{y+40}" width="{w*0.34:.0f}" height="20" rx="10" fill="{accent}" opacity=".9"/>'
         for i in range(lines):
@@ -174,6 +180,7 @@ def files(cv):
     body += f'<path d="{front}" fill="none" stroke="#0A5B66" stroke-opacity=".35" stroke-width="2"/>'
     # soft glass sheen on front, lower hem
     body += f'<rect x="212" y="746" width="600" height="6" rx="3" fill="#fff" opacity=".28"/>'
+    defs += "".join(grains)
     return finish(cv, defs, body)
 
 # ---------------------------------------------------------------- TERMINAL (dark glass)
@@ -374,7 +381,9 @@ def mail(cv):
     flap = f'M{L-4} {T-4}H{R+4}L{cx} {tip}Z'
     body += f'<g filter="url(#e-sh2)"><path d="{flap}" fill="#F5E5CB"/></g>'
     body += f'<path d="{flap}" fill="url(#e-flap)"/>'
-    body += f'<path d="{flap}" fill="#000" filter="url(#grain)"/>'
+    gd, gm = grained("e-grain", f'<path d="{flap}" fill="#000"/>')
+    defs += gd
+    body += gm
     body += f'<path d="M{L+4} {T+4}L{cx} {tip-6}L{R-4} {T+4}" fill="none" stroke="#D2B58C" stroke-opacity=".7" stroke-width="3" stroke-linejoin="round" transform="translate(0 3)"/>'
     body += f'<path d="M{L} {T}H{R}" stroke="#fff" stroke-width="6" opacity=".95"/>'
     body += '</g>'

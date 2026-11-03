@@ -23,8 +23,7 @@ from raster import contrast_lum, decode_png, rel_lum, render_text
 
 MAX_BYTES = 40 * 1024
 SAFE_FILTER = {"filter", "feGaussianBlur", "feOffset", "feFlood", "feComposite", "feMerge", "feMergeNode",
-               "feColorMatrix", "feTurbulence", "feSpecularLighting", "feDiffuseLighting", "feDistantLight",
-               "feBlend"}
+               "feColorMatrix", "feTurbulence", "feBlend"}   # no lighting: GTK 4 draws it black (gtkcheck)
 FORBIDDEN = {"image", "text", "script", "style", "use", "foreignObject", "a", "animate", "set", "tspan"}
 # Colours the set left behind (INVENTORY.md): never again in a shipped icon.
 BANNED = {"#FF3B30", "#FF9500", "#FFCC00", "#34C759", "#007AFF", "#FF453A", "#FF9F0A", "#FFD60A",

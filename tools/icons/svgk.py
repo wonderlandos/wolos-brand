@@ -334,10 +334,20 @@ def shadow_filter(fid, dy=24, blur=20, color="#000", op=.4, dx=0):
 
 
 def paper_noise(fid="grain", op=.07, freq=.9):
+    """Paper grain: noise over the filter region, not tied to the source's alpha. Draw it with
+    grained(), which clips it to the shape, so a renderer that ignores filters draws nothing."""
     return (f'<filter id="{fid}" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">'
             f'<feTurbulence type="fractalNoise" baseFrequency="{freq}" numOctaves="2" seed="7"/>'
-            f'<feColorMatrix values="0 0 0 0 .25  0 0 0 0 .18  0 0 0 0 .1  0 0 0 {op * 3} {-op * 0.9}" result="n"/>'
-            f'<feComposite in="n" in2="SourceAlpha" operator="in"/></filter>')
+            f'<feColorMatrix values="0 0 0 0 .25  0 0 0 0 .18  0 0 0 0 .1  0 0 0 {op * 3} {-op * 0.9}"/></filter>')
+
+
+def grained(cid, shape, fid="grain"):
+    """Grain on one shape (a self-closing <path>/<rect>): the clipPath def with id cid and the markup,
+    the shape itself invisible (fill-opacity 0) and filtered, the noise clipped to its outline.
+    -> (defs, markup)."""
+    clip = f'<clipPath id="{cid}">{shape}</clipPath>'
+    el = shape[:-2] + f' fill-opacity="0" filter="url(#{fid})"/>'
+    return clip, f'<g clip-path="url(#{cid})">{el}</g>'
 
 
 def finish(cv, defs, body):
