@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-"""The long tail in the D1 finish, "pressed paper, lit" (LANGUAGE-v2 section 8): places (folders and
+"""The long tail in the D1 finish, "pressed paper, lit" (design/icons/LANGUAGE.md section 7): places (folders and
 the basket), devices and mimetypes. Each is a single OBJECT (a folder, a drive, a page), not a tile:
 a +-3.5% lightness ramp with no hue shift, a 6-unit inner highlight at 18%, an ambient shadow (16%)
 plus a contact line, and the emblem raised from the surface by one small emboss filter (one unit of
