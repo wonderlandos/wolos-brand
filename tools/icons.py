@@ -751,6 +751,12 @@ def letter_a():
     return P([(3.0, 13.75), (8, 2.25), (13.0, 13.75)], r=0.75) + L(5.0, 9.5, 11.0, 9.5)
 
 
+def folio():
+    """The outline of a map folded in three (a Z-fold): edges at x 1.75, 5.75, 10.25, 14.25."""
+    x, top, bot = (1.75, 5.75, 10.25, 14.25), (4.0, 2.25, 4.0, 2.25), (12.0, 13.75, 12.0, 13.75)
+    return P([(x[k], top[k]) for k in range(4)] + [(x[k], bot[k]) for k in (3, 2, 1, 0)], closed=True, r=0.75)
+
+
 def full_arrows(out=True):
     """Fullscreen (out) and back (in): two diagonal arrows on the corners."""
     if out:
@@ -1114,6 +1120,11 @@ def build_symbolic():
     # inner feature, on the 16 grid (the 24 px size is this drawing scaled); the Kit boxes show what they hold
     sym("wolos-installer", A(8, 7.0, 3.75, 180, 360) + L(4.25, 7.0, 4.25, 14.0) + L(11.75, 7.0, 11.75, 14.0) + L(2.25, 14.0, 13.75, 14.0) + D(8, 10.5, 1.25))
     sym("wolos-plugin-maker", puzzle())
+    # Atlas, the browser (brand/atlas direction B, Folio): the map folded in three, near creases tall, the far
+    # one short; the creases stop short of the "you are here" dot so it reads on its own at 16 px
+    sym("atlas", folio() + L(5.75, 2.25, 5.75, 5.25) + L(5.75, 10.75, 5.75, 13.75) +
+        L(10.25, 4.0, 10.25, 5.25) + L(10.25, 10.75, 10.25, 12.0) + D(8, 8, 1.75))
+    same("wolos-atlas", "atlas")
     same("wolos-kit-ai", "wolos-assistant")
     same("wolos-kit-codecs", "applications-multimedia")
     same("wolos-kit-craft-suite", "document-edit")

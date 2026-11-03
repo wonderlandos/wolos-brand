@@ -70,7 +70,7 @@ APPS = [
 ]
 # The apps WolOS ships that had no icon in the language (crafted_c.py).
 APPS_SHIPPED = [("clock", C.clock), ("documents", C.documents), ("videos", C.videos), ("archive", C.archive),
-                ("disk-usage", C.disk_usage)]
+                ("disk-usage", C.disk_usage), ("atlas", C.atlas)]
 
 
 def all_icons():

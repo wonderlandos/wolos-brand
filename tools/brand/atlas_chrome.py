@@ -32,7 +32,7 @@ THEME = {
              "glass": "rgba(35,33,45,0.84)", "control": "#393647", "success": "#5BE3B0", "warning": "#FF8A55",
              "danger": "#F2678F"},
 }
-KEY = "c"               # the direction the mocks wear (the recommended one); change here to see another
+KEY = "b"               # the direction the mocks wear: B, Folio, the one the lead chose (2026-11-03)
 
 
 def col(c):
@@ -190,7 +190,7 @@ def sidebar(f, x, y, h, selected=1):
     row("mail-unread", "Mail")
     yy += 12
     section("Today")
-    row("web-browser", "New tab", selected == 1)
+    row("atlas", "New tab", selected == 1)       # the new tab page is Atlas's own: its 16 px glyph
     row("text-x-generic", "Release notes")
     row("text-x-generic", "Atlas manual")
     yy += 12
