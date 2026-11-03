@@ -1,14 +1,14 @@
 # WolOS brand
 
-The mark is four nested doors on one floor line: the small door into Wonderland, with light coming through. Flat fills only, no gradients, no strokes. Colours come from `../tokens/colors.json`: accent `#7C5CFF` (light) and `#8B6CFF` (dark), plus three steps of the same hue for depth (`#4B2FD6`, `#33208A`; on dark `#5E3FE6`, `#36209A`) and the tint `#E9E3FF` for the lit door. The wordmark is drawn (one round-capped stroke weight, expanded to outlines), so it needs no font. `text` is `#1C1C1E` on light and `#F5F5F7` on dark.
+The mark is four nested doors on one floor line: the small door into Wonderland, with light coming through. Flat fills only, no gradients, no strokes. Colours come from `../tokens/colors.json`: accent `#7C5CFF` (light) and `#8B6CFF` (dark), plus three steps of the same hue for depth (`#4B2FD6`, `#33208A`; on dark `#5E3FE6`, `#36209A`) and the tint `#E9E3FF` for the lit door. The wordmark is drawn (one round-capped stroke weight, expanded to outlines), so it needs no font. The ink is the WolOS neutral ramp from the same tokens (`light.text` `#181521` on light, `dark.text` `#F6F5FB` on dark); the generator reads it, so a token retune reaches the brand on the next build.
 
 Everything here is generated: `python3 -I design/tools/brand/build.py design` (from the repository root; needs `rsvg-convert`, and `convert` for the site favicon).
 
 | File | viewBox | Use |
 |---|---|---|
 | `wolos-mark.svg` | 64 | Full mark on light grounds. 24 px and up. About page, notifications. Installed as the `wolos-mark` app icon. |
-| `wolos-mark-on-dark.svg` | 64 | Full mark on dark grounds (#1C1C1E, black). |
-| `wolos-mark-mono.svg` | 64 | One colour (`#1C1C1E`), true cut-outs: print, embossing, one-ink places. |
+| `wolos-mark-on-dark.svg` | 64 | Full mark on dark grounds (`dark.bg` `#191720`, black). |
+| `wolos-mark-mono.svg` | 64 | One colour (the ink, `#181521`), true cut-outs: print, embossing, one-ink places. |
 | `wolos-mark-mono-white.svg` | 64 | The same in white, for photos and dark grounds. |
 | `wolos-mark-16.svg` | 16 | Two doors drawn on whole pixels. Use at 16-23 px on light grounds; never scale the full mark down to 16. |
 | `wolos-mark-16-on-dark.svg` | 16 | The same for dark grounds. |

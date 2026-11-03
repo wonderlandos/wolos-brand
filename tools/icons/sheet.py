@@ -6,6 +6,7 @@
 Writes OUT_DIR/sheet-<size>-<light|dark>.png: with --before (a copy of icons/ as it was) the sheet has
 two blocks, before and after; 48 px cells are the real 48 px renders (the small variant), enlarged 2x
 with nearest-neighbour for reading. The "after" renders are the generator's own, not the files on disk."""
+import json
 import os
 import subprocess
 import sys
@@ -16,10 +17,13 @@ if HERE not in sys.path:
     sys.path.insert(0, HERE)
 
 import families  # noqa: E402
+import palette  # noqa: E402
 from build import file_name  # noqa: E402
 from raster import render_png  # noqa: E402
 
-GROUND = {"light": ("#F5F5F7", "#1C1C1E"), "dark": ("#1C1C1E", "#F5F5F7")}
+# (ground, label ink) per mode: the WolOS neutral ramp, as the icon checks see the desktop
+_T = json.load(open(os.path.join(palette.DESIGN, "tokens", "colors.json"), encoding="utf-8"))
+GROUND = {m: (_T[m]["bg"], _T[m]["text"]) for m in ("light", "dark")}
 
 
 def cells(tmp, before, size, only):

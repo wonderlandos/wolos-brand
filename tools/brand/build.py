@@ -16,12 +16,11 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from marks import (svg, mark_c, mark_c_mono, mark_c16, wordmark, door_boxes, WM_W, WM_H,  # noqa: E402
-                   ACC, ACC_D, INK, PAPER, LIGHT)
+                   ACC, ACC_D, INK, PAPER, GROUND, DARK_BG, LIGHT)
 import mascots as M  # noqa: E402
 
 C_DARK = (ACC_D, "#5E3FE6", "#36209A", LIGHT)      # mark C on dark grounds
 BOX = (192, 180, 640, 700)                         # visible box of mark C on its 1024 canvas
-DARK_BG = "#1C1C1E"                                # tokens dark.bg
 
 
 def w(path, text):
@@ -138,8 +137,8 @@ def build(DESIGN, SITE=None):
             p = os.path.join(S, f".t{px}.svg")
             w(p, svg((0, 0, px, px), rect + inner, px, px))
             return p
-        for px, mg, bg, out in ((32, 2, None, "favicon-32.png"), (180, 30, PAPER, "apple-touch-icon.png"),
-                                (512, 96, PAPER, "icon-512.png")):
+        for px, mg, bg, out in ((32, 2, None, "favicon-32.png"), (180, 30, GROUND, "apple-touch-icon.png"),
+                                (512, 96, GROUND, "icon-512.png")):
             p = padded(px, mg, bg)
             png(p, f"{S}/{out}", px)
             os.remove(p)

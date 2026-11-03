@@ -70,7 +70,7 @@ apps = {
 <path d="M230 380 H620 M230 470 H700 M230 560 H560" stroke="#6b5f3a" stroke-width="14" stroke-linecap="round" stroke-opacity=".55"/>'''),
 "calendar": ("#FFFFFF","#F2F2F5", f'''<rect x="100" y="100" width="824" height="230" fill="#FF3B30"/>
 <text x="512" y="270" font-family="Inter, sans-serif" font-weight="700" font-size="120" text-anchor="middle" fill="{W}">OCT</text>
-<text x="512" y="760" font-family="Inter, sans-serif" font-weight="300" font-size="400" text-anchor="middle" fill="#1c1c1e">26</text>'''),
+<text x="512" y="760" font-family="Inter, sans-serif" font-weight="300" font-size="400" text-anchor="middle" fill="#181521">26</text>'''),
 "mail": ("#6AC8FF","#1A73F0", f'''<rect x="232" y="322" width="560" height="380" rx="40" fill="{W}"/><path d="M252 352 L512 552 L772 352" fill="none" stroke="#1A73F0" stroke-opacity=".55" stroke-width="26" stroke-linejoin="round"/>'''),
 "calculator": ("#4A4A50","#1E1E22", ''.join(f'<circle cx="{332+x*180}" cy="{332+y*180}" r="72" fill="{"#FF9F0A" if x==2 else ("#A5A5AA" if y==0 else "#5A5A60")}"/>' for x in range(3) for y in range(3))+f'<path d="M692 312 v40 M672 332 h40 M672 512 h40 M672 692 h40 M672 676 h40" stroke="{W}" stroke-width="12" stroke-linecap="round"/>'),
 "games": ("#2B3B5C","#0E1628", f'''<path d="M300 420 q-100 0-120 140 l-20 140 q-6 70 60 70 q40 0 80-60 l40-60 h344 l40 60 q40 60 80 60 q66 0 60-70 l-20-140 q-20-140-120-140Z" fill="#E9EEF7"/>

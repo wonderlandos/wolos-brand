@@ -1,6 +1,6 @@
 # WolOS design
 
-Wonderland theme: four nested doors, the small door into Wonderland with light coming through. One accent: violet `#7C5CFF` (dark `#8B6CFF`, as in `tokens/colors.json`). macOS-like neutrals.
+Wonderland theme: four nested doors, the small door into Wonderland with light coming through. One accent: violet `#7C5CFF` (dark `#8B6CFF`, as in `tokens/colors.json`). WolOS neutrals (a faint violet hue).
 
 | Path | Content | Installs to |
 |---|---|---|
@@ -10,7 +10,7 @@ Wonderland theme: four nested doors, the small door into Wonderland with light c
 | `brand/wolos-boot.svg` | Boot splash 1920x1080 | `/usr/local/share/wolos/brand/` |
 | `brand/wolos-splash.png` | Kernel splash: the mark of `wolos-boot.svg`, 256x256 8-bit RGBA (the loader reads PNG only) | `/boot/images/wolos.png` |
 | `tokens/colors.{css,json,sh}` | Light/dark palette, radii, blur, fonts | `/usr/local/share/wolos/tokens/` |
-| `icons/apps/wolos-*.svg` | App and Kit tiles, 24-cell pixel grid (`tools/icons.py`; PNG 48/128/512 in `desktop/overlay/usr/share/icons/WolOS`) | `/usr/share/icons/WolOS/scalable/apps/` |
+| `icons/apps/wolos-*.svg`, `icons/{places,devices,mimetypes}/*.svg` | Full-colour icons drawn as vectors on a 1024 canvas by the generator `tools/icons/build.py`: crafted objects on the soft card (apps, `crafted_a.py`, `crafted_b.py`) and pressed paper (places, devices, mimetypes, `paper_set.py`); `icons/apps/small/` holds the small variants (larger glyph, lighter ramp on dark tiles, fewer details). PNG 48/128/512 are renders (`tools/icons/overlay.py`) in `desktop/overlay/usr/share/icons/WolOS`; CI runs `build.py --check` and `overlay.py --check`, so nothing is edited by hand | `/usr/share/icons/WolOS/scalable/apps/` |
 | `icons/symbolic/*-symbolic.svg` | Symbolic set: 16 grid, 1.5 px lines as filled outlines, 2 px radius, currentColor (`tools/icons.py`) | `/usr/share/icons/WolOS/symbolic/status/` |
 | `icons/index.theme`, `aliases.tsv` | Theme `WolOS`, `Inherits=Adwaita,hicolor`; alias map | `/usr/local/share/icons/WolOS/` |
 | `wallpapers/wonderland-{day,night,dusk}.svg` | 3840x2160 | `/usr/local/share/wolos/wallpapers/` |

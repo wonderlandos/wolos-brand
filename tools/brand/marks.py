@@ -2,15 +2,21 @@
 # Copyright (c) 2026 Julia Klee
 """WolOS logo marks A/B/C and the wordmark (hand-written SVG geometry, stdlib only).
 Every drawing is fill-only: strokes are expanded to outlines by outline.stroke()."""
-import os, sys
+import json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from outline import stroke, circle_d
 ACC = "#7C5CFF"      # tokens accent.light
 ACC_D = "#8B6CFF"    # tokens accent.dark
 DEEP = "#4B2FD6"     # one step darker than accent (depth only)
 NIGHT = "#33208A"    # deepest step (depth only)
-INK = "#1C1C1E"      # tokens light.text
-PAPER = "#F5F5F7"    # tokens light.bg / dark.text
+# the neutrals are the WolOS ramp, read from the tokens (tools/tokens.py writes colors.json)
+_T = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "tokens", "colors.json"),
+                    encoding="utf-8"))
+INK = _T["light"]["text"]       # ink on light grounds
+INK_2 = _T["light"]["text-2"]   # secondary ink (labels) on light grounds
+PAPER = _T["dark"]["text"]      # ink on dark grounds
+GROUND = _T["light"]["bg"]      # the light ground
+DARK_BG = _T["dark"]["bg"]      # the dark ground
 LIGHT = "#E9E3FF"    # accent tint, "light through the door"
 
 

@@ -1,6 +1,6 @@
 # Cursors
 
-No custom build. Use an existing macOS-like theme from ports.
+No custom build. Use an existing outlined cursor theme from the packages, chosen to sit with the WolOS ramp (crisp dark arrow, light outline).
 
 | Choice | Theme name | Port (verify) |
 |---|---|---|

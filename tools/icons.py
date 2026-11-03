@@ -9,19 +9,22 @@
 Writes
   design/icons/symbolic/<name>-symbolic.svg   16 grid, 1.5 px line, 2 px corner radius, currentColor
   design/icons/index.theme, dev.theme         theme WolOS (index.theme is the overlay's too)
-  design/icons/{apps,places,devices,mimetypes}/*.svg, aliases.tsv, the app PNGs below:
-                                              the Wonderland card, written by tools/icons/build.py
+  design/icons/{apps,places,devices,mimetypes}/*.svg, apps/small/*.svg, aliases.tsv, the app PNGs below:
+                                              crafted objects and pressed paper, written by tools/icons/build.py
   <overlay>/usr/share/icons/WolOS/{48x48,128x128,512x512}/apps/wolos-<name>.png and index.theme
   (overlay default: desktop/overlay of the repo that has design/ as a submodule)
 
 Symbolic icons are drawn as lines and rings of width 1.5 and written as filled outlines (GTK 4.20
 draws stroked symbolics as blobs, crates/shell/tests/symbolic_icons.rs): every line is a capsule,
 every ring an outer contour plus a reversed inner one, so the default nonzero fill unions them.
-The full-colour icons (the Wonderland card, .claude/brand/icons-apps/LANGUAGE.md in the product
-checkout) are vector SVGs drawn by tools/icons/ (card.py, families.py, app_glyphs.py, checks.py) and
-rendered to PNG with rsvg-convert, the renderer GTK loads them with. The contact sheet shows both sets.
+The full-colour icons (crafted objects on the soft card for the 25 apps, pressed paper for places, devices
+and mimetypes: .claude/brand/icons-premium/LANGUAGE-v2.md in the product checkout) are vector SVGs on a
+1024 canvas drawn by tools/icons/ (svgk.py, crafted_a.py, crafted_b.py, paper_set.py, families.py,
+checks.py) and rendered to PNG with rsvg-convert, the renderer GTK loads them with: 128 and 512 px from the
+full drawing, 48 px from the small one (apps/small/: larger glyph, lighter ramp on dark tiles, less detail).
+The contact sheet shows both sets; tools/icons/sheet.py builds before/after review sheets.
 """
-import math, os, struct, sys, zlib
+import json, math, os, struct, sys, zlib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DESIGN = os.path.normpath(os.path.join(HERE, ".."))
@@ -1107,6 +1110,26 @@ def build_symbolic():
     sym("x-office-spreadsheet", page() + R(5.5, 7.0, 5.0, 5.0, 0.5, lw=1.25) + L(8, 7.0, 8, 12.0, w=1.25) + L(5.5, 9.5, 10.5, 9.5, w=1.25))
     sym("x-office-presentation", R(1.75, 2.25, 12.5, 8.0, 1.5) + L(8, 10.25, 8, 11.75) + L(5.0, 14.0, 8, 11.75) + L(11.0, 14.0, 8, 11.75))
 
+    # the apps of the crafted set (design/tools/icons/, LANGUAGE-v2 section 6): the silhouette of each object, one
+    # inner feature, on the 16 grid (the 24 px size is this drawing scaled); the Kit boxes show what they hold
+    sym("wolos-installer", A(8, 7.0, 3.75, 180, 360) + L(4.25, 7.0, 4.25, 14.0) + L(11.75, 7.0, 11.75, 14.0) + L(2.25, 14.0, 13.75, 14.0) + D(8, 10.5, 1.25))
+    sym("wolos-plugin-maker", puzzle())
+    same("wolos-kit-ai", "wolos-assistant")
+    same("wolos-kit-codecs", "applications-multimedia")
+    same("wolos-kit-craft-suite", "document-edit")
+    same("wolos-kit-creative", "applications-graphics")
+    same("wolos-kit-dev", "applications-development")
+    same("wolos-kit-gaming", "applications-games")
+    same("system-file-manager", "folder")
+    same("internet-mail", "mail-unread")
+    same("multimedia-audio-player", "audio-x-generic")
+    same("multimedia-photo-viewer", "image-x-generic")
+    same("accessories-text-editor", "document-edit")
+    sym("accessories-calculator", R(3.25, 1.75, 9.5, 12.5, 1.5) + R(5.25, 3.75, 5.5, 2.5, 0.5, lw=1.25) +
+        D(6.0, 9.0, 0.9) + D(8.0, 9.0, 0.9) + D(10.0, 9.0, 0.9) + D(6.0, 11.75, 0.9) + D(8.0, 11.75, 0.9) + D(10.0, 11.75, 0.9))
+    sym("accessories-notes", clipboard() + L(5.75, 7.0, 10.25, 7.0) + L(5.75, 10.0, 10.25, 10.0))
+    sym("system-software-install", P([(3.25, 5.25), (12.75, 5.25), (12.25, 13.5), (3.75, 13.5)], closed=True, r=1.0) + A(8, 5.25, 2.75, 180, 360))
+
 
 # ======================================================================================
 # Rasteriser (symbolic): nonzero scanline with exact horizontal coverage, 4 sub-rows.
@@ -1184,8 +1207,10 @@ def symbolic_svg(name):
 # ======================================================================================
 # Colour helpers (the full-colour icons are drawn by tools/icons/, see build.py)
 # ======================================================================================
-LIGHT_BG, DARK_BG = "#F5F5F7", "#1C1C1E"
-INK = "#1C1C1E"
+# the contact sheet's grounds and glyph tones: the WolOS neutral ramp (tokens/colors.json, tokens.py)
+_T = json.load(open(os.path.join(DESIGN, "tokens", "colors.json"), encoding="utf-8"))
+LIGHT_BG, DARK_BG = _T["light"]["bg"], _T["dark"]["bg"]
+INK, PAPER = _T["light"]["text"], _T["dark"]["text"]
 
 
 def hx(c):
@@ -1384,21 +1409,21 @@ def sheet(path):
     y += rows32 * 44
     band(y, y + rows32 * 44, dark)
     for k, n in enumerate(syms):
-        blit_alpha(8 + (k % cols32) * 44, y + 6 + (k // cols32) * 44, render_symbolic(n, 32), hx("#F5F5F7"))
+        blit_alpha(8 + (k % cols32) * 44, y + 6 + (k // cols32) * 44, render_symbolic(n, 32), hx(PAPER))
     y += rows32 * 44 + 16
     for k, n in enumerate(syms):
         blit_alpha(8 + (k % cols16) * 24, y + (k // cols16) * 24, render_symbolic(n, 16), hx(INK))
     y += rows16 * 24
     band(y, y + rows16 * 24 + 8, dark)
     for k, n in enumerate(syms):
-        blit_alpha(8 + (k % cols16) * 24, y + 4 + (k // cols16) * 24, render_symbolic(n, 16), hx("#F5F5F7"))
+        blit_alpha(8 + (k % cols16) * 24, y + 4 + (k // cols16) * 24, render_symbolic(n, 16), hx(PAPER))
     rows = [[tuple(int(max(0, min(255, round(v)))) for v in p) + (255,) for p in r] for r in img]
     write(path, png_bytes(W, Hh, rows))
     write(os.path.splitext(path)[0] + ".txt", "\n".join(order) + "\n")
 
 
 def full_colour_names():
-    """Names of the full-colour icons (card apps, places, devices, mimetypes) on disk."""
+    """Names of the full-colour icons (apps, places, devices, mimetypes) on disk."""
     out = []
     for ctx in ("apps", "places", "devices", "mimetypes"):
         d = os.path.join(DESIGN, "icons", ctx)
@@ -1414,7 +1439,7 @@ def render_full(name, size):
 
 
 def icon_build():
-    """tools/icons/build.py (the Wonderland card generator), imported lazily."""
+    """tools/icons/build.py (the full-colour icon generator), imported lazily."""
     import importlib.util
     spec = importlib.util.spec_from_file_location("wolos_icons_build", os.path.join(HERE, "icons", "build.py"))
     mod = importlib.util.module_from_spec(spec)

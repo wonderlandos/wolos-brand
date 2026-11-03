@@ -184,7 +184,7 @@ def terminal(cv):
     defs = d
     defs += shadow_filter("t-sh", dy=34, blur=26, color="#000", op=.7)
     defs += blur_filter("t-b14", 14) + blur_filter("t-b30", 30)
-    defs += lingrad("t-win", [(0, "#352D66"), (.12, "#241E48"), (1, "#0F0B24")])
+    defs += lingrad("t-win", [(0, "#5046A0"), (.12, "#3A3274"), (1, "#1E1848")] if cv.small else [(0, "#352D66"), (.12, "#241E48"), (1, "#0F0B24")])
     defs += lingrad("t-bar", [(0, "#fff", .14), (1, "#fff", .03)])
     defs += lingrad("t-rim", [(0, "#fff", .75), (.16, "#fff", .22), (.55, "#fff", .05), (1, "#fff", .20)])
     defs += lingrad("t-sheen", [(0, "#fff", .20), (1, "#fff", 0)], x1=0, y1=0, x2=.7, y2=1)
@@ -212,7 +212,7 @@ def terminal(cv):
     body += f'<path d="{chev}" fill="none" stroke="#2FD6A0" stroke-width="76" stroke-linecap="round" stroke-linejoin="round" opacity=".55" filter="url(#t-b30)"/>'
     body += f'<rect x="{x0+312}" y="{y0+414}" width="170" height="88" rx="14" fill="#2FD6A0" opacity=".6" filter="url(#t-b30)"/>'
     body += f'<path d="{chev}" fill="none" stroke="#0A3F33" stroke-width="58" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 7)" opacity=".6"/>'
-    body += f'<path d="{chev}" fill="none" stroke="url(#t-mint)" stroke-width="56" stroke-linecap="round" stroke-linejoin="round"/>'
+    body += f'<path d="{chev}" fill="none" stroke="url(#t-mint)" stroke-width="{70 if cv.small else 56}" stroke-linecap="round" stroke-linejoin="round"/>'
     body += f'<path d="{chev}" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity=".55" transform="translate(-6 -10)"/>'
     body += f'<rect x="{x0+318}" y="{y0+418}" width="158" height="80" rx="14" fill="url(#t-mint)"/>'
     body += f'<rect x="{x0+318}" y="{y0+418}" width="158" height="13" rx="6" fill="#fff" opacity=".6"/>'

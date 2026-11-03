@@ -178,7 +178,7 @@ def basket(cv, full):
         o += f'<path d="M{x} 300L{x + 300} 880M{x + 300} 300L{x} 880" stroke="{shade(SYSTEM, .32)}" stroke-width="9" opacity=".75"/>'
     o += '</g>'
     rim = rrect(160, 276, 704, 80, 40)
-    o += shadow(cv, rim, 8, 5, shade(SYSTEM, -.3), .5) + f'<path d="{rim}" fill="{PAPER}"/>'
+    o += shadow(cv, rim, 8, 5, shade(SYSTEM, -.3), .5) + f'<path d="{rim}" fill="{PAPER}" stroke="{shade(PAPER, -.34)}" stroke-opacity=".7" stroke-width="6"/>'
     o += f'<path d="M190 296H834" stroke="#fff" stroke-opacity=".5" stroke-width="5" stroke-linecap="round"/>'
     o += f'<path d="M190 350H834" stroke="{shade(SYSTEM, -.3)}" stroke-opacity=".35" stroke-width="5"/>'
     cv.add(o)

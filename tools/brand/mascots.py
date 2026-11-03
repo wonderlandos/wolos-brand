@@ -7,7 +7,7 @@ Eyes are solid ink capsules (1.5u x 2.25u) with one white catch-light (r 0.4u) t
 Pink #F5A9B8 and blue #5BCEFA come from the doctrine band; violet from tokens.accent."""
 import math, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from marks import svg, ACC, ACC_D, PAPER, INK
+from marks import svg, ACC, ACC_D, INK, INK_2, GROUND
 from outline import stroke, rect_d, ellipse_d, circle_d, dashes, polyline_d
 
 LINE = "#2B2140"      # outline ink (tokens text, tinted violet)
@@ -200,7 +200,7 @@ CAT_EXPR = [
     ("vanishing", dict(fade=0.18)),
 ]
 
-def sheet(title, pose, exprs, headfn, path, bg=PAPER, fg=INK, vb_head=(56, 56, 400, 400)):
+def sheet(title, pose, exprs, headfn, path, bg=GROUND, fg=INK, vb_head=(56, 56, 400, 400)):
     # pose left (512x640), 3x2 expression grid right (6 x 240)
     W, H = 512 + 3 * 240 + 64, 760
     out = [f'<rect width="{W}" height="{H}" fill="{bg}"/>',
@@ -211,7 +211,7 @@ def sheet(title, pose, exprs, headfn, path, bg=PAPER, fg=INK, vb_head=(56, 56, 4
         out.append(f'<rect x="{x - 1}" y="{y - 1}" width="226" height="252" rx="19" fill="#DEDEE0"/>'
                    f'<rect x="{x}" y="{y}" width="224" height="250" rx="18" fill="#FFFFFF"/>')
         out.append(f'<svg x="{x + 12}" y="{y + 8}" width="200" height="200" viewBox="{" ".join(map(str, vb_head))}">{headfn(**kw)}</svg>')
-        out.append(f'<text x="{x + 112}" y="{y + 234}" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" font-weight="600" fill="#6E6E73">{name}</text>')
+        out.append(f'<text x="{x + 112}" y="{y + 234}" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" font-weight="600" fill="{INK_2}">{name}</text>')
     open(path, "w").write(svg((0, 0, W, H), "".join(out), W, H))
 
 if __name__ == "__main__":
