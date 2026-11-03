@@ -13,6 +13,6 @@ If primary is absent, ship fallback; do not block the image.
 Apply (size 24):
 
 ```sh
-hyprctl setcursor capitaine-cursors 24        # Hyprland: env = XCURSOR_THEME,capitaine-cursors
+hyprctl setcursor capitaine-cursors 24        # compositor: env = XCURSOR_THEME,capitaine-cursors
 gsettings set org.gnome.desktop.interface cursor-theme capitaine-cursors
 ```

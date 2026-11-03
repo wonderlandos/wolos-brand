@@ -10,6 +10,8 @@ import sys
 import xml.etree.ElementTree as ET
 
 D = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "icons")
+if "--legacy" not in sys.argv:
+    sys.exit("places.py: superseded by tools/icons.py (icon set v2 draws places, devices and mimetypes); --legacy runs the old set")
 
 # No SVG filters: GTK's own icon renderer turns them into grey boxes. The drop shadow is the
 # shape repeated below, offset and translucent (see `shadowed`).

@@ -5,6 +5,8 @@ for s in ["brand","tokens","icons/apps","icons/symbolic","wallpapers","cursors"]
     os.makedirs(f"{D}/{s}", exist_ok=True)
 
 def w(p, s):
+    if p.startswith("icons/"):
+        return  # icons, theme and aliases: tools/icons.py (icon set v2)
     with open(f"{D}/{p}", "w") as f: f.write(s.strip()+"\n")
 
 ACCENT = "#7C5CFF"   # looking-glass violet
