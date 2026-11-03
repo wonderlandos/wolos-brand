@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 """Crafted objects, part two: calculator, calendar, control centre, launcher, plugin maker, notes,
 photos, system monitor, text editor, games, trash and the six Kit boxes. Same language as
-crafted_a.py (LANGUAGE-v2): a lit object on the soft card, ramps and two shadows, one pop."""
+crafted_a.py (design/icons/LANGUAGE.md): a lit object on the soft card, ramps and two shadows, one pop."""
 import math
 from svgk import *
 

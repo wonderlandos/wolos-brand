@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-"""Drawing kit of the WolOS icon language (.claude/brand/icons-premium/LANGUAGE-v2.md): a 1024 canvas,
+"""Drawing kit of the WolOS icon language (design/icons/LANGUAGE.md): a 1024 canvas,
 one key light straight above, gradients and blurs only (no <image>, <text>, scripts).
 
 Cv is one icon in the making: it collects <defs>, hands out gradient, filter and clip ids, and
@@ -138,6 +138,36 @@ def gtk_safe(svg):
     return _FILTERED_LEAF.sub(_wrap_leaf, svg)
 
 
+# ---- the Qt pass ----------------------------------------------------------------------------
+# QtSvg (Qt 6.12: the renderer Qt apps load SVG theme icons with) draws masks and the blur filters
+# but ignores clip-path, so a clipped glow or mesh spills over the card (qtcheck/check.sh). Every
+# clipPath is therefore written as the same shape in a white luminance mask: librsvg and GTK draw
+# it pixel for pixel like the clip, Qt draws it at all. The mask region is three canvases wide, so
+# a clip used inside a moved or rotated group never cuts its content. A clipPath holds one shape.
+_CLIP = re.compile(r'<clipPath id="([^"]+)">(<(?:path|rect|circle|ellipse)\b[^>]*/>)</clipPath>')
+_REGION = 'maskUnits="userSpaceOnUse" x="-1024" y="-1024" width="3072" height="3072"'
+
+
+def _white(shape):
+    shape = re.sub(r'\s(?:fill|fill-opacity|stroke|stroke-width|opacity)="[^"]*"', "", shape)
+    return shape[:-2] + ' fill="#fff"/>'
+
+
+def qt_safe(svg):
+    """Every clipPath of svg as a luminance mask of the same shape (QtSvg ignores clip-path)."""
+    ids = []
+
+    def mask(m):
+        ids.append(m.group(1))
+        return f'<mask id="{m.group(1)}" {_REGION}>{_white(m.group(2))}</mask>'
+    svg = _CLIP.sub(mask, svg)
+    if "<clipPath" in svg:
+        raise ValueError("qt_safe: a clipPath that is not one plain shape")
+    for i in ids:
+        svg = svg.replace(f'clip-path="url(#{i})"', f'mask="url(#{i})"')
+    return svg
+
+
 # ---- the canvas -----------------------------------------------------------------------------
 class Cv:
     def __init__(self, small=False):
@@ -200,11 +230,11 @@ class Cv:
         if scale != 1.0:
             g = f'<g transform="translate(512 {n(cy)}) scale({scale:.3f}) translate(-512 {n(-cy)})">{g}</g>'
         body = "".join(self.tile) + ("" if tile_only else g)
-        return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">'
-                f'<title>{title}</title><defs>{"".join(self.defs)}</defs>{gtk_safe(body)}</svg>\n')
+        return qt_safe(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">'
+                       f'<title>{title}</title><defs>{"".join(self.defs)}</defs>{gtk_safe(body)}</svg>\n')
 
 
-# ---- lighting helpers (the light model, LANGUAGE-v2 section 1) ------------------------------------
+# ---- lighting helpers (the light model, LANGUAGE.md sections 1 and 2) ----------------------------
 def shadow(cv, d, dy=28, sd=22, color="#000000", op=.55, dx=0, extra=""):
     """A soft cast shadow of path d, straight down (the key light is above)."""
     return (f'<path d="{d}" fill="{color}" opacity="{op}" filter="{cv.blur(sd)}" '
@@ -277,7 +307,7 @@ def knob(cv, cx, cy, r, c0="#FFF3C0", c1="#F0B13C", c2="#8A5A12", sh="#2A1500", 
             f'<circle cx="{n(cx - r * .28)}" cy="{n(cy - r * .32)}" r="{n(max(2.5, r * .2))}" fill="#fff" opacity=".85"/>')
 
 
-# ---- the container (LANGUAGE-v2 section 2) -----------------------------------------------------
+# ---- the container (LANGUAGE.md section 3) -----------------------------------------------------
 X0, Y0, X1, Y1 = 100, 100, 924, 924
 CARD = rr_path(X0, Y0, X1, Y1, 236, 150, 236, 150, n_=3.1)
 
