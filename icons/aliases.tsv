@@ -5,7 +5,7 @@ browser	helium firefox web-browser org.mozilla.firefox chromium librewolf epipha
 settings	preferences-system org.gnome.Settings gnome-control-center nwg-look org.wolos.settings
 software	system-software-install org.gnome.Software octopkg org.wolos.store wolos-store
 music	multimedia-audio-player org.gnome.Music audacious rhythmbox elisa io.bassi.Amberol
-photos	multimedia-photo-viewer org.gnome.eog org.gnome.Loupe org.gnome.Shotwell ristretto
+photos	multimedia-photo-viewer org.gnome.eog org.gnome.Loupe org.gnome.Shotwell ristretto org.wolos.gallery
 notes	accessories-notes org.gnome.gitlab.cheywood.Iotas xpad org.gnome.Gnote
 calendar	office-calendar org.gnome.Calendar
 mail	internet-mail mail-client thunderbird org.mozilla.Thunderbird evolution org.gnome.Geary
