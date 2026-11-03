@@ -1,0 +1,2 @@
+# Icons GTK 4.24 still draws differently from librsvg (check.sh reports them as KNOWN).
+# Fix the drawing in the generator, then delete the line: check.sh errors on a listed icon that passes.

@@ -25,21 +25,26 @@ def shade(hexc, dl):
 
 
 def emb(cv, sh="#000000"):
-    """The emboss: a small drop, a unit of top light on the lower rim, a unit of shade on the upper."""
+    """The emboss: a small drop, a unit of top light on the lower rim, a unit of shade on the upper.
+    Each rim is the glyph minus its own blurred alpha shifted by a few units (SourceAlpha out the
+    shifted blur): the same pixels as inverting the alpha and masking it back, without an alpha
+    transfer table."""
     def make(i):
         return (f'<filter id="{i}" filterUnits="userSpaceOnUse" x="-100" y="-100" width="1224" height="1224" color-interpolation-filters="sRGB">'
                 '<feGaussianBlur in="SourceAlpha" stdDeviation="3" result="sb"/><feOffset in="sb" dy="8" result="so"/>'
                 f'<feFlood flood-color="{sh}" flood-opacity=".30"/><feComposite in2="so" operator="in" result="drop"/>'
-                '<feComponentTransfer in="SourceAlpha" result="inv"><feFuncA type="table" tableValues="1 0"/></feComponentTransfer>'
-                '<feGaussianBlur in="inv" stdDeviation="2" result="ib"/>'
-                '<feOffset in="ib" dy="5" result="il"/><feFlood flood-color="#fff" flood-opacity=".55"/><feComposite in2="il" operator="in"/><feComposite in2="SourceAlpha" operator="in" result="light"/>'
-                '<feOffset in="ib" dy="-6" result="id"/><feFlood flood-color="#000" flood-opacity=".28"/><feComposite in2="id" operator="in"/><feComposite in2="SourceAlpha" operator="in" result="dark"/>'
+                '<feGaussianBlur in="SourceAlpha" stdDeviation="2" result="ab"/>'
+                '<feOffset in="ab" dy="5" result="al"/><feComposite in="SourceAlpha" in2="al" operator="out" result="ml"/>'
+                '<feFlood flood-color="#fff" flood-opacity=".55"/><feComposite in2="ml" operator="in" result="light"/>'
+                '<feOffset in="ab" dy="-6" result="ad"/><feComposite in="SourceAlpha" in2="ad" operator="out" result="md"/>'
+                '<feFlood flood-color="#000" flood-opacity=".28"/><feComposite in2="md" operator="in" result="dark"/>'
                 '<feMerge><feMergeNode in="drop"/><feMergeNode in="SourceGraphic"/><feMergeNode in="light"/><feMergeNode in="dark"/></feMerge></filter>')
     return cv.raw(("emb", sh), make)
 
 
 def raised(cv, markup, sh="#000000"):
-    """The emblem lifted off its surface. The small variant drops the filter (a flat mark reads cleaner at 48)."""
+    """The emblem lifted off its surface. The small variant drops the filter (a flat mark reads cleaner at 48).
+    Cv.svg opens the filtered group with svgk.PAD (GTK 4 draws a thin stroked emblem's drop as a block otherwise)."""
     if cv.small:
         return markup
     return f'<g filter="{emb(cv, sh)}">{markup}</g>'

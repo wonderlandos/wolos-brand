@@ -8,6 +8,7 @@ glyph is scaled about the optical centre (`scale`), which is how the small varia
 renders) gets its larger live area. A glyph can also be left out (tile_only) for the legibility
 check in checks.py."""
 import math
+import re
 
 W = 1024
 GLYPH = "\x00glyph\x00"       # marks where the tile ends and the glyph starts
@@ -103,6 +104,40 @@ def lum(c):
     return 0.2126 * r + 0.7152 * g + 0.0722 * b
 
 
+# ---- the GTK pass ---------------------------------------------------------------------------
+# GTK 4 draws SVG icons with its own renderer, which sizes a filter's source from the geometry
+# bounds of what is filtered: on a thin stroke (a bare vertical stem) or an offset copy those
+# bounds collapse and the shadow floods a grey or dark block (design/tools/icons/gtkcheck). Every
+# filtered element therefore draws inside a group that opens with this rect: canvas-sized, no
+# pixels (fill-opacity 0), so librsvg draws exactly the same.
+PAD = '<rect width="1024" height="1024" fill="#000" fill-opacity="0"/>'
+_FILTERED_G = re.compile(r'(<g\b[^>]*\sfilter="url\(#[^)]+\)"[^>]*>)(?!' + re.escape(PAD) + ')')
+_FILTERED_LEAF = re.compile(r'<(?!g\b)[a-z]+\b[^>]*\sfilter="url\(#[^)]+\)"[^>]*/>')
+# Applied after the filter (SVG order: filter, clip, mask, opacity) or around it (transform): these
+# move from a filtered leaf to the wrapping group.
+_OUTER = ("transform", "clip-path", "mask", "opacity")
+
+
+def _wrap_leaf(m):
+    el = m.group(0)
+    outer = []
+    for a in _OUTER:
+        v = re.search(rf'\s{a}="([^"]*)"', el)
+        if v:
+            outer.append(f' {a}="{v.group(1)}"')
+            el = el.replace(v.group(0), "", 1)
+    f = re.search(r'\sfilter="([^"]*)"', el)
+    el = el.replace(f.group(0), "", 1)
+    inner = f'<g filter="{f.group(1)}">{PAD}{el}</g>'
+    return f'<g{"".join(outer)}>{inner}</g>' if outer else inner
+
+
+def gtk_safe(svg):
+    """Every filtered element of svg drawn the same by GTK 4 and librsvg (PAD above)."""
+    svg = _FILTERED_G.sub(lambda m: m.group(1) + PAD, svg)
+    return _FILTERED_LEAF.sub(_wrap_leaf, svg)
+
+
 # ---- the canvas -----------------------------------------------------------------------------
 class Cv:
     def __init__(self, small=False):
@@ -166,7 +201,7 @@ class Cv:
             g = f'<g transform="translate(512 {n(cy)}) scale({scale:.3f}) translate(-512 {n(-cy)})">{g}</g>'
         body = "".join(self.tile) + ("" if tile_only else g)
         return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">'
-                f'<title>{title}</title><defs>{"".join(self.defs)}</defs>{body}</svg>\n')
+                f'<title>{title}</title><defs>{"".join(self.defs)}</defs>{gtk_safe(body)}</svg>\n')
 
 
 # ---- lighting helpers (the light model, LANGUAGE-v2 section 1) ------------------------------------
@@ -206,6 +241,22 @@ def solid(cv, d, top, bot, shade=None, edge=None, lip=5, amb=(30, 22, .55), con=
 def ellipse_spec(cv, x, y, rx, ry, rot=0, op=.8, sd=0):
     return (f'<ellipse cx="{n(x)}" cy="{n(y)}" rx="{n(rx)}" ry="{n(ry)}" fill="#fff" opacity="{op}" '
             f'transform="rotate({rot} {n(x)} {n(y)})"' + (f' filter="{cv.blur(sd)}"' if sd else "") + "/>")
+
+
+def soft_ring(cv, cx, cy, r, w, sd, color, op, clip=None):
+    """A ring of width w and radius r blurred by sd, as a radial gradient (the blur across the
+    radius, Gaussian against the band): GTK 4 and librsvg blur a thin stroke differently at icon
+    sizes, a gradient they draw the same."""
+    phi = lambda x: .5 * (1 + math.erf(x / (sd * math.sqrt(2))))
+    lo, hi = max(0.0, r - w / 2 - 3 * sd), r + w / 2 + 3 * sd
+    stops = []
+    for i in range(25):
+        t = lo + (hi - lo) * i / 24
+        a = op * (phi(t - (r - w / 2)) - phi(t - (r + w / 2)))
+        stops.append((round(t / hi, 4), color, round(a, 4)))
+    g = cv.rad(stops, cx, cy, hi, user=True)
+    ring = f'<circle cx="{n(cx)}" cy="{n(cy)}" r="{n(hi)}" fill="{g}"/>'
+    return f'<g clip-path="{clip}">{ring}</g>' if clip else ring
 
 
 def tube(cv, d, w, top, bot, shade, hl=.7, amb=(16, 10, .5)):

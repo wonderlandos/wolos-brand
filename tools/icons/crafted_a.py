@@ -23,18 +23,16 @@ def settings(cv):
     defs += lingrad("g-ring2", [(0, "#FFFFFF"), (1, "#6D7690")])
     defs += radgrad("g-key", [(0, "#C9BBFF"), (.5, "#8D70FF"), (1, "#5B3CE0")])
     defs += radgrad("g-glow", [(0, "#9B85FF", .9), (1, "#9B85FF", 0)])
-    # bevel via specular lighting on the gear alpha
+    # bevel on the gear alpha, in primitives GTK 4 draws like librsvg (it has no lighting filters):
+    # the face dimmed to the diffuse level of a flat top lit at 52 degrees, the flat specular sheen
+    # as a white wash, and the lower rim shaded by the face minus its own blurred alpha shifted up
+    # (constants fitted to the earlier specular+diffuse lighting at 128 and 512 px)
     defs += ('<filter id="g-bevel" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">'
-             '<feGaussianBlur in="SourceAlpha" stdDeviation="5" result="bl"/>'
-             '<feSpecularLighting in="bl" surfaceScale="9" specularConstant="1.1" specularExponent="22" lighting-color="#fff" result="sp">'
-             '<feDistantLight azimuth="270" elevation="48"/></feSpecularLighting>'
-             '<feComposite in="sp" in2="SourceAlpha" operator="in" result="spc"/>'
-             '<feDiffuseLighting in="bl" surfaceScale="9" diffuseConstant="1" lighting-color="#fff" result="df">'
-             '<feDistantLight azimuth="270" elevation="52"/></feDiffuseLighting>'
-             '<feComposite in="df" in2="SourceAlpha" operator="in" result="dfc"/>'
-             '<feColorMatrix in="dfc" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" result="dfm"/>'
-             '<feBlend in="SourceGraphic" in2="dfm" mode="multiply" result="m"/>'
-             '<feComposite in="spc" in2="m" operator="arithmetic" k1="0" k2=".55" k3="1" k4="0"/></filter>')
+             '<feColorMatrix in="SourceGraphic" type="matrix" values=".88 0 0 0 0  0 .88 0 0 0  0 0 .88 0 0  0 0 0 1 0" result="m"/>'
+             '<feFlood flood-color="#fff" flood-opacity=".09"/><feComposite in2="SourceAlpha" operator="in" result="sp"/>'
+             '<feGaussianBlur in="SourceAlpha" stdDeviation="8" result="ab"/><feOffset in="ab" dy="-15" result="ad"/>'
+             '<feComposite in="SourceAlpha" in2="ad" operator="out" result="dark"/>'
+             '<feMerge><feMergeNode in="m"/><feMergeNode in="sp"/><feMergeNode in="dark"/></feMerge></filter>')
     defs += f'<mask id="g-mask"><path d="{gp}" fill="#fff" stroke="#fff" stroke-width="{sw}" stroke-linejoin="round"/></mask>'
     # brushed rings
     rings = ""

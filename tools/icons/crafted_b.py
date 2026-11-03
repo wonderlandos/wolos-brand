@@ -350,7 +350,8 @@ def kit_ai(cv):
     cx, cy, R = 512, 612, 196
     o = shadow(cv, circ(cx, cy, R), 30, 22, "#0A0440", .6) + shadow(cv, circ(cx, cy, R), 9, 7, "#0A0440", .45)
     o += f'<circle cx="{cx}" cy="{cy}" r="{R}" fill="{cv.rad([(0, "#B9A8FF"), (.5, "#5B3CE0"), (1, "#1A0E70")], .38, .3, .95)}"/>'
-    o += f'<circle cx="{cx}" cy="{cy}" r="{R - 12}" fill="none" stroke="#9BE7FF" stroke-opacity=".9" stroke-width="16" filter="{cv.blur(10)}" clip-path="{cv.clip(circ(cx, cy, R))}" transform="translate(0 20)"/>'
+    # the rim light: clipped to the orb moved down with it (the clip sits in the shifted space)
+    o += soft_ring(cv, cx, cy + 20, R - 12, 16, 10, "#9BE7FF", .9, cv.clip(circ(cx, cy + 20, R)))
     st = lambda x, y, r, w=.2: (f"M{x} {y - r}Q{x + r * w} {y - r * w} {x + r} {y}Q{x + r * w} {y + r * w} {x} {y + r}"
                                 f"Q{x - r * w} {y + r * w} {x - r} {y}Q{x - r * w} {y - r * w} {x} {y - r}Z")
     big = st(cx - 8, cy + 6, 110)

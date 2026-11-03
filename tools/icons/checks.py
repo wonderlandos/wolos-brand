@@ -2,7 +2,8 @@
 """The rules every full-colour icon is held to before anything is written (LANGUAGE-v2 sections 2-6).
 
 Static, on the SVG text: parses; the 1024 canvas; no <image>, <text>, <script>, <style>, <use> or
-foreign content; filters from the rsvg-safe primitives only; no banned system colour; every url(#id)
+foreign content; filters from the rsvg-safe primitives only (the same list as
+crates/shell/tests/icons_v2.rs SAFE_FILTER, a test keeps them equal); no banned system colour; every url(#id)
 resolves and ids are unique; no gloss sweep; under 40 KB.
 
 Raster, on what rsvg-convert draws (the renderer GTK loads SVG with), for BOTH variants:
@@ -23,7 +24,7 @@ from raster import contrast_lum, decode_png, rel_lum, render_text
 MAX_BYTES = 40 * 1024
 SAFE_FILTER = {"filter", "feGaussianBlur", "feOffset", "feFlood", "feComposite", "feMerge", "feMergeNode",
                "feColorMatrix", "feTurbulence", "feSpecularLighting", "feDiffuseLighting", "feDistantLight",
-               "feComponentTransfer", "feFuncA", "feBlend"}
+               "feBlend"}
 FORBIDDEN = {"image", "text", "script", "style", "use", "foreignObject", "a", "animate", "set", "tspan"}
 # Colours the set left behind (INVENTORY.md): never again in a shipped icon.
 BANNED = {"#FF3B30", "#FF9500", "#FFCC00", "#34C759", "#007AFF", "#FF453A", "#FF9F0A", "#FFD60A",
