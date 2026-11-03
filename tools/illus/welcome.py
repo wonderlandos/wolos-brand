@@ -1,7 +1,8 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 # Copyright (c) 2026 Julia Klee
-"""Setup Assistant welcome, 480x320: dusk at the garden hedge. The little door is ajar, Wonderland
-light pours through it across the grass, and the Rabbit (late, of course) stands in it.
+"""Setup Assistant welcome, 480x320: dusk at the garden hedge. A doorway is cut into it: the WolOS
+mark, four nested doors, the smallest one open. Wonderland light pours out of it across the grass,
+and the Rabbit (late, of course) stands in it.
 The left 55 % stays calm sky for the title."""
 import math
 import random
@@ -10,14 +11,15 @@ import sys
 sys.path.insert(1, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "brand"))
 from kit import Canvas, f, path, fluffy, sparkle, svg
 from parts import glow, motes
-from keyhole import mark_paths
+from keyhole import door_list, door_set, arch, lip, in_door
 import mascots  # noqa: E402  (the flat Rabbit: design/tools/brand)
 
 W, H = 480, 320
-KX, K = 316, 2.9            # the door: the WolOS keyhole, as a doorway
+KX, K = 308, 2.3            # the doorway: the WolOS mark, mark_paths placement
 BASE = 252                  # threshold / foot of the hedge
-KY = BASE - 27 * K          # centre of the keyhole's round head
-DEPTH = (6, 1)              # how far the back of the doorway shows, seen from a little to the right
+KY = BASE - 27 * K          # the mark's centre; its floor line is BASE
+DOORS = door_list(KX, KY, K)
+OUTER = DOORS[0]
 
 
 def mix(c1, c2, u):
@@ -28,19 +30,19 @@ def mix(c1, c2, u):
 
 
 def in_mark(x, y):
-    """Is (x, y) inside the keyhole doorway? Analytic, in mark space."""
-    u = (x - KX) / K + 32
-    v = (y - KY) / K + 33
-    if (u - 32) ** 2 + (v - 33) ** 2 <= 15 ** 2:
-        return True
-    if 38 <= v <= 60:
-        t = (v - 40) / 20
-        if 27 - 3 * t <= u <= 37 + 3 * t:
-            return True
-    for ex in (22.5, 41.5):
-        if ((u - ex) / 4.2) ** 2 + ((v - 12) / 10) ** 2 <= 1:
-            return True
-    return False
+    """Is (x, y) inside the doorway (the mark's outer door)? Analytic."""
+    return in_door(OUTER, x, y)
+
+
+# the door light thrown on the grass: each door's shape laid down towards us and stretched
+POOL = (1.6, .4)            # the whole doorway: a faint warm wash
+BEAM = (2.6, .55)           # the little open door: the bright pool
+
+
+def on_grass(d, sc, x, y):
+    """Does grass point (x, y) fall inside door d laid on the grass with stretch sc?"""
+    lx = (DOORS[3][0] + DOORS[3][1]) / 2
+    return in_door(d, lx + (x - lx - 4) / sc[0], BASE - (y - BASE - 1) / sc[1])
 
 
 def sky(cv):
@@ -63,7 +65,7 @@ def far_land(cv):
 
 
 def hedge(cv, rnd):
-    top = [(262, 258), (256, 150), (260, 116), (272, 102), (290, 96), (310, 88), (334, 82), (358, 76),
+    top = [(244, 258), (238, 160), (242, 122), (256, 104), (282, 94), (310, 88), (334, 82), (358, 76),
            (382, 68), (406, 62), (432, 56), (458, 50), (484, 46), (490, 46), (490, 262)]
     d, poly = fluffy(top, [(0.08, 0.86, 1)], amp=7, step=22, sweep=.1, seed=5)
     fill = cv.lin(0, 50, 0, 258, [(0, "#4A43A8"), (0.5, "#2E2878"), (1, "#181348")])
@@ -76,7 +78,7 @@ def hedge(cv, rnd):
         f'<path d="M0 0L-1 -7M0 0L7 1M0 0L-6 4" stroke="#120E38" stroke-width=".5" opacity=".45" fill="none"/></g>')
     uses = []
     for _ in range(880):
-        x, y = rnd.uniform(250, 490), rnd.uniform(44, 262)
+        x, y = rnd.uniform(232, 490), rnd.uniform(44, 262)
         if not any(abs(px - x) < 1 for px, _ in []) and not inside_poly(poly, x, y):
             continue
         if in_mark(x, y) or near_frame(x, y, 9):
@@ -96,8 +98,8 @@ def hedge(cv, rnd):
     uses.sort()
     body = (f'<path d="{d}" fill="{fill}"/><g clip-path="{clip}">' + "".join(u for _, u in uses)
             # sky light along the top, deep shade at the foot, warmth around the door
-            + f'<path d="M250 40H490V140Q370 100 250 160Z" fill="#B9A6FF" opacity=".12" filter="{cv.blur(10)}"/>'
-            + f'<rect x="240" y="226" width="260" height="40" fill="#0C0828" opacity=".55" filter="{cv.blur(9)}"/>'
+            + f'<path d="M232 40H490V140Q370 100 232 160Z" fill="#B9A6FF" opacity=".12" filter="{cv.blur(10)}"/>'
+            + f'<rect x="222" y="226" width="278" height="40" fill="#0C0828" opacity=".55" filter="{cv.blur(9)}"/>'
             + glow(cv, KX + 6, KY + 30, 120, "#FFB870", .3)
             + "</g>")
     return body, d
@@ -117,68 +119,34 @@ def near_frame(x, y, m):
 
 
 def doorway(cv):
-    ears, head, foot = mark_paths(KX, KY, K)
-    hole = ears + head + foot
+    hole = arch(OUTER)
+    x0, x1, yb, ya, r = OUTER
     g = ""
     # contact shadow of the frame in the leaves
     g += (f'<path d="{hole}" fill="#05030F" stroke="#05030F" stroke-width="22" stroke-linejoin="round" opacity=".55" '
           f'filter="{cv.blur(5)}" transform="translate(2 3)"/>')
-    # bevelled brass frame: dark base, polished face, a bright bevel line
-    brass = cv.lin(KX - 60, KY - 90, KX + 60, KY + 90, [(0, "#FFF2C0"), (0.25, "#E2A94A"), (0.5, "#8A5A16"),
-                                                        (0.7, "#E9B654"), (1, "#5E3A08")])
-    g += f'<path d="{hole}" fill="#3A2205" stroke="#3A2205" stroke-width="17" stroke-linejoin="round"/>'
-    g += f'<path d="{hole}" fill="{brass}" stroke="{brass}" stroke-width="14" stroke-linejoin="round"/>'
-    g += (f'<path d="{hole}" fill="none" stroke="#FFF6D6" stroke-width="15" stroke-linejoin="round" opacity=".55" '
+    # bevelled brass frame round the arch: dark base, polished face, a bright bevel line
+    brass = cv.lin(x0, ya - r, x1, yb, [(0, "#FFF2C0"), (0.25, "#E2A94A"), (0.5, "#8A5A16"),
+                                        (0.7, "#E9B654"), (1, "#5E3A08")])
+    arc = lip(OUTER)
+    g += f'<path d="{arc}" fill="none" stroke="#3A2205" stroke-width="17" stroke-linejoin="round"/>'
+    g += f'<path d="{arc}" fill="none" stroke="{brass}" stroke-width="14" stroke-linejoin="round"/>'
+    g += (f'<path d="{arc}" fill="none" stroke="#FFF6D6" stroke-width="15" stroke-linejoin="round" opacity=".45" '
           f'transform="translate(-1.2 -1.2)" filter="{cv.blur(.7)}"/>')
-    g += f'<path d="{hole}" fill="#5E3A08" stroke="#5E3A08" stroke-width="4" stroke-linejoin="round"/>'
-    # rivets on the frame
-    for a in range(0, 360, 30):
-        r = 15 * K + 7.5
-        x, y = KX + r * math.cos(math.radians(a)), KY + r * math.sin(math.radians(a))
-        if 60 < a < 120 or 230 < a < 310:
-            continue
+    g += f'<path d="{arc}" fill="none" stroke="#5E3A08" stroke-width="4" stroke-linejoin="round"/>'
+    # rivets on the frame, round the arch
+    for a in range(-180, 1, 30):
+        x, y = (x0 + x1) / 2 + (r + 7.5) * math.cos(math.radians(a)), ya + (r + 7.5) * math.sin(math.radians(a))
         g += (f'<circle cx="{f(x)}" cy="{f(y)}" r="1.6" fill="#FFF2C0"/>'
               f'<circle cx="{f(x + .4)}" cy="{f(y + .5)}" r="1.6" fill="none" stroke="#5E3A08" stroke-width=".5"/>')
-
-    # ---- inside the doorway
-    hc = cv.clip(hole)
-    dx, dy = DEPTH
-    back = f'<path d="{hole}" transform="translate({dx} {dy})"/>'
-    x0, y0, x1, y1 = KX - 70, KY - 100, KX + 70, BASE + 10
-    light = cv.rad(KX + 16, KY + 14, 120, [(0, "#FFFFFF"), (0.25, "#FFF8E6"), (0.55, "#FFDDB4"), (1, "#E6B0FF")])
-    beyond = (f'<rect x="{x0}" y="{y0}" width="{x1 - x0}" height="{y1 - y0}" fill="{light}"/>'
-              # Wonderland, washed out by its own light: a lawn, a path, two topiary shapes
-              f'<path d="M{x0} {KY + 44}C{KX - 20} {KY + 36} {KX + 30} {KY + 44} {x1} {KY + 38}V{y1}H{x0}Z" fill="#E7C8FF" opacity=".75"/>'
-              f'<path d="M{KX + 2} {y1}L{KX + 8} {KY + 42}H{KX + 12}L{KX + 26} {y1}Z" fill="#FFF8EC"/>'
-              f'<ellipse cx="{KX - 22}" cy="{KY + 30}" rx="7" ry="12" fill="#C9A8F8" opacity=".7"/>'
-              f'<ellipse cx="{KX + 46}" cy="{KY + 32}" rx="6" ry="10" fill="#C9A8F8" opacity=".6"/>'
-              + glow(cv, KX + 16, KY + 18, 60, "#FFFFFF", .95))
-    # the reveal: the hedge is thick; its brass-lined inner wall shows on the left
-    reveal_fill = cv.lin(KX - 50, 0, KX + 10, 0, [(0, "#4A2C06"), (0.6, "#A8711C"), (1, "#F2C766")])
-    # the little door, swung inward on its left hinge; backlit, its edge on fire
-    hinge = KX - 16 * K + dx
-    sx = .34
-    leaf_t = f"translate({f(hinge)} 0) scale({sx} 1) translate({f(-hinge)} 0) translate({dx} {dy})"
-    wood = cv.lin(KX - 50, 0, KX + 50, 0, [(0, "#2A1A66"), (0.6, "#3E2A8A"), (1, "#5A44B0")])
-    planks = "".join(f"M{f(KX - 44 + i * 11)} {f(KY - 90)}V{BASE}" for i in range(9))
-    lc = cv.clip(hole, leaf_t)
-    leaf_inner = (f'<rect x="{x0}" y="{y0}" width="{x1 - x0}" height="{y1 - y0}" fill="{wood}"/>'
-                  f'<path d="{planks}" stroke="#160C40" stroke-width="1.6" opacity=".7"/>'
-                  f'<path d="{planks}" stroke="#7A66D0" stroke-width=".6" opacity=".35" transform="translate(1 0)"/>'
-                  f'<rect x="{x0}" y="{KY + 34}" width="{x1 - x0}" height="5" fill="#160C40" opacity=".6"/>'
-                  f'<rect x="{x0}" y="{KY - 26}" width="{x1 - x0}" height="5" fill="#160C40" opacity=".6"/>')
-    ears2, head2, foot2 = mark_paths(KX + 8, KY + 10, .55)
-    door = (f'<path d="{hole}" transform="translate({f(hinge)} 0) scale({sx + .05} 1) translate({f(-hinge)} 0) '
-            f'translate({dx + 2} {dy})" fill="#FFB060"/>'                                  # lit edge thickness
-            f'<g clip-path="{lc}">{leaf_inner}'
-            f'</g>'
-            f'<path d="{hole}" transform="{leaf_t}" fill="none" stroke="#FFD08A" stroke-width="2" opacity=".8" '
-            f'filter="{cv.blur(1.2)}"/>')
-    bc = cv.clip(hole, f"translate({dx} {dy})")
-    g += (f'<g clip-path="{hc}"><rect x="{x0}" y="{y0}" width="{x1 - x0}" height="{y1 - y0}" fill="{reveal_fill}"/>'
-          f'<g clip-path="{bc}">{beyond}{door}</g></g>')
-    # light spilling over the brass on the open side
-    g += glow(cv, KX + 26, KY + 30, 70, "#FFE6B8", .45)
+    # inside: the nested doors, the little one open and pouring out its light
+    g += door_set(cv, KX, KY, K, bead=False)
+    # dusk: the lacquer is in the hedge's shade, lit only from inside
+    lx0, lx1, lyb, lya, lr = DOORS[3]
+    dusk = cv.rad((lx0 + lx1) / 2, lyb - 10, 70, [(0, "#120A38", 0), (0.35, "#120A38", .05), (1, "#120A38", .55)])
+    g += f'<path d="{hole}" fill="{dusk}"/>'
+    # light spilling over the brass at the foot of the frame
+    g += glow(cv, (lx0 + lx1) / 2, BASE - 14, 60, "#FFE6B8", .35)
     return g, hole
 
 
@@ -200,12 +168,11 @@ def ground(cv, rnd, hole):
     reach = cv.rad(410, 300, 90, [(0, "#FFC890", .42), (0.6, "#FFB070", .15), (1, "#FFB070", 0)],
                    tf="translate(410 300) scale(1.3 .3) translate(-410 -300)")
     g += f'<ellipse cx="410" cy="300" rx="130" ry="30" fill="{reach}"/>'
-    proj = f"translate({KX + 4} {BASE + 1}) scale(1.6 -.4) translate({-KX} {-BASE})"
-    pool = cv.lin(0, BASE, 0, BASE - 190, [(0, "#FFF2D8", .95), (0.5, "#FFD9A0", .55), (1, "#FFC27A", .05)])
-    hinge = KX - 16 * K + DEPTH[0]
-    leaf_shadow = f"translate({f(hinge)} 0) scale(.34 1) translate({f(-hinge)} 0)"
-    g += (f'<g transform="{proj}" filter="{cv.blur(2)}"><path d="{hole}" fill="{pool}"/>'
-          f'<path d="{hole}" transform="{leaf_shadow}" fill="#1C0F50" opacity=".38"/></g>')
+    lx = (DOORS[3][0] + DOORS[3][1]) / 2
+    for d, sc, top, blur in ((OUTER, POOL, .45, 5), (DOORS[3], BEAM, .95, 2)):
+        proj = f"translate({f(lx + 4)} {BASE + 1}) scale({sc[0]} {-sc[1]}) translate({f(-lx)} {-BASE})"
+        pool = cv.lin(0, BASE, 0, BASE - 130, [(0, "#FFF2D8", top), (0.5, "#FFD9A0", top * .55), (1, "#FFC27A", .03)])
+        g += f'<g transform="{proj}" filter="{cv.blur(blur)}"><path d="{arch(d)}" fill="{pool}"/></g>'
     # blades: dark in the dusk, gold where the door light falls; bigger towards us
     blades = []
     for _ in range(330):
@@ -213,18 +180,16 @@ def ground(cv, rnd, hole):
         y = rnd.uniform(254, H + 6)
         depth = (y - 252) / 70
         h = 3 + depth * rnd.uniform(6, 14)
-        # lit if the point falls inside the projected keyhole (and not in the door's shadow)
-        mx = KX + (x - KX - 4) / 1.6
-        my = BASE - (y - BASE - 1) / .4
-        lit = in_mark(mx, my) and not (mx < hinge + (KX + 16 * K - hinge) * .34 and my > KY - 30 * K)
+        # lit where the little door's light falls, warm in the doorway's wider wash
+        lit = on_grass(DOORS[3], BEAM, x, y)
         warmth = max(0.0, 1 - math.hypot((x - KX) / 1.6, (y - BASE) * 2.2) / 130)
-        in_pool = in_mark(mx, my)
+        in_pool = on_grass(OUTER, POOL, x, y)
         if lit:
             col = mix("#FFF0CC", "#FFB868", rnd.random() * .7)
             op = .95
         elif in_pool:
-            col = mix("#B07A50", "#7A58A8", rnd.random())
-            op = .7
+            col = mix("#C89060", "#8A68B8", rnd.random())
+            op = .75
         elif warmth > .25 and rnd.random() < warmth:
             col = mix("#6A50C0", "#FFB060", warmth * .8)
             op = .8
@@ -232,7 +197,7 @@ def ground(cv, rnd, hole):
             col = rnd.choice(["#2A1A70", "#33227E", "#4A38A6", "#1C1052"])
             op = .9
         lean = rnd.uniform(-.35, .35) * h
-        w = (.35 if in_mark(mx, my) else .5) + depth * .8
+        w = (.35 if lit else .5) + depth * .8
         blades.append((y, f'<path d="M{f(x - w)} {f(y)}Q{f(x + lean * .3)} {f(y - h * .6)} {f(x + lean)} {f(y - h)}'
                           f'Q{f(x + lean * .3 + w * .4)} {f(y - h * .55)} {f(x + w)} {f(y)}Z" fill="{col}" opacity="{op}"/>'))
     blades.sort()
@@ -242,16 +207,13 @@ def ground(cv, rnd, hole):
     n = 0
     while n < 170:
         x, y = rnd.uniform(KX - 90, KX + 100), rnd.uniform(BASE + 2, H)
-        mx = KX + (x - KX - 4) / 1.6
-        my = BASE - (y - BASE - 1) / .4
-        if not in_mark(mx, my):
+        if not on_grass(DOORS[3], BEAM, x, y):
             continue
         n += 1
         depth = (y - 252) / 70
         h = 2.5 + depth * rnd.uniform(4, 9)
         lean = rnd.uniform(-.4, .4) * h
-        shade = mx < hinge + (KX + 16 * K - hinge) * .34
-        col = mix("#FFF4D8", "#FFB868", rnd.random() * .8) if not shade else mix("#C08A60", "#8A68B8", rnd.random())
+        col = mix("#FFF4D8", "#FFB868", rnd.random() * .8)
         lb.append((y, f'<path d="M{f(x - .4)} {f(y)}Q{f(x + lean * .3)} {f(y - h * .6)} {f(x + lean)} {f(y - h)}'
                       f'Q{f(x + lean * .3 + .2)} {f(y - h * .55)} {f(x + .4)} {f(y)}Z" fill="{col}"/>'))
     lb.sort()
