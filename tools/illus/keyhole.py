@@ -1,15 +1,67 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 # Copyright (c) 2026 Julia Klee
-"""The Keyhole: the small door into Wonderland, with the light coming through."""
+"""The Keyhole: the small door into Wonderland, with the light coming through.
+It is the WolOS mark made as an object: four nested arched doors on one floor line. The outer
+door is a polished brass frame, the next two are violet lacquer set deeper and deeper into it,
+and the smallest door is open: Wonderland light pours out of it, over the lacquer and the sill."""
 import math
+import os
 import random
-from kit import f, path, sample, volume, band, sparkle, KEY
-from parts import BRASS, BRASS_SPIN, glow, motes, ground, scallop, conic
+import sys
+sys.path.insert(1, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "brand"))
+from kit import f, volume, band, sparkle, KEY
+from parts import BRASS, glow, motes, ground
+from marks import door_boxes, door_geo, ACC, DEEP, NIGHT, LIGHT  # noqa: E402  (the one door geometry)
 
-# right half of the escutcheon outline, top to bottom (mirrored for the left)
-PLATE_R = [(256, 58), (266, 61), (273, 72), (270, 86), (280, 96), (302, 102), (324, 98), (338, 110), (334, 128),
-           (316, 136), (304, 146), (316, 186), (322, 232), (316, 278), (302, 318), (314, 340), (330, 360),
-           (328, 380), (312, 386), (296, 392), (286, 412), (274, 434), (256, 454)]
+# mark space: the brand mark is drawn on a 1024 grid; 1024 units = 81.92 of ours at k = 1, and
+# the point (512, 542.5) of that grid lands on (cx, cy).  So k means the same here as it did for
+# the earlier 64-unit mark: k = 1 is the 64 px mark.
+MARK_S = 0.08
+MARK_O = (512, 542.5)
+FLOOR = 880
+
+
+def _at(cx, cy, k):
+    s = MARK_S * k
+    return lambda x, y: (cx + (x - MARK_O[0]) * s, cy + (y - MARK_O[1]) * s)
+
+
+def door_list(cx, cy, k, n=4):
+    """The mark's n nested doors in our coords, outer first: [(x0, x1, floor_y, arch_y, r)]."""
+    P = _at(cx, cy, k)
+    out = []
+    for g in door_boxes(n):
+        x0, x1, yb, ya, r = door_geo(*g)
+        (X0, YB), (X1, YA) = P(x0, yb), P(x1, ya)
+        out.append((X0, X1, YB, YA, r * MARK_S * k))
+    return out
+
+
+def arch(d):
+    """One door as a closed path, drawn clockwise (so nested doors union under nonzero)."""
+    x0, x1, yb, ya, r = d
+    return f"M{f(x0)} {f(yb)}V{f(ya)}A{f(r)} {f(r)} 0 0 1 {f(x1)} {f(ya)}V{f(yb)}Z"
+
+
+def arch_pts(d, n=24):
+    """The door outline as points (for the light bands), clockwise from the bottom left."""
+    x0, x1, yb, ya, r = d
+    cx = (x0 + x1) / 2
+    pts = [(x0, yb), (x0, (yb + ya) / 2)]
+    pts += [(cx - r * math.cos(math.pi * i / n), ya - r * math.sin(math.pi * i / n)) for i in range(n + 1)]
+    return pts + [(x1, (yb + ya) / 2), (x1, yb), (cx, yb)]
+
+
+def in_door(d, x, y):
+    x0, x1, yb, ya, r = d
+    if not (x0 <= x <= x1 and y <= yb):
+        return False
+    return y >= ya or (x - (x0 + x1) / 2) ** 2 + (y - ya) ** 2 <= r * r
+
+
+# right half of the brass frame outline, top to bottom (mirrored for the left): the mark's outer
+# door at the size the character draws it
+PLATE_R = [(round(x), round(y)) for x, y in arch_pts(door_list(256, 260, 7.2)[0], 8)[6:]]
 
 
 def mirrored(half):
@@ -19,15 +71,11 @@ def mirrored(half):
 
 
 def mark_paths(cx, cy, k):
-    """The WolOS keyhole-with-ears as one outline (ears, head, foot), in our coords."""
-    def T(x, y):
-        return f"{f(cx + (x - 32) * k)} {f(cy + (y - 33) * k)}"
-    ears = (f"M{T(22, 22)}C{T(17, 14)} {T(16, 4)} {T(21, 3)}C{T(26, 2)} {T(28, 12)} {T(28, 21)}Z"
-            f"M{T(42, 22)}C{T(47, 14)} {T(48, 4)} {T(43, 3)}C{T(38, 2)} {T(36, 12)} {T(36, 21)}Z")
-    r = 15 * k
-    head = f"M{f(cx - r)} {f(cy)}a{f(r)} {f(r)} 0 1 0 {f(2 * r)} 0a{f(r)} {f(r)} 0 1 0 {f(-2 * r)} 0Z"
-    foot = f"M{T(27, 40)}L{T(24, 60)}H{T(40, 60).split()[0]}L{T(37, 40)}Z"
-    return ears, head, foot
+    """The WolOS mark, nested doors on one floor line, as three parts (outer door, the two
+    middle doors, the lit door). All clockwise, so together under nonzero they fill the outer
+    door's silhouette, and stroked they draw every door. In our coords."""
+    ds = door_list(cx, cy, k)
+    return arch(ds[0]), arch(ds[1]) + arch(ds[2]), arch(ds[3])
 
 
 def engraving(cv, d, w=2.2):
@@ -48,18 +96,23 @@ def screw(cv, x, y, r, rot):
 
 
 def wonderland_view(cv, box):
-    """What you see through the keyhole: a dusk garden, glowing."""
+    """What you see through the little door: a dusk garden, washed out by its own light."""
     x0, y0, x1, y1 = box
     cx = (x0 + x1) / 2
-    sky = cv.rad(cx, y0 + (y1 - y0) * .45, (y1 - y0) * .75,
-                 [(0, "#FFFFFF"), (0.3, "#FFF8E4"), (0.6, "#FFD9B8"), (0.85, "#E3B8FF"), (1, "#B08CFF")])
-    g = f'<rect x="{f(x0)}" y="{f(y0)}" width="{f(x1 - x0)}" height="{f(y1 - y0)}" fill="{sky}"/>'
     h = y1 - y0
     w = x1 - x0
-    g += glow(cv, cx, y0 + h * .44, w * .45, "#FFFFFF", .95)
+    sky = cv.rad(cx, y0 + h * .55, h * .8,
+                 [(0, "#FFFFFF"), (0.35, "#FFF7EC"), (0.7, LIGHT), (1, "#C4B2FF")])
+    g = f'<rect x="{f(x0)}" y="{f(y0)}" width="{f(w)}" height="{f(h)}" fill="{sky}"/>'
+    # a lawn and a path running away from the door
+    g += (f'<path d="M{f(x0)} {f(y0 + h * .74)}C{f(cx - w * .2)} {f(y0 + h * .68)} {f(cx + w * .2)} {f(y0 + h * .76)} '
+          f'{f(x1)} {f(y0 + h * .7)}V{f(y1)}H{f(x0)}Z" fill="#D6C8FF" opacity=".7"/>'
+          f'<path d="M{f(cx - w * .26)} {f(y1)}L{f(cx - w * .03)} {f(y0 + h * .72)}H{f(cx + w * .03)}L{f(cx + w * .26)} {f(y1)}Z" '
+          f'fill="#FFF8EC"/>')
+    g += glow(cv, cx, y0 + h * .6, w * .7, "#FFFFFF", .95)
     rnd = random.Random(5)
-    for _ in range(9):
-        g += sparkle(rnd.uniform(x0, x1), rnd.uniform(y0, y0 + h * .6), rnd.uniform(1.5, 3.5), "#fff", rnd.uniform(.6, 1))
+    for _ in range(6):
+        g += sparkle(rnd.uniform(x0, x1), rnd.uniform(y0, y0 + h * .55), rnd.uniform(1.5, 3), "#fff", rnd.uniform(.6, 1))
     return g
 
 
@@ -77,105 +130,108 @@ def rays(cv, cx, cy, n, length, spread, seed, color="#FFF4D6", op=.5, a0=0, a1=3
     return f'<g filter="{cv.blur(spread)}">{out}</g>'
 
 
-def keyhole(cv, backdrop=True, shadow=True):
-    g = ""
-    cx, cy, k = 256, 248, 2.55
-    if shadow:
-        g += ground(cv, 256, 488, 170, 14, .3)
-    if backdrop:
-        # a round panel of violet lacquered wood: the door
-        R = 222
-        g += (f'<circle cx="262" cy="270" r="{R}" fill="#1A0D4A" opacity=".45" filter="{cv.blur(14)}"/>')
-        panel = cv.rad(220, 190, R * 1.25, [(0, "#6E50F0"), (0.4, "#3E24B0"), (0.8, "#22106A"), (1, "#150845")])
-        dp = f"M{256 - R} 256a{R} {R} 0 1 0 {2 * R} 0a{R} {R} 0 1 0 {-2 * R} 0Z"
-        grain = ""
-        rnd = random.Random(8)
-        for i in range(34):
-            x = 40 + i * 13 + rnd.uniform(-3, 3)
-            grain += f"M{f(x)} 30C{f(x + rnd.uniform(-14, 14))} 160 {f(x + rnd.uniform(-14, 14))} 330 {f(x + rnd.uniform(-8, 8))} 490"
-        c = cv.clip(dp)
-        inner = (f'<path d="{grain}" stroke="#1E0E5C" stroke-width="1.2" fill="none" opacity=".25"/>'
-                 f'<path d="{grain}" stroke="#B9A6FF" stroke-width=".7" fill="none" opacity=".18" transform="translate(2 0)"/>'
-                 + band(cv, dp, [(34, 34), (478, 478)], (-KEY[0], -KEY[1]), 30, 22, "#0E0630", .55)
-                 + band(cv, dp, [(34, 34), (478, 478)], KEY, 10, 8, "#D8C8FF", .55)
-                 # the light from the keyhole warms the wood around it
-                 + glow(cv, cx, cy + 20, 210, "#FFD9A8", .55))
-        g += f'<path d="{dp}" fill="{panel}"/><g clip-path="{c}">{inner}</g>'
-        # moulding ring: a bevelled brass bead
-        for r, w, col, op in ((R - 6, 7, "#1E0E5C", .7), (R - 7, 4, cv.lin(60, 60, 452, 452, BRASS), 1),
-                              (R - 7.6, 1.2, "#FFF4C9", .9)):
-            g += f'<circle cx="256" cy="256" r="{r}" fill="none" stroke="{col}" stroke-width="{w}" opacity="{op}"/>'
-        g += (f'<circle cx="256" cy="256" r="{R - 26}" fill="none" stroke="#1E0E5C" stroke-width="3" opacity=".5" '
-              f'filter="{cv.blur(2)}"/><circle cx="256" cy="256" r="{R - 26}" fill="none" stroke="#B9A6FF" '
-              f'stroke-width="1" opacity=".5" transform="translate(-1 -1)"/>')
+def lip(d):
+    """The arch of a door without its floor edge: where one door meets the one around it."""
+    x0, x1, yb, ya, r = d
+    return f"M{f(x0)} {f(yb)}V{f(ya)}A{f(r)} {f(r)} 0 0 1 {f(x1)} {f(ya)}V{f(yb)}"
 
-    # ---- escutcheon: a scalloped rosette of polished brass
-    R0 = 168
-    rose = scallop(256, 256, R0, 9, 16)
-    rp = [(256 + R0 * math.cos(a / 40 * math.pi), 256 + R0 * math.sin(a / 40 * math.pi)) for a in range(80)]
-    g += f'<path d="{rose}" fill="#0A0420" opacity=".6" transform="translate(10 14)" filter="{cv.blur(12)}"/>'
-    g += f'<path d="{rose}" fill="#0A0420" opacity=".5" transform="translate(2 3)" filter="{cv.blur(2.5)}"/>'
-    sheen = conic(256, 256, R0 + 12, BRASS_SPIN)
-    g += volume(cv, rose, rp, "#C98F2C", shade=("#3A2205", .5, 12, 8), hi=("#FFF6D6", .7, 5, 3),
-                rim=("#C9B8FF", .9, 2.5, 1.5), extra=sheen)
-    # scallop ribs: each lobe catches its own highlight
-    ribs = ""
-    for i in range(16):
-        a = 2 * math.pi * (i + .5) / 16
-        x0, y0 = 256 + math.cos(a) * (R0 - 26), 256 + math.sin(a) * (R0 - 26)
-        x1, y1 = 256 + math.cos(a) * (R0 - 6), 256 + math.sin(a) * (R0 - 6)
-        ribs += f"M{f(x0)} {f(y0)}L{f(x1)} {f(y1)}"
-    g += engraving(cv, ribs, 1.6)
-    # bevelled groove, then the engine-turned inner field
-    for r, w, col, op, dx in ((R0 - 30, 6, "#3A2205", .6, 0), (R0 - 30, 2, "#FFF1C0", .8, -1.2)):
-        g += (f'<circle cx="{256 + dx}" cy="{256 + dx}" r="{r}" fill="none" stroke="{col}" stroke-width="{w}" '
-              f'opacity="{op}"/>')
-    Ri = R0 - 36
-    fd = f"M{256 - Ri} 256a{Ri} {Ri} 0 1 0 {2 * Ri} 0a{Ri} {Ri} 0 1 0 {-2 * Ri} 0Z"
-    fpts = [(256 + Ri * math.cos(a / 40 * math.pi), 256 + Ri * math.sin(a / 40 * math.pi)) for a in range(80)]
-    guil = ""
-    for i in range(96):
-        a = 2 * math.pi * i / 96
-        guil += (f"M{f(256 + math.cos(a) * 66)} {f(256 + math.sin(a) * 66)}"
-                 f"L{f(256 + math.cos(a) * (Ri - 4))} {f(256 + math.sin(a) * (Ri - 4))}")
-    field = (conic(256, 256, Ri + 4, BRASS_SPIN, phase=20)
-             + f'<path d="{guil}" stroke="#5E3A08" stroke-width=".9" opacity=".35"/>'
-             + f'<path d="{guil}" stroke="#FFF1C0" stroke-width=".5" opacity=".45" transform="rotate(1.2 256 256)"/>'
-             + "".join(f'<circle cx="256" cy="256" r="{r}" fill="none" stroke="#5E3A08" stroke-width=".9" opacity=".4"/>'
-                       for r in (Ri - 10, Ri - 14)))
-    g += volume(cv, fd, fpts, "#D79E36", shade=("#FFF1C0", .45, 8, 5), hi=("#4A2A05", .45, 8, 5), extra=field)
-    for a in (-90, 90, 0, 180):
-        x, y = 256 + math.cos(math.radians(a)) * (R0 - 17), 256 + math.sin(math.radians(a)) * (R0 - 17)
-        g += screw(cv, x, y, 6.5, a + 37)
 
-    # ---- the keyhole itself (the WolOS mark, cut through)
-    ears, head, foot = mark_paths(cx, cy, k)
-    hole = ears + head + foot
-    # a raised brass lip around the hole
-    g += (f'<path d="{hole}" fill="none" stroke="#3A2205" stroke-width="12" stroke-linejoin="round" opacity=".55" '
-          f'filter="{cv.blur(3)}" transform="translate(2 3)"/>')
-    g += (f'<path d="{hole}" fill="none" stroke="{cv.lin(cx - 60, cy - 90, cx + 60, cy + 90, [(0, "#FFF4C9"), (0.5, "#D79E36"), (1, "#6B4410")])}" '
-          f'stroke-width="9" stroke-linejoin="round"/>')
-    hc = cv.clip(hole)
-    x0, y0, x1, y1 = cx - 17 * k, cy - 31 * k, cx + 17 * k, cy + 28 * k
-    view = wonderland_view(cv, (x0, y0, x1, y1))
-    # inner wall of the hole: the brass is thick, the light comes from deep inside
-    wall = (f'<g filter="{cv.blur(2.5)}"><path d="M{f(x0 - 40)} {f(y0 - 40)}H{f(x1 + 40)}V{f(y1 + 40)}H{f(x0 - 40)}Z{hole}" '
-            f'fill-rule="evenodd" fill="#6B4410" transform="translate(6 8)" opacity=".9"/></g>'
-            f'<g filter="{cv.blur(1.2)}"><path d="M{f(x0 - 40)} {f(y0 - 40)}H{f(x1 + 40)}V{f(y1 + 40)}H{f(x0 - 40)}Z{hole}" '
-            f'fill-rule="evenodd" fill="#F6C76A" transform="translate(3 4)" opacity=".9"/></g>')
-    g += f'<g clip-path="{hc}">{view}{wall}</g>'
+def recess(cv, d, top, bottom, depth, u=1.0):
+    """A lacquered door set into the one around it: the lip above casts a shadow down into it
+    (the key light is top-left), its lower right edge catches the light, and the open door
+    further in warms its floor. `u` scales every distance (1 at k = 6.4)."""
+    x0, x1, yb, ya, r = d
+    p = arch(d)
+    pts = arch_pts(d)
+    fill = cv.lin(x0, ya - r, x1, yb, [(0, top), (1, bottom)])
+    inner = (band(cv, p, pts, (-.35, -1), (12 + depth * 3) * u, 6 * u, "#0A0628", .7)
+             + band(cv, p, pts, (-KEY[0], -KEY[1]), 2.5 * u, 1.5 * u, "#E9E3FF", .45)
+             + glow(cv, (x0 + x1) / 2, yb - (yb - ya + r) * .22, (x1 - x0) * .62, "#FFC98A", .30))
+    bead = cv.lin(x0, ya - r, x1, yb, [(0, "#7A4E12"), (0.45, "#C98F2C"), (1, "#FFF1C0")])
+    return (volume(cv, p, pts, fill, hi=("#0A0628", .55, (5 + depth * 2) * u, (4 + depth) * u), extra=inner)
+            + f'<path d="{lip(d)}" fill="none" stroke="{bead}" stroke-width="{f(max((3.2 - depth * .6) * u, .8))}"/>')
 
-    # ---- light pouring out, towards us: soft on the brass, plain in the air beyond
+
+def light_heart(ds):
+    """Where the light is brightest: low inside the little open door."""
+    lx0, lx1, lyb, lya, lr = ds[3]
+    return (lx0 + lx1) / 2, lyb - (lyb - lya + lr) * .45
+
+
+def door_set(cv, cx, cy, k, bead=True):
+    """The mark as an object: the outer door in violet lacquer, two lacquered doors set deeper,
+    the little one open on Wonderland with its light pouring out over the lacquer.
+    Same placement as mark_paths(cx, cy, k)."""
+    u = k / 6.4
+    ds = door_list(cx, cy, k)
+    outer, mid, deep, lit = ds
+    x0, x1, yb, ya, r = outer
+    lx0, lx1, lyb, lya, lr = lit
+    lcx, lcy = light_heart(ds)
+    po, pts = arch(outer), arch_pts(outer)
+    lacquer = cv.lin(x0, ya - r, x1, yb, [(0, "#A48CFF"), (0.35, ACC), (1, "#5A3BE0")])
+    e = 18 * u
+    gloss = (f'<path d="M{f(x0 + e)} {f(ya + 40 * u)}V{f(ya)}A{f(r - e)} {f(r - e)} 0 0 1 {f((x0 + x1) / 2 - 10 * u)} '
+             f'{f(ya - r + e)}" fill="none" stroke="#FFFFFF" stroke-width="{f(10 * u)}" stroke-linecap="round" '
+             f'opacity=".28" filter="{cv.blur(4 * u)}"/>')
+    g = volume(cv, po, pts, lacquer, shade=("#1E0E5C", .55, 16 * u, 10 * u), hi=("#FFFFFF", .45, 6 * u, 4 * u),
+               rim=("#FFD9A8", .8, 3 * u, 1.6 * u), extra=gloss)
+    if bead:
+        bd = cv.lin(x0, ya - r, x1, yb, [(0, "#FFF4C9"), (0.3, "#E9B654"), (0.6, "#9A6618"), (0.8, "#F2C766"), (1, "#7A4E12")])
+        g += (f'<path d="{lip(outer)}" fill="none" stroke="#3A2205" stroke-width="{f(7 * u)}" opacity=".35" '
+              f'transform="translate({f(u)} {f(2 * u)})" filter="{cv.blur(1.5 * u)}"/>'
+              f'<path d="{lip(outer)}" fill="none" stroke="{bd}" stroke-width="{f(5 * u)}"/>'
+              f'<path d="{lip(outer)}" fill="none" stroke="#FFF6D6" stroke-width="{f(1.2 * u)}" opacity=".8" '
+              f'transform="translate({f(-.8 * u)} {f(-.8 * u)})"/>')
+    g += recess(cv, mid, "#6446F0", DEEP, 1, u)
+    g += recess(cv, deep, "#3F27B0", NIGHT, 2, u)
+    # the little door is open: Wonderland beyond, a lavender jamb catching its light
+    pl, lpts = arch(lit), arch_pts(lit)
+    view = wonderland_view(cv, (lx0, lya - lr, lx1, lyb))
+    jamb = (band(cv, pl, lpts, KEY, 5 * u, 3 * u, "#7A5CCF", .55)
+            + band(cv, pl, lpts, KEY, 1.5 * u, u, "#FFFFFF", .8))
+    g += f'<g clip-path="{cv.clip(pl)}">{view}{jamb}</g>'
+    # its light across the lacquer (only inside the doors) and down onto the floor
     m = cv.id("m")
-    fade = cv.rad(cx, cy, 300, [(0, "#fff", .35), (0.45, "#fff", .4), (0.62, "#fff", 1), (1, "#fff", 1)])
-    cv.defs.append(f'<mask id="{m}" maskUnits="userSpaceOnUse" x="-100" y="-100" width="712" height="712">'
-                   f'<rect x="-100" y="-100" width="712" height="712" fill="{fade}"/></mask>')
-    beams = (rays(cv, cx, cy + 4, 30, 330, 5, 3, "#FFE3A6", 1, 0, 360, (5, 15))
-             + rays(cv, cx, cy + 4, 14, 300, 2, 6, "#FFFFFF", .9, 0, 360, (1.5, 4)))
-    pc = cv.clip("M36 256a220 220 0 1 0 440 0a220 220 0 1 0 -440 0Z")
-    g += f'<g clip-path="{pc}"><g mask="url(#{m})">{beams}</g></g>'
-    g += glow(cv, cx, cy, 120, "#FFE2A8", .45)
-    g += glow(cv, cx, cy - 6, 70, "#FFFFFF", .75)
-    g += motes(cv, (80, 70, 440, 440), 40, 21, "#FFF6DA", 6)
+    bx0, by0, bw, bh = x0 - 40 * u, ya - r - 40 * u, x1 - x0 + 80 * u, yb - ya + r + 80 * u
+    fade = cv.rad(lcx, lcy, 260 * u, [(0, "#fff", .2), (0.3, "#fff", .55), (0.7, "#fff", 1), (1, "#fff", 0)])
+    cv.defs.append(f'<mask id="{m}" maskUnits="userSpaceOnUse" x="{f(bx0)}" y="{f(by0)}" width="{f(bw)}" height="{f(bh)}">'
+                   f'<rect x="{f(bx0)}" y="{f(by0)}" width="{f(bw)}" height="{f(bh)}" fill="{fade}"/></mask>')
+    beams = (rays(cv, lcx, lcy, 18, 220 * u, 5 * u, 3, "#FFE3A6", .9, 190, 350, (5, 14))
+             + rays(cv, lcx, lcy, 8, 200 * u, 2 * u, 6, "#FFFFFF", .8, 200, 340, (1.5, 4)))
+    mc = cv.clip(arch(mid))
+    g += f'<g clip-path="{mc}"><g mask="url(#{m})">{beams}</g>{glow(cv, lcx, lyb, 150 * u, "#FFD9A0", .55)}</g>'
+    g += glow(cv, lcx, lcy, 90 * u, "#FFE8BC", .45) + glow(cv, lcx, lcy + 6 * u, 46 * u, "#FFFFFF", .7)
+    return g
+
+
+def keyhole(cv, backdrop=True, shadow=True):
+    """The character at 512x512. `backdrop` adds the warm halo the door stands in."""
+    g = ""
+    cx, cy, k = 256, 260, 7.2
+    ds = door_list(cx, cy, k)
+    outer, lit = ds[0], ds[3]
+    x0, x1, yb, ya, r = outer
+    lcx, lcy = light_heart(ds)
+    if shadow:
+        g += ground(cv, cx, yb + 14, 214, 18, .34)
+    if backdrop:
+        g += glow(cv, cx, cy + 10, 250, "#FFE2B0", .22) + glow(cv, cx, cy - 20, 200, "#B9A6FF", .18)
+    po = arch(outer)
+    g += f'<path d="{po}" fill="#140A3A" opacity=".45" transform="translate(10 14)" filter="{cv.blur(12)}"/>'
+    g += f'<path d="{po}" fill="#140A3A" opacity=".45" transform="translate(2 3)" filter="{cv.blur(2.5)}"/>'
+    g += door_set(cv, cx, cy, k)
+
+    # ---- the sill: the mark's floor line, a brass bar the doors stand on, lit from inside
+    sx0, sx1, sy, sh = x0 - 16, x1 + 16, yb - 2, 16
+    sill = f"M{f(sx0 + 6)} {f(sy)}H{f(sx1 - 6)}Q{f(sx1)} {f(sy)} {f(sx1)} {f(sy + 6)}V{f(sy + sh - 5)}Q{f(sx1)} {f(sy + sh)} " \
+           f"{f(sx1 - 6)} {f(sy + sh)}H{f(sx0 + 6)}Q{f(sx0)} {f(sy + sh)} {f(sx0)} {f(sy + sh - 5)}V{f(sy + 6)}Q{f(sx0)} {f(sy)} {f(sx0 + 6)} {f(sy)}Z"
+    spts = [(sx0, sy), (sx1, sy), (sx1, sy + sh), (sx0, sy + sh)]
+    sfill = cv.lin(0, sy, 0, sy + sh, [(0, "#FFF0B8"), (0.35, "#D9A040"), (1, "#6B4410")])
+    spill = cv.rad(lcx, sy, 150, [(0, "#FFFFFF", .95), (0.4, "#FFE6B8", .55), (1, "#FFE6B8", 0)],
+                   tf=f"translate({f(lcx)} {f(sy)}) scale(1 .25) translate({f(-lcx)} {f(-sy)})")
+    g += f'<path d="{sill}" fill="#140A3A" opacity=".4" transform="translate(4 6)" filter="{cv.blur(5)}"/>'
+    g += volume(cv, sill, spts, sfill, hi=("#FFF6D6", .6, 2, 1),
+                extra=f'<rect x="{f(sx0)}" y="{f(sy - 40)}" width="{f(sx1 - sx0)}" height="80" fill="{spill}"/>')
+    g += motes(cv, (lcx - 120, lit[3] - lit[4] - 120, lcx + 120, lit[2] - 10), 22, 21, "#FFF6DA", 5)
     return g
