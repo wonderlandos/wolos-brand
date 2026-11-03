@@ -176,38 +176,11 @@ wall("wonderland-dusk", [(0,"#FFD6C2"),(.5,"#C7A6F0"),(1,"#3B2A78")],
      wave("#ffffff",.2,1450)+wave("#2A1F5E",.4,1850))
 
 # ---------- tokens ----------
-tok = {
- "accent": {"light": ACCENT, "dark": ACCENT_D},
- "light": {"bg":"#F5F5F7","surface":"#FFFFFF","surface-2":"#ECECEF","menubar":"rgba(246,246,248,0.72)","dock":"rgba(255,255,255,0.55)","border":"rgba(0,0,0,0.10)","text":"#1C1C1E","text-2":"#6E6E73","shadow":"rgba(0,0,0,0.18)","red":"#FF3B30","orange":"#FF9500","yellow":"#FFCC00","green":"#34C759","blue":"#007AFF","accent":ACCENT,"accent-fg":"#FFFFFF","selection":"rgba(124,92,255,0.22)"},
- "dark": {"bg":"#1C1C1E","surface":"#2C2C2E","surface-2":"#3A3A3C","menubar":"rgba(28,28,30,0.62)","dock":"rgba(40,40,44,0.50)","border":"rgba(255,255,255,0.10)","text":"#F5F5F7","text-2":"#A1A1A6","shadow":"rgba(0,0,0,0.45)","red":"#FF453A","orange":"#FF9F0A","yellow":"#FFD60A","green":"#30D158","blue":"#0A84FF","accent":ACCENT_D,"accent-fg":"#FFFFFF","selection":"rgba(155,133,255,0.30)"},
- "radius": {"sm":"6px","md":"10px","lg":"14px","window":"12px","dock":"18px","icon":"22.5%"},
- "blur": {"menubar":"20px","dock":"24px","popover":"30px","hyprland_size":8,"hyprland_passes":3},
- "font": {"ui":"Inter","ui-fallback":["Inter","Cantarell","Noto Sans","DejaVu Sans","sans-serif"],"mono":"JetBrains Mono","mono-fallback":["JetBrains Mono","Fira Code","DejaVu Sans Mono","monospace"],"size":"13px","size-menubar":"13px","ports":["x11-fonts/inter","x11-fonts/jetbrains-mono","x11-fonts/noto-basic"]},
- "wallpaper": {"light":"wonderland-day.svg","dark":"wonderland-night.svg"},
-}
-w("tokens/colors.json", json.dumps(tok, indent=2))
-css = ["/* WolOS design tokens. Generated alongside colors.json/colors.sh; keep in sync. */", ":root {"]
-def cssblock(p):
-    return [f"  --wol-{k}: {v};" for k,v in tok[p].items()]
-css += cssblock("light")
-css += [f"  --wol-radius-{k}: {v};" for k,v in tok["radius"].items()]
-css += [f"  --wol-blur-{k}: {v};" for k,v in tok["blur"].items() if str(v).endswith("px")]
-css += [f'  --wol-font-ui: {", ".join(repr(f).replace(chr(39),chr(34)) if " " in f else f for f in tok["font"]["ui-fallback"])};',
-        f'  --wol-font-mono: {", ".join(repr(f).replace(chr(39),chr(34)) if " " in f else f for f in tok["font"]["mono-fallback"])};',
-        f'  --wol-font-size: {tok["font"]["size"]};', "}",
-        "@media (prefers-color-scheme: dark) {", "  :root {"] + ["  "+l for l in cssblock("dark")] + ["  }", "}",
-        '[data-theme="dark"] {'] + cssblock("dark") + ["}"]
-w("tokens/colors.css", "\n".join(css))
-sh = ["# WolOS design tokens (POSIX sh). Usage: . /usr/local/share/wolos/tokens/colors.sh", ": \"${WOL_THEME:=light}\""]
-for p in ("light","dark"):
-    for k,v in tok[p].items(): sh.append(f'WOL_{p.upper()}_{k.upper().replace("-","_")}=\'{v}\'')
-sh += ['if [ "$WOL_THEME" = dark ]; then _p=DARK; else _p=LIGHT; fi']
-for k in tok["light"]:
-    K=k.upper().replace("-","_"); sh.append(f'eval "WOL_{K}=\\${{WOL_${{_p}}_{K}}}"')
-sh += [f"WOL_RADIUS_{k.upper()}='{v}'" for k,v in tok["radius"].items()]
-sh += [f"WOL_BLUR_{k.upper()}='{v}'" for k,v in tok["blur"].items()]
-sh += [f"WOL_FONT_UI='{tok['font']['ui']}'", f"WOL_FONT_MONO='{tok['font']['mono']}'", "unset _p"]
-w("tokens/colors.sh", "\n".join(sh))
+# One source: tools/tokens.py (colors.json, colors.css, colors.sh and the icon palette).
+import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import tokens  # noqa: E402
+tokens.main()
 
 # ---------- icon theme ----------
 w("icons/index.theme", """[Icon Theme]

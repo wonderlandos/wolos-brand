@@ -8,8 +8,9 @@ import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(1, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "brand"))
 from kit import Canvas, svg  # noqa: E402
-import rabbit  # noqa: E402
+import mascots  # noqa: E402  (the flat Rabbit: design/tools/brand)
 import keyhole  # noqa: E402
 import cheshire  # noqa: E402
 import teacup  # noqa: E402
@@ -22,8 +23,7 @@ DEFAULT = os.path.normpath(os.path.join(HERE, "..", "..", "illustrations"))
 
 
 def char_rabbit():
-    cv = Canvas("wr")
-    return svg(512, 512, [cv], rabbit.rabbit(cv), "The White Rabbit")
+    return mascots.rabbit_svg()
 
 
 def char_keyhole():
@@ -68,7 +68,7 @@ ITEMS = {
     "teacup": (char_teacup, [("@1x", 160, 160), ("@2x", 320, 320)]),
     "pocket-watch": (char_watch, [("@1x", 160, 160), ("@2x", 320, 320)]),
     "setup-welcome": (welcome.welcome, [("@1x", 480, 320), ("@2x", 960, 640)]),
-    "lock-peek": (scenes.peek, [("@1x", 320, 200), ("@2x", 640, 400)]),
+    "lock-peek": (mascots.rabbit_peek, [("@1x", 320, 200), ("@2x", 640, 400)]),
     "character-sheet": (lambda: scenes.sheet(CAST), [("@1x", 1600, 1000), ("@2x", 3200, 2000)]),
 }
 

@@ -1,32 +1,33 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 """WolOS icon set v2: one geometry for every icon. Python 3 stdlib only.
 
-  python3 design/tools/icons.py [--sheet OUT.png] [--overlay DIR]
+  python3 design/tools/icons.py [--sheet OUT.png] [--overlay DIR] [--symbolic-only]
+
+--symbolic-only writes design/icons/symbolic and nothing else (the symbolic grammar:
+.claude/brand/icons-symbolic/GRAMMAR.md in the product checkout).
 
 Writes
   design/icons/symbolic/<name>-symbolic.svg   16 grid, 1.5 px line, 2 px corner radius, currentColor
-  design/icons/apps/wolos-<name>.svg          24-cell pixel tile (the WolOS wordmark's cells)
-  design/icons/index.theme                    theme WolOS (same file as the overlay's)
+  design/icons/index.theme, dev.theme         theme WolOS (index.theme is the overlay's too)
+  design/icons/{apps,places,devices,mimetypes}/*.svg, aliases.tsv, the app PNGs below:
+                                              the Wonderland card, written by tools/icons/build.py
   <overlay>/usr/share/icons/WolOS/{48x48,128x128,512x512}/apps/wolos-<name>.png and index.theme
   (overlay default: desktop/overlay of the repo that has design/ as a submodule)
 
 Symbolic icons are drawn as lines and rings of width 1.5 and written as filled outlines (GTK 4.20
 draws stroked symbolics as blobs, crates/shell/tests/symbolic_icons.rs): every line is a capsule,
 every ring an outer contour plus a reversed inner one, so the default nonzero fill unions them.
-App icons are a grid of cells: a squarish tile with stepped corners, a dithered two-tone gradient
-(Bayer 8x8, as on wolos.org), a one-cell bevel and an edge that reads on light and dark grounds.
-The PNGs and the contact sheet are rasterised here from the same shapes (no external renderer).
+The full-colour icons (the Wonderland card, .claude/brand/icons-apps/LANGUAGE.md in the product
+checkout) are vector SVGs drawn by tools/icons/ (card.py, families.py, app_glyphs.py, checks.py) and
+rendered to PNG with rsvg-convert, the renderer GTK loads them with. The contact sheet shows both sets.
 """
 import math, os, struct, sys, zlib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DESIGN = os.path.normpath(os.path.join(HERE, ".."))
 SYM_DIR = os.path.join(DESIGN, "icons", "symbolic")
-APP_DIR = os.path.join(DESIGN, "icons", "apps")
 # Brand drawings kept as they are (the logo is not redrawn here).
 KEEP_SYMBOLIC = {"wolos-glyph-symbolic", "wolos-logo-symbolic"}
-KEEP_APPS = {"wolos-mark"}
-PNG_SIZES = (48, 128, 512)
 
 # ======================================================================================
 # Symbolic geometry
@@ -375,6 +376,29 @@ def moon(cx, cy, r, ox, oy, rr=None):
     return A(*c1, r1, *o) + A(*c2, r2, *i)
 
 
+def arc_outside(cx, cy, r, a0, a1, discs, gap=1.25):
+    """Arc a0..a1 with the runs inside any disc (x, y, radius + gap) left out: a shape behind a cloud."""
+    out, run = [], None
+    steps = max(2, int(abs(a1 - a0)))
+    for j in range(steps + 1):
+        a = a0 + (a1 - a0) * j / steps
+        x, y = cx + r * math.cos(math.radians(a)), cy + r * math.sin(math.radians(a))
+        hidden = any(math.hypot(x - dx, y - dy) < dr + gap for dx, dy, dr in discs)
+        if not hidden and run is None:
+            run = a
+        if (hidden or j == steps) and run is not None:
+            end = a if not hidden else a0 + (a1 - a0) * (j - 1) / steps
+            if abs(end - run) > 4:
+                out += A(cx, cy, r, run, end)
+            run = None
+    return out
+
+
+def moon_behind(cx, cy, r, ox, oy, rr, discs):
+    (c1, r1, o), (c2, r2, i) = moon_arcs(cx, cy, r, ox, oy, rr)
+    return arc_outside(*c1, r1, *o, discs) + arc_outside(*c2, r2, *i, discs)
+
+
 def moon_solid(cx, cy, r, ox, oy, rr=None):
     """Filled crescent (one contour: outer arc out, inner arc back)."""
     (c1, r1, o), (c2, r2, i) = moon_arcs(cx, cy, r, ox, oy, rr)
@@ -589,15 +613,16 @@ def globe():
     return C(8, 8, 6.25) + L(1.75, 8, 14.25, 8) + arc_through(8, 1.75, 8, 14.25, 2.75) + arc_through(8, 1.75, 8, 14.25, -2.75)
 
 
-def refresh(cx=8, cy=8, r=5.5):
+def refresh(cx=8, cy=8.75, r=5.25):
+    # cy 8.75 and head 2.75 keep the arrow head's cap inside the 1 px padding (ink y >= 1)
     a1 = 300
     t = math.radians(a1)
     tip = (cx + r * math.cos(t), cy + r * math.sin(t))
-    return A(cx, cy, r, 0, a1) + head(tip[0], tip[1], a1 + 98, 3.0)
+    return A(cx, cy, r, 0, a1) + head(tip[0], tip[1], a1 + 98, 2.75)
 
 
 def keyboard():
-    out = R(1.25, 3.75, 13.5, 8.5)
+    out = R(1.75, 3.75, 12.5, 8.5)
     for row, y in enumerate((6.25, 8.5)):
         for k in range(5):
             out += D(4.0 + k * 2.0, y, 0.7)
@@ -657,6 +682,77 @@ def puzzle():
 
 def sliders():
     return R(1.75, 2.75, 12.5, 4.0, 2.0) + D(12.25, 4.75, 1.5) + R(1.75, 9.25, 12.5, 4.0, 2.0) + C(3.75, 11.25, 1.0, w=1.5)
+
+
+# ---- v0.12 completion parts (.claude/brand/icons-symbolic/GRAMMAR.md) ------------------
+def same(name, other):
+    """One drawing, two names (the freedesktop name and the toolkit or app name)."""
+    SYMBOLIC[name + "-symbolic"] = list(SYMBOLIC[other + "-symbolic"])
+
+
+def mic_level(frac):
+    """Microphone with its level filled in, like the battery: the input level reads at a glance."""
+    out = [(1.0, mic())]
+    if frac > 0:
+        h = 5.25 * frac
+        out.append((1.0, F(7.0, 8.25 - h, 2.0, h, 1.0)))
+    return out
+
+
+def nodes3():
+    """Three linked nodes: a group of machines (network-workgroup), not one cable tree."""
+    return C(8, 3.75, 2.0) + C(3.75, 12.0, 2.0) + C(12.25, 12.0, 2.0) + \
+        L(6.9, 5.55, 4.85, 10.2) + L(9.1, 5.55, 11.15, 10.2) + L(5.75, 12.0, 10.25, 12.0)
+
+
+def share_nodes():
+    return C(11.75, 3.75, 2.0) + C(4.25, 8.0, 2.0) + C(11.75, 12.25, 2.0) + L(6.0, 7.0, 10.0, 4.75) + L(6.0, 9.0, 10.0, 11.25)
+
+
+def cell_bars(level, n=4):
+    out = []
+    for i in range(n):
+        h = 3.0 + 3.0 * i
+        out.append((1.0 if i < level else 0.35, F(1.75 + i * 3.25, 13.75 - h, 2.25, h, 0.75)))
+    return out
+
+
+def lock_open(x=3.0, y=7.5, w=10.0, h=6.25, sh=3.0):
+    cx = x + w / 2
+    return R(x, y, w, h) + A(cx, y - 2.75, sh, 180, 360) + P([(cx + sh, y - 2.75), (cx + sh, y)]) + D(cx, y + h / 2, 1.0)
+
+
+def code():
+    return chevron("left", 7.0, cx=3.75, r=0.5) + chevron("right", 7.0, cx=12.25, r=0.5) + L(9.25, 3.0, 6.75, 13.0)
+
+
+def heart():
+    t = math.radians(135)
+    lx, ly = 5.5 + 2.5 * math.cos(t), 6.25 + 2.5 * math.sin(t)
+    return A(5.5, 6.25, 2.5, 135, 360) + A(10.5, 6.25, 2.5, 180, 405) + P([(lx, ly), (8, 13.0), (16 - lx, ly)], r=0.75)
+
+
+def octagon(cx=8, cy=8, r=6.25):
+    return [(cx + r * math.cos(math.radians(22.5 + 45 * k)), cy + r * math.sin(math.radians(22.5 + 45 * k))) for k in range(8)]
+
+
+def webcam():
+    return C(8, 6.75, 5.0) + C(8, 6.75, 1.75) + L(8, 11.75, 8, 13.75) + L(4.75, 14.0, 11.25, 14.0)
+
+
+def key():
+    return C(4.75, 8, 3.0) + L(7.75, 8, 14.0, 8) + L(11.25, 8, 11.25, 10.75) + L(14.0, 8, 14.0, 10.0)
+
+
+def letter_a():
+    return P([(3.0, 13.75), (8, 2.25), (13.0, 13.75)], r=0.75) + L(5.0, 9.5, 11.0, 9.5)
+
+
+def full_arrows(out=True):
+    """Fullscreen (out) and back (in): two diagonal arrows on the corners."""
+    if out:
+        return arrow(9.5, 6.5, 13.75, 2.25, 3.25) + arrow(6.5, 9.5, 2.25, 13.75, 3.25)
+    return arrow(13.75, 2.25, 9.25, 6.75, 3.25) + arrow(2.25, 13.75, 6.75, 9.25, 3.25)
 
 
 SYMBOLIC = {}
@@ -744,7 +840,7 @@ def build_symbolic():
     sym("system-lock-screen", lock())
     sym("channel-secure", lock())
     sym("security-high", shield() + P([(5.5, 8.0), (7.25, 9.75), (10.5, 6.25)], r=0.5))
-    sym("system-users", person(6.0, 2.0, 0.85) + C(11.5, 4.25, 1.75) + A(11.5, 12.0, 4.0, 255, 330))
+    sym("system-users", person(6.0, 2.0, 0.85) + C(11.25, 4.25, 1.75) + A(11.25, 12.0, 3.75, 255, 330))
     sym("avatar-default", C(8, 8, 6.25) + C(8, 6.5, 2.25) + A(8, 15.25, 5.25, 235, 305))
     sym("user-available", person())
     sym("emblem-system", gear(8, 8, 6.25, 4.5, 8, 1.75))
@@ -756,7 +852,7 @@ def build_symbolic():
     sym("package-x-generic", R(2.25, 6.0, 11.5, 8.0) + R(1.5, 2.25, 13.0, 3.75, 1.25) + L(6.5, 8.75, 9.5, 8.75))
     sym("application-x-addon", puzzle())
     sym("printer", R(1.75, 5.75, 12.5, 5.5) + P([(4.5, 5.75), (4.5, 2.0), (11.5, 2.0), (11.5, 5.75)], r=1.0) + R(4.5, 9.0, 7.0, 5.0, 1.0) + D(11.75, 7.75, 0.8))
-    sym("computer", R(2.75, 2.75, 10.5, 7.5) + L(1.25, 12.75, 14.75, 12.75))
+    sym("computer", R(2.75, 2.75, 10.5, 7.5) + L(1.75, 12.75, 14.25, 12.75))
     sym("video-display", monitor())
     sym("preferences-desktop-screensaver", monitor() + moon(8, 6.5, 2.5, 1.5, -1.0, 2.0))
     sym("user-desktop", monitor() + D(5.0, 5.0, 0.8) + D(5.0, 7.75, 0.8))
@@ -776,9 +872,8 @@ def build_symbolic():
     sym("network-wireless-signal-none", *wifi(0))
     sym("network-wireless-offline", *wifi(0), slash())
     sym("network-wireless-encrypted", *wifi(2)[:3], R(10.0, 11.0, 4.25, 3.25, 1.0) + A(12.125, 11.0, 1.25, 180, 360))
-    sym("network-workgroup", R(5.75, 1.75, 4.5, 3.5, 1.0) + R(1.75, 10.75, 4.5, 3.5, 1.0) + R(9.75, 10.75, 4.5, 3.5, 1.0) +
-        L(8, 5.25, 8, 8.0) + P([(4.0, 10.75), (4.0, 8.0), (12.0, 8.0), (12.0, 10.75)], r=1.0))
-    sym("bluetooth-active", bluetooth())
+    sym("network-workgroup", nodes3())
+    sym("bluetooth-active", bluetooth() + D(2.25, 8, 0.9) + D(13.75, 8, 0.9))
     sym("bluetooth", bluetooth())
     sym("bluetooth-disabled", (0.35, bluetooth()), slash())
     sym("phone", R(4.25, 1.75, 7.5, 12.5) + L(7.0, 11.75, 9.0, 11.75))
@@ -789,7 +884,8 @@ def build_symbolic():
     sym("input-gaming", gamepad())
     sym("applications-games", gamepad())
     sym("applications-engineering", L(3.0, 13.0, 8.6, 7.4) + A(10.5, 5.5, 2.75, 0, 270))
-    sym("applications-graphics", P([(3.0, 13.0), (3.5, 10.25), (10.75, 3.0), (13.0, 5.25), (5.75, 12.5)], closed=True, r=0.75) + L(9.25, 4.5, 11.5, 6.75))
+    # a brush (the pencil is document-edit)
+    sym("applications-graphics", L(13.25, 2.75, 9.0, 7.0) + FP([(8.0, 6.5), (9.5, 8.0), (7.0, 12.25), (2.75, 13.25), (3.75, 9.0)]))
     sym("applications-multimedia", R(1.75, 2.75, 12.5, 10.5) + FP([(6.5, 5.75), (10.5, 8.0), (6.5, 10.25)]))
     sym("camera-photo", P([(1.75, 5.0), (5.0, 5.0), (6.25, 3.0), (9.75, 3.0), (11.0, 5.0), (14.25, 5.0), (14.25, 13.0), (1.75, 13.0)], closed=True, r=1.75) + C(8, 8.75, 2.5))
     sym("image-x-generic", frame_pic())
@@ -799,9 +895,10 @@ def build_symbolic():
     sym("audio-headphones", headphones())
     sym("audio-headset", headphones() + P([(12.75, 12.5), (12.75, 14.25), (8.5, 14.25)], r=1.25))
     sym("audio-input-microphone", mic())
-    sym("microphone-sensitivity-high", mic())
-    sym("microphone-sensitivity-medium", mic())
-    sym("microphone-sensitivity-low", mic())
+    # input level filled in like the battery (the three were one drawing)
+    sym("microphone-sensitivity-high", *mic_level(1.0))
+    sym("microphone-sensitivity-medium", *mic_level(0.6))
+    sym("microphone-sensitivity-low", *mic_level(0.25))
     sym("microphone-sensitivity-muted", (0.35, mic()), slash())
     sym("audio-volume-high", speaker(), *waves(3))
     sym("audio-volume-medium", speaker(), *waves(2))
@@ -846,17 +943,18 @@ def build_symbolic():
     sym("weather-clear-night", moon(7.5, 8.5, 5.75, 3.25, -2.5, 4.75))
     sym("weather-few-clouds", A(6.0, 6.0, 2.75, 120, 330) + L(6.0, 0.75 + 0.75, 6.0, 1.75) + L(1.5, 6.0, 2.5, 6.0) + L(2.75, 2.75, 3.5, 3.5) + L(9.25, 2.75, 8.5, 3.5) +
         cloud([(5.25, 11.25, 2.25), (9.25, 9.75, 3.75), (12.5, 11.75, 1.75)], 13.5))
-    sym("weather-few-clouds-night", moon(5.5, 5.75, 3.75, 2.25, -1.5, 3.0) +
+    # the moon sits behind the cloud (it crossed the cloud's outline; the sun of few-clouds is cut the same way)
+    sym("weather-few-clouds-night", moon_behind(5.5, 5.75, 3.75, 2.25, -1.5, 3.0, [(5.25, 11.25, 2.25), (9.25, 9.75, 3.75), (12.5, 11.75, 1.75)]) +
         cloud([(5.25, 11.25, 2.25), (9.25, 9.75, 3.75), (12.5, 11.75, 1.75)], 13.5))
     sym("weather-overcast", cloud_big())
     sym("weather-fog", cloud_high() + L(2.0, 12.0, 12.0, 12.0) + L(4.0, 14.25, 14.0, 14.25))
     sym("weather-showers", cloud_high() + L(5.0, 11.75, 4.25, 14.25) + L(8.25, 11.75, 7.5, 14.25) + L(11.5, 11.75, 10.75, 14.25))
     sym("weather-showers-scattered", cloud_high() + L(5.5, 11.75, 4.75, 14.25) + L(10.5, 11.75, 9.75, 14.25))
     sym("weather-snow", cloud_high() + D(5.0, 12.5, 0.9) + D(8.25, 14.0, 0.9) + D(11.5, 12.5, 0.9))
-    sym("weather-storm", cloud_high() + FP([(8.75, 10.5), (6.5, 13.0), (8.25, 13.0), (7.25, 15.0)], round_=False) + P([(8.75, 10.5), (6.5, 13.0), (8.25, 13.0), (7.25, 15.0)], r=0.25, w=1.25))
+    sym("weather-storm", cloud_high() + FP([(8.75, 10.25), (6.5, 12.5), (8.25, 12.5), (7.25, 14.25)], round_=False) + P([(8.75, 10.25), (6.5, 12.5), (8.25, 12.5), (7.25, 14.25)], r=0.25, w=1.25))
 
     # WolOS
-    sym("wolos-assistant", FP(sparkle(7.0, 9.0, 5.75)) + FP(sparkle(12.5, 3.5, 2.25), round_=False))
+    sym("wolos-assistant", FP(sparkle(7.25, 8.75, 5.25)) + FP(sparkle(12.25, 3.75, 2.25), round_=False))
     sym("wolos-effects", L(2.5, 13.5, 9.0, 7.0) + FP(sparkle(11.25, 4.75, 3.25), round_=False) + D(4.5, 4.0, 0.9) + D(13.0, 11.0, 0.9))
     sym("wolos-capture-screen", corners(1.75, 2.75, 12.5, 10.5, 3.25) + F(5.25, 6.0, 5.5, 4.0, 1.0))
     sym("wolos-capture-selection", dashed_rect(2.0, 2.75, 12.0, 10.5))
@@ -869,11 +967,145 @@ def build_symbolic():
     sym("wolos-dark-mode", moon(8.0, 8.0, 6.0, 3.25, -2.75, 5.0) + moon_solid(8.0, 8.0, 6.0, 3.25, -2.75, 5.0))
     sym("wolos-dock", R(1.75, 2.75, 12.5, 10.5) + F(4.5, 9.5, 7.0, 2.0, 1.0))
     sym("wolos-reduce-motion", C(10.25, 8, 3.5) + L(1.75, 5.5, 4.25, 5.5) + L(1.75, 8.0, 5.0, 8.0) + L(1.75, 10.5, 4.25, 10.5))
-    sym("wolos-restore", A(8, 8, 5.75, 160, 450) + head(8 + 5.75 * math.cos(math.radians(160)), 8 + 5.75 * math.sin(math.radians(160)), 75, 3.0) + P([(8, 5.0), (8, 8.25), (10.25, 9.5)], r=0.5))
+    sym("wolos-restore", A(8.75, 8, 5.25, 160, 450) + head(8.75 + 5.25 * math.cos(math.radians(160)), 8 + 5.25 * math.sin(math.radians(160)), 75, 2.75) + P([(8.75, 5.0), (8.75, 8.25), (11.0, 9.5)], r=0.5))
     sym("wolos-widgets", R(1.75, 1.75, 5.25, 5.25, 1.75) + R(9.0, 1.75, 5.25, 5.25, 1.75) + R(1.75, 9.0, 12.5, 5.25, 1.75))
     sym("wolos-kit", R(1.75, 5.0, 12.5, 9.0) + P([(5.5, 5.0), (5.5, 2.5), (10.5, 2.5), (10.5, 5.0)], r=1.0) + L(1.75, 8.75, 14.25, 8.75))
     # the console module (registry icon, docs/modules/modules.md): a window with a prompt
     sym("utilities-terminal", R(1.75, 2.75, 12.5, 10.5) + P([(4.75, 6.0), (6.75, 8.0), (4.75, 10.0)], r=0.5) + L(8.5, 10.0, 11.25, 10.0))
+
+    # ---- v0.12 completion: names the product, GTK/libadwaita and the file chooser ask for that
+    # fell back to the system theme (.claude/brand/icons-symbolic/INVENTORY.md) -------------------
+    # product
+    sym("utilities-system-monitor", R(1.75, 2.75, 12.5, 10.5) + P([(4.0, 8.5), (5.75, 8.5), (7.0, 5.75), (9.0, 11.0), (10.25, 8.5), (12.0, 8.5)], r=0.5))
+    sym("web-browser", C(8, 8, 6.25) + arc_through(8, 1.75, 8, 14.25, 2.75) + arc_through(8, 1.75, 8, 14.25, -2.75) +
+        L(2.75, 5.5, 13.25, 5.5) + L(2.75, 10.5, 13.25, 10.5))
+    same("applications-internet", "web-browser")
+    # places, devices and media (file chooser sidebar, mounts)
+    sym("user-trash-full", (0.35, F(5.0, 5.25, 6.0, 7.5, 0.5)), (1.0, trash()))
+    sym("user-bookmarks", P([(4.0, 1.75), (12.0, 1.75), (12.0, 14.25), (8, 10.75), (4.0, 14.25)], closed=True, r=1.25))
+    same("bookmark-new", "user-bookmarks")
+    same("document-open-recent", "wolos-restore")
+    sym("folder-open", P([(12.5, 6.25), (12.5, 4.75), (7.5, 4.75), (6.0, 3.0), (1.75, 3.0), (1.75, 13.0)], r=1.5) +
+        P([(1.75, 13.0), (4.25, 7.0), (14.5, 7.0), (12.0, 13.0)], closed=True, r=1.0))
+    sym("folder-remote", folder() + C(8, 9.0, 1.75, w=1.25) + L(4.5, 9.0, 6.25, 9.0, w=1.25) + L(9.75, 9.0, 11.5, 9.0, w=1.25))
+    sym("folder-saved-search", folder() + C(7.5, 8.5, 1.75, w=1.25) + L(8.75, 9.75, 10.25, 11.25, w=1.25))
+    sym("folder-templates", folder() + P([(6.25, 7.25), (9.75, 7.25), (9.75, 11.0), (6.25, 11.0)], closed=True, r=0.5, w=1.25))
+    same("inode-directory", "folder")
+    same("go-home", "user-home")
+    sym("media-optical", C(8, 8, 6.25) + C(8, 8, 1.75))
+    sym("drive-optical", R(1.75, 4.25, 12.5, 7.5) + L(4.5, 6.75, 11.5, 6.75) + D(11.25, 9.5, 0.9))
+    sym("media-removable", R(4.25, 6.0, 7.5, 8.25) + R(5.75, 1.75, 4.5, 4.25, 0.75) + L(7.25, 3.5, 7.25, 3.5) + L(8.75, 3.5, 8.75, 3.5))
+    sym("media-flash", P([(5.75, 1.75), (12.25, 1.75), (12.25, 14.25), (3.75, 14.25), (3.75, 3.75)], closed=True, r=1.25) +
+        L(6.75, 4.25, 6.75, 6.0) + L(8.75, 4.25, 8.75, 6.0) + L(10.25, 4.25, 10.25, 6.0))
+    sym("camera-web", webcam())
+    sym("camera-disabled", (0.35, webcam()), slash())
+    same("camera-web-disabled", "camera-disabled")
+    sym("camera-video", R(1.75, 4.25, 8.5, 7.5) + P([(10.25, 7.0), (14.25, 4.75), (14.25, 11.25), (10.25, 9.0)], closed=True, r=0.5))
+    sym("ac-adapter", L(6.0, 1.75, 6.0, 4.75) + L(10.0, 1.75, 10.0, 4.75) +
+        P([(3.75, 5.0), (12.25, 5.0), (12.25, 8.0), (8, 11.5), (3.75, 8.0)], closed=True, r=1.5) + L(8, 11.5, 8, 14.25))
+    sym("scanner", R(1.75, 7.75, 12.5, 6.0, 1.5) + L(4.5, 10.75, 11.5, 10.75) + L(2.5, 6.0, 13.25, 2.25))
+    sym("input-dialpad", *[(1.0, D(4.0 + 4.0 * (k % 3), 2.75 + 3.5 * (k // 3), 1.15)) for k in range(9)], (1.0, D(8.0, 13.25, 1.15)))
+    same("smartphone", "phone")
+    sym("thunderbolt", bolt())
+    # status
+    sym("network-cellular-signal-excellent", *cell_bars(4))
+    sym("network-cellular-signal-good", *cell_bars(3))
+    sym("network-cellular-signal-ok", *cell_bars(2))
+    sym("network-cellular-signal-weak", *cell_bars(1))
+    sym("network-cellular-signal-none", *cell_bars(0))
+    sym("network-cellular-offline", *cell_bars(0), (1.0, slash()))
+    same("network-cellular-no-route", "network-cellular-offline")
+    same("network-wired-disconnected", "network-offline")
+    sym("network-wireless-hotspot", D(8, 8, 1.5) + A(8, 8, 3.75, -50, 50) + A(8, 8, 3.75, 130, 230) + A(8, 8, 6.25, -45, 45) + A(8, 8, 6.25, 135, 225))
+    sym("network-vpn", key())
+    sym("airplane-mode", P([(8, 1.75), (9.0, 3.0), (9.0, 6.0), (14.25, 9.0), (14.25, 10.5), (9.0, 9.0), (9.0, 12.0), (10.75, 13.25),
+                            (10.75, 14.25), (8, 13.5), (5.25, 14.25), (5.25, 13.25), (7.0, 12.0), (7.0, 9.0), (1.75, 10.5), (1.75, 9.0),
+                            (7.0, 6.0), (7.0, 3.0)], closed=True, r=0.5))
+    sym("location-services-active", A(8, 6.25, 4.75, 142.2, 397.8) + L(8 + 4.75 * math.cos(math.radians(37.8)), 6.25 + 4.75 * math.sin(math.radians(37.8)), 8, 14.25) +
+        L(8 + 4.75 * math.cos(math.radians(142.2)), 6.25 + 4.75 * math.sin(math.radians(142.2)), 8, 14.25) + D(8, 6.25, 1.75))
+    sym("location-services-disabled", (0.35, SYMBOLIC["mark-location-symbolic"][0][1]), (1.0, slash()))
+    sym("find-location", C(8, 8, 4.75) + L(8, 1.75, 8, 4.0) + L(8, 12.0, 8, 14.25) + L(1.75, 8, 4.0, 8) + L(12.0, 8, 14.25, 8) + D(8, 8, 1.25))
+    sym("microphone-disabled", (0.35, mic()), slash())
+    sym("touchpad-disabled", (0.35, SYMBOLIC["input-touchpad-symbolic"][0][1]), (1.0, slash()))
+    sym("screen-shared", monitor() + arrow(8, 9.0, 8, 4.75, 2.75))
+    sym("security-low", shield() + L(8, 5.0, 8, 8.0) + D(8, 10.5, 0.95))
+    sym("security-medium", shield() + FP([(8, 3.5), (4.25, 4.75), (4.25, 7.75), (8, 12.25)], round_=False))
+    sym("user-away", C(8, 8, 6.25) + P([(8, 4.5), (8, 8), (10.75, 9.75)], r=0.5))
+    same("user-idle", "user-away")
+    sym("user-busy", C(8, 8, 6.25) + L(5.0, 8, 11.0, 8))
+    sym("user-offline", C(8, 8, 6.25))
+    sym("emblem-favorite", heart())
+    same("emblem-important", "dialog-error")
+    same("emblem-ok", "emblem-default")
+    same("emblem-synchronizing", "view-refresh")
+    sym("emblem-shared", share_nodes())
+    same("send-to", "emblem-shared")
+    same("document-send", "emblem-shared")
+    same("preferences-system-sharing", "emblem-shared")
+    same("weather-severe-alert", "dialog-warning")
+    sym("changes-prevent", lock())
+    sym("changes-allow", lock_open())
+    sym("alarm", C(8, 8.75, 5.0) + P([(8, 6.0), (8, 8.75), (10.0, 10.25)], r=0.5) + L(2.0, 3.75, 3.75, 2.0) + L(14.0, 3.75, 12.25, 2.0))
+    # actions (toolkit, libadwaita, file chooser, players, mail)
+    sym("list-drag-handle", *[(1.0, D(6.0 + 4.0 * (k % 2), 4.0 + 4.0 * (k // 2), 1.1)) for k in range(6)])
+    sym("tab-new", R(1.75, 2.75, 12.5, 10.5) + L(8, 5.5, 8, 10.5) + L(5.5, 8, 10.5, 8))
+    same("window-new", "tab-new")
+    sym("face-smile", C(8, 8, 6.25) + D(5.75, 6.25, 0.95) + D(10.25, 6.25, 0.95) + A(8, 8, 3.5, 30, 150))
+    sym("image-missing", dashed_rect(2.0, 2.75, 12.0, 10.5) + L(5.5, 6.0, 10.5, 10.0) + L(10.5, 6.0, 5.5, 10.0))
+    sym("application-x-executable", window_frame() + FP([(6.5, 7.75), (10.25, 9.75), (6.5, 11.75)]))
+    sym("system-run", C(8, 8, 6.25) + FP([(6.5, 5.25), (11.0, 8), (6.5, 10.75)]))
+    sym("system-suspend", C(8, 8, 6.25) + L(6.25, 5.5, 6.25, 10.5) + L(9.75, 5.5, 9.75, 10.5))
+    same("application-exit", "system-log-out")
+    sym("view-fullscreen", full_arrows(True))
+    sym("view-restore", full_arrows(False))
+    sym("sidebar-show", R(1.75, 2.75, 12.5, 10.5) + L(6.0, 2.75, 6.0, 13.25))
+    sym("sidebar-show-right", R(1.75, 2.75, 12.5, 10.5) + L(10.0, 2.75, 10.0, 13.25))
+    sym("view-dual", R(1.75, 2.75, 12.5, 10.5) + L(8, 2.75, 8, 13.25))
+    sym("process-stop", P(octagon(), closed=True, r=1.0) + L(5.25, 8, 10.75, 8))
+    sym("go-first", chevron("left", 9.0, cx=9.5) + L(3.75, 3.5, 3.75, 12.5))
+    sym("go-last", chevron("right", 9.0, cx=6.5) + L(12.25, 3.5, 12.25, 12.5))
+    sym("go-top", chevron("up", 9.0, cy=9.5) + L(3.5, 3.75, 12.5, 3.75))
+    sym("go-bottom", chevron("down", 9.0, cy=6.5) + L(3.5, 12.25, 12.5, 12.25))
+    sym("media-seek-backward", FP([(7.25, 4.0), (1.75, 8), (7.25, 12.0)]) + FP([(14.0, 4.0), (8.5, 8), (14.0, 12.0)]))
+    sym("media-seek-forward", FP([(8.75, 4.0), (14.25, 8), (8.75, 12.0)]) + FP([(2.0, 4.0), (7.5, 8), (2.0, 12.0)]))
+    sym("media-playlist-shuffle", P([(1.75, 4.5), (4.5, 4.5), (9.5, 11.5), (13.0, 11.5)], r=1.5) + head(13.75, 11.5, 0, 2.75) +
+        P([(1.75, 11.5), (4.5, 11.5), (9.5, 4.5), (13.0, 4.5)], r=1.5) + head(13.75, 4.5, 0, 2.75))
+    sym("media-playlist-repeat", P([(2.25, 9.5), (2.25, 4.5), (12.75, 4.5)], r=2.5) + head(13.5, 4.5, 0, 2.75) +
+        P([(13.75, 6.5), (13.75, 11.5), (3.25, 11.5)], r=2.5) + head(2.5, 11.5, 180, 2.75))
+    sym("view-sort-ascending", L(1.75, 4.0, 5.25, 4.0) + L(1.75, 8.0, 7.25, 8.0) + L(1.75, 12.0, 9.25, 12.0) + arrow(12.5, 13.25, 12.5, 2.75, 3.0))
+    sym("view-sort-descending", L(1.75, 4.0, 9.25, 4.0) + L(1.75, 8.0, 7.25, 8.0) + L(1.75, 12.0, 5.25, 12.0) + arrow(12.5, 2.75, 12.5, 13.25, 3.0))
+    sym("mail-send", P([(1.75, 7.25), (14.25, 1.75), (9.75, 14.25), (7.5, 8.5)], closed=True, r=0.75) + L(7.5, 8.5, 14.25, 1.75))
+    sym("mail-read", P([(1.75, 6.5), (8, 2.0), (14.25, 6.5), (14.25, 13.25), (1.75, 13.25)], closed=True, r=1.5) + P([(2.25, 7.0), (8, 10.5), (13.75, 7.0)], r=1.0))
+    sym("mail-reply-sender", P([(13.75, 13.0), (13.75, 7.25), (3.0, 7.25)], r=4.0) + head(2.5, 7.25, 180, 3.5))
+    sym("mail-forward", P([(2.25, 13.0), (2.25, 7.25), (13.0, 7.25)], r=4.0) + head(13.5, 7.25, 0, 3.5))
+    same("document-print", "printer")
+    same("document-revert", "edit-undo")
+    same("help-browser", "dialog-question")
+    same("help-contents", "dialog-question")
+    sym("insert-link", R(1.75, 5.25, 7.5, 5.5, 2.75) + R(6.75, 5.25, 7.5, 5.5, 2.75))
+    same("insert-image", "image-x-generic")
+    sym("contact-new", person(6.25, 2.0, 0.85) + L(12.0, 5.0, 12.0, 9.5) + L(9.75, 7.25, 14.25, 7.25))
+    # categories, settings panels, file types
+    same("applications-system", "preferences-system")
+    same("applications-utilities", "applications-engineering")
+    sym("applications-science", P([(6.0, 1.75), (6.0, 6.25), (2.5, 12.0), (3.75, 14.0), (12.25, 14.0), (13.5, 12.0), (10.0, 6.25), (10.0, 1.75)], r=1.0) +
+        L(4.75, 1.75, 11.25, 1.75) + L(4.25, 9.75, 11.75, 9.75))
+    sym("applications-development", code())
+    same("text-x-script", "applications-development")
+    same("preferences-desktop-display", "video-display")
+    same("preferences-desktop-keyboard", "input-keyboard")
+    same("preferences-desktop-keyboard-shortcuts", "input-keyboard")
+    same("preferences-desktop-apps", "view-app-grid")
+    same("preferences-system-network", "network-wired")
+    same("preferences-system-privacy", "view-conceal")
+    sym("preferences-system-power", bolt())
+    sym("preferences-color", C(6.0, 6.0, 3.5) + C(10.0, 6.0, 3.5) + C(8, 10.0, 3.5))
+    sym("preferences-desktop-font", letter_a())
+    same("font-x-generic", "preferences-desktop-font")
+    same("application-x-firmware", "wolos-chip")
+    sym("video-x-generic", page() + FP([(6.5, 7.5), (10.25, 9.75), (6.5, 12.0)]))
+    sym("x-office-spreadsheet", page() + R(5.5, 7.0, 5.0, 5.0, 0.5, lw=1.25) + L(8, 7.0, 8, 12.0, w=1.25) + L(5.5, 9.5, 10.5, 9.5, w=1.25))
+    sym("x-office-presentation", R(1.75, 2.25, 12.5, 8.0, 1.5) + L(8, 10.25, 8, 11.75) + L(5.0, 14.0, 8, 11.75) + L(11.0, 14.0, 8, 11.75))
 
 
 # ======================================================================================
@@ -950,14 +1182,10 @@ def symbolic_svg(name):
 
 
 # ======================================================================================
-# App icons: 24 x 24 cells
+# Colour helpers (the full-colour icons are drawn by tools/icons/, see build.py)
 # ======================================================================================
-N = 24
-BAYER = [0, 32, 8, 40, 2, 34, 10, 42, 48, 16, 56, 24, 50, 18, 58, 26, 12, 44, 4, 36, 14, 46, 6, 38, 60, 28, 52, 20, 62, 30, 54, 22,
-         3, 35, 11, 43, 1, 33, 9, 41, 51, 19, 59, 27, 49, 17, 57, 25, 15, 47, 7, 39, 13, 45, 5, 37, 63, 31, 55, 23, 61, 29, 53, 21]
-bayer = lambda c, r: (BAYER[(r & 7) * 8 + (c & 7)] + 0.5) / 64
-
 LIGHT_BG, DARK_BG = "#F5F5F7", "#1C1C1E"
+INK = "#1C1C1E"
 
 
 def hx(c):
@@ -965,749 +1193,10 @@ def hx(c):
     return tuple(int(c[i:i + 2], 16) for i in (0, 2, 4))
 
 
-def tohex(rgb):
-    return "#%02X%02X%02X" % tuple(max(0, min(255, int(round(v)))) for v in rgb)
-
-
-def mix(a, b, t):
-    a, b = hx(a), hx(b)
-    return tohex(tuple(a[i] + (b[i] - a[i]) * t for i in range(3)))
-
-
-def lum(c):
-    def ch(v):
-        v /= 255
-        return v / 12.92 if v <= 0.04045 else ((v + 0.055) / 1.055) ** 2.4
-    r, g, b = hx(c)
-    return 0.2126 * ch(r) + 0.7152 * ch(g) + 0.0722 * ch(b)
-
-
-def contrast(a, b):
-    la, lb = lum(a), lum(b)
-    return (max(la, lb) + 0.05) / (min(la, lb) + 0.05)
-
-
-EDGE_MIN = 1.3   # tile edge against both the light and the dark ground (tests/icons_v2.rs checks it)
-
-
-def edge_color(c):
-    """The tile colour nudged until it separates from both grounds."""
-    for t in [i / 20 for i in range(21)]:
-        e = mix(c, "#000000", t) if lum(c) > 0.3 else mix(c, "#FFFFFF", t)
-        if contrast(e, LIGHT_BG) >= EDGE_MIN and contrast(e, DARK_BG) >= EDGE_MIN:
-            return e
-    return "#8E8E93"
-
-
-class Cells:
-    def __init__(self):
-        self.c = {}
-
-    def px(self, x, y, col):
-        if 0 <= x < N and 0 <= y < N:
-            self.c[(x, y)] = col
-
-    def rect(self, x, y, w, h, col):
-        for j in range(y, y + h):
-            for i in range(x, x + w):
-                self.px(i, j, col)
-
-    def disc(self, cx, cy, r, col, r0=-1.0):
-        for j in range(N):
-            for i in range(N):
-                d = math.hypot(i + 0.5 - cx, j + 0.5 - cy)
-                if r0 < d <= r:
-                    self.px(i, j, col)
-
-    def line(self, x0, y0, x1, y1, col, w=1):
-        dx, dy = abs(x1 - x0), -abs(y1 - y0)
-        sx, sy = (1 if x0 < x1 else -1), (1 if y0 < y1 else -1)
-        err = dx + dy
-        while True:
-            for a in range(w):
-                for b in range(w):
-                    self.px(x0 + a, y0 + b, col)
-            if x0 == x1 and y0 == y1:
-                break
-            e2 = 2 * err
-            if e2 >= dy:
-                err += dy
-                x0 += sx
-            if e2 <= dx:
-                err += dx
-                y0 += sy
-
-    def art(self, x, y, rows, pal):
-        for j, row in enumerate(rows):
-            for i, ch in enumerate(row):
-                if ch in pal:
-                    self.px(x + i, y + j, pal[ch])
-
-    def clear(self, x, y, w=1, h=1):
-        for j in range(y, y + h):
-            for i in range(x, x + w):
-                self.c.pop((i, j), None)
-
-
-TILE = (1, 1, 22, 21)   # x, y, w, h in cells; the row under it is the shadow
-TILE_R = 3.6
-
-
-def in_tile(i, j):
-    x, y, w, h = TILE
-    cx, cy = i + 0.5, j + 0.5
-    if not (x <= cx <= x + w and y <= cy <= y + h):
-        return False
-    qx = min(max(cx, x + TILE_R), x + w - TILE_R)
-    qy = min(max(cy, y + TILE_R), y + h - TILE_R)
-    return math.hypot(cx - qx, cy - qy) <= TILE_R
-
-
-APPS = {}
-
-
-def tile_shape():
-    return {(i, j) for j in range(N) for i in range(N) if in_tile(i, j)}, None
-
-
-def app(name, top, bottom, draw, kit=False, glyph_shadow=True, shape=tile_shape, ctx="apps"):
-    """ctx apps: design/icons/apps/wolos-<name>.svg (+ PNGs); other contexts: icons/<ctx>/<name>.svg."""
-    APPS[name] = (top, bottom, draw, kit, glyph_shadow, shape, ctx)
-
-
-def compose(name):
-    """name -> {(x, y): (hex, alpha, role)}."""
-    top, bottom, draw, kit, gshadow, shape, _ctx = APPS[name]
-    levels = [mix(top, bottom, k / 4) for k in range(5)]
-    grid = {}
-    tile_cells, post = shape()
-    y0 = min(j for _, j in tile_cells)
-    h = max(j for _, j in tile_cells) - y0 + 1
-    for (i, j) in tile_cells:
-        t = (j - y0) / (h - 1) * 4
-        lo = min(int(t), 3)
-        f = t - lo
-        col = levels[lo + 1] if bayer(i, j) < f else levels[lo]
-        grid[(i, j)] = (col, 1.0, "tile")
-    if post:
-        post(grid)
-    if kit:
-        # Kits: a lid band two cells deep, lighter (a box of things).
-        for (i, j) in tile_cells:
-            if j in (y0 + 3, y0 + 4):
-                grid[(i, j)] = (mix(grid[(i, j)][0], "#FFFFFF", 0.22), 1.0, "tile")
-            if j == y0 + 5:
-                grid[(i, j)] = (mix(grid[(i, j)][0], "#000000", 0.18), 1.0, "tile")
-    # bevel: first row lighter, last row darker
-    for (i, j) in tile_cells:
-        if (i, j - 1) not in tile_cells:
-            grid[(i, j)] = (mix(grid[(i, j)][0], "#FFFFFF", 0.28), 1.0, "tile")
-        elif (i, j + 1) not in tile_cells:
-            grid[(i, j)] = (mix(grid[(i, j)][0], "#000000", 0.22), 1.0, "tile")
-    # edge: every tile cell touching the outside (4-neighbourhood)
-    for (i, j) in tile_cells:
-        if any((i + a, j + b) not in tile_cells for a, b in ((1, 0), (-1, 0), (0, 1), (0, -1))):
-            grid[(i, j)] = (edge_color(grid[(i, j)][0]), 1.0, "edge")
-    # shadow under the tile
-    for (i, j) in tile_cells:
-        if (i, j + 1) not in tile_cells and (i, j + 1) not in grid:
-            grid[(i, j + 1)] = ("#000000", 0.20, "shadow")
-    g = Cells()
-    draw(g)
-    if gshadow:
-        for (i, j), col in g.c.items():
-            k = (i, j + 1)
-            if k not in g.c and k in tile_cells and grid[k][2] == "tile":
-                grid[k] = (mix(grid[k][0], "#000000", 0.28), 1.0, "tile")
-    for k, col in g.c.items():
-        if k in tile_cells:
-            grid[k] = (col, 1.0, "glyph")
-    return grid
-
-
-def app_svg(name):
-    grid = compose(name)
-    rows = []
-    for (role, alpha) in (("shadow", None), ("tile", None), ("edge", None), ("glyph", None)):
-        for j in range(N):
-            i = 0
-            while i < N:
-                v = grid.get((i, j))
-                if not v or v[2] != role:
-                    i += 1
-                    continue
-                k = i
-                while k + 1 < N and grid.get((k + 1, j)) == v:
-                    k += 1
-                cls = f' class="{role}"' if role in ("edge", "shadow") else ""
-                op = f' fill-opacity="{v[1]:g}"' if v[1] < 1 else ""
-                rows.append(f'<rect x="{i}" y="{j}" width="{k - i + 1}" height="1" fill="{v[0]}"{op}{cls}/>')
-                i = k + 1
-    return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="512" height="512" shape-rendering="crispEdges">'
-            f'<title>{name}</title>{"".join(rows)}</svg>\n')
-
-
-def render_app(name, size):
-    """RGBA rows (floats 0..1, straight alpha) of an app icon at size px, box-filtered cells."""
-    grid = compose(name)
-    s = size / N
-    # per output pixel: cells it covers with weights
-    def weights(p):
-        a, b = p / s, (p + 1) / s
-        out = []
-        c = int(a)
-        while c < N and c < b:
-            lo, hi = max(a, c), min(b, c + 1)
-            if hi > lo:
-                out.append((c, (hi - lo) / (b - a)))
-            c += 1
-        return out
-    W = [weights(p) for p in range(size)]
-    prem = {}
-    for k, (col, al, _r) in grid.items():
-        r, g, b = hx(col)
-        prem[k] = (r / 255 * al, g / 255 * al, b / 255 * al, al)
-    # horizontal pass per cell row
-    hrows = []
-    for j in range(N):
-        row = []
-        for p in range(size):
-            acc = [0.0, 0.0, 0.0, 0.0]
-            for c, wgt in W[p]:
-                v = prem.get((c, j))
-                if v:
-                    for q in range(4):
-                        acc[q] += v[q] * wgt
-            row.append(acc)
-        hrows.append(row)
-    out = []
-    for p in range(size):
-        ws = W[p]
-        if len(ws) == 1:
-            out.append(hrows[ws[0][0]])
-            continue
-        row = []
-        for x in range(size):
-            acc = [0.0, 0.0, 0.0, 0.0]
-            for c, wgt in ws:
-                v = hrows[c][x]
-                for q in range(4):
-                    acc[q] += v[q] * wgt
-            row.append(acc)
-        out.append(row)
-    return out
-
-
-# ---- app glyphs ----------------------------------------------------------------------
-WHITE = "#FFFFFF"
-INK = "#1C1C1E"
-VIOLET = "#7C5CFF"
-
-
-def g_files(g):
-    g.rect(4, 6, 7, 2, "#D4E8FF")
-    g.rect(4, 8, 16, 11, "#D4E8FF")
-    g.rect(4, 10, 16, 9, WHITE)
-    g.rect(9, 13, 6, 1, "#9CC8FF")
-
-
-def g_mail(g):
-    g.rect(4, 7, 16, 11, WHITE)
-    for k in range(7):
-        g.px(4 + k, 7 + k, "#2F7BF0")
-        g.px(19 - k, 7 + k, "#2F7BF0")
-    g.px(11, 14, "#2F7BF0")
-    g.px(12, 14, "#2F7BF0")
-
-
-def g_calendar(g):
-    g.rect(4, 4, 16, 4, "#FF3B30")
-    g.px(7, 3, "#8E8E93"), g.px(16, 3, "#8E8E93")
-    for r in range(4):
-        for c in range(5):
-            x, y = 5 + c * 3, 10 + r * 2.5
-            col = VIOLET if (r, c) == (1, 2) else "#C7C7CC"
-            g.rect(x, int(y), 2, 2 if (r, c) == (1, 2) else 1, col)
-
-
-def g_notes(g):
-    g.rect(5, 4, 14, 3, "#E8A400")
-    g.rect(5, 7, 14, 13, "#FFF8DC")
-    for y in (10, 13, 16):
-        g.rect(7, y, 10 if y != 16 else 6, 1, "#B8962E")
-
-
-def g_photos(g):
-    cols = ["#FF9500", "#FFCC00", "#9BE15D", "#34C759", "#32ADE6", "#5856D6", "#AF52DE", "#FF3B30"]
-    for k, c in enumerate(cols):
-        t = math.radians(-90 + 45 * k)
-        g.disc(12 + 4.6 * math.cos(t), 12 + 4.6 * math.sin(t), 2.7, c)
-    g.disc(12, 12, 1.6, WHITE)
-
-
-def g_settings(g):
-    dark, light = "#2F333B", "#D5D8DE"
-    for k in range(8):
-        t = math.radians(22.5 + 45 * k)
-        cx, cy = 12 + 6.6 * math.cos(t), 12 + 6.6 * math.sin(t)
-        g.rect(int(cx - 1), int(cy - 1), 2, 2, dark)
-    g.disc(12, 12, 6.2, dark)
-    g.disc(12, 12, 3.6, light)
-    g.disc(12, 12, 1.8, dark)
-
-
-def g_store(g):
-    g.disc(12, 9, 4.0, WHITE, 2.6)
-    g.clear(0, 9, 24, 15)
-    g.rect(5, 9, 14, 11, WHITE)
-    g.rect(8, 11, 1, 2, "#7C5CFF"), g.rect(15, 11, 1, 2, "#7C5CFF")
-    g.rect(9, 15, 6, 1, "#B8A6FF")
-
-
-def g_terminal(g):
-    green = "#3CE37A"
-    for k in range(3):
-        g.rect(6 + k, 8 + k, 2, 1, green)
-        g.rect(6 + k, 14 - k, 2, 1, green)
-    g.rect(11, 14, 6, 2, WHITE)
-    g.px(5, 5, "#FF5F57"), g.px(7, 5, "#FEBC2E"), g.px(9, 5, "#28C840")
-
-
-def g_browser(g):
-    g.disc(12, 12, 7.6, WHITE)
-    g.disc(12, 12, 6.6, "#E6F2FF", 6.0)
-    red, grey = "#FF3B30", "#9AA4B8"
-    for k in range(5):
-        g.rect(12 + k, 11 - k, 1, 1, red), g.rect(11 + k, 11 - k, 1, 1, red)
-        g.rect(11 - k, 12 + k, 1, 1, grey), g.rect(12 - k, 12 + k, 1, 1, grey)
-    g.rect(11, 11, 2, 2, INK)
-
-
-def g_installer(g):
-    # arrow into a tray, the WolOS ears on the arrow
-    g.rect(9, 3, 2, 3, WHITE), g.rect(13, 3, 2, 3, WHITE)
-    g.rect(10, 6, 4, 6, WHITE)
-    for k in range(4):
-        g.rect(7 + k, 11 + k, 10 - 2 * k, 1, WHITE)
-    g.rect(5, 16, 2, 4, "#D9D0FF"), g.rect(17, 16, 2, 4, "#D9D0FF"), g.rect(5, 19, 14, 2, "#D9D0FF")
-
-
-def g_control_center(g):
-    g.rect(5, 6, 14, 5, VIOLET)
-    g.rect(6, 5, 12, 7, VIOLET)
-    g.disc(15.5, 8.5, 2.2, WHITE)
-    g.rect(5, 14, 14, 5, "#6B6F7B")
-    g.rect(6, 13, 12, 7, "#6B6F7B")
-    g.disc(8.5, 16.5, 2.2, WHITE)
-
-
-def g_plugin_maker(g):
-    g.art(5, 5, [
-        "...wwww.....",
-        "...wwww.....",
-        "....ww......",
-        "wwwwwwwwww..",
-        "wwwwwwwwww..",
-        "wwwwwwwwww..",
-        ".wwwwwwwwwww",
-        ".wwwwwwwwwww",
-        "wwwwwwwwww..",
-        "wwwwwwwwww..",
-        "wwwwwwwwww..",
-        "wwwwwwwwww..",
-    ], {"w": WHITE})
-    g.art(15, 3, ["..y..", "..y..", "yyyyy", "..y..", "..y.."], {"y": "#FFD60A"})
-
-
-def g_launcher(g):
-    cols = ["#FF6A88", "#FFB340", "#3CD070", "#40A8FF", VIOLET, "#FF5E3A", "#30D0C0", "#B07CFF", "#FFD60A"]
-    for k, c in enumerate(cols):
-        g.rect(5 + (k % 3) * 5, 5 + (k // 3) * 5, 4, 4, c)
-
-
-def g_music(g):
-    g.rect(9, 5, 2, 11, WHITE)
-    g.rect(16, 4, 2, 11, WHITE)
-    g.rect(9, 4, 9, 2, WHITE)
-    g.disc(7.5, 16.5, 2.6, WHITE)
-    g.disc(14.5, 15.5, 2.6, WHITE)
-
-
-def g_calculator(g):
-    for r in range(3):
-        for c in range(3):
-            col = "#FF9F0A" if c == 2 else ("#A5A5AA" if r == 0 else "#5A5A60")
-            g.rect(5 + c * 5, 5 + r * 5, 4, 4, col)
-
-
-def g_games(g):
-    g.rect(5, 8, 14, 7, "#E9EEF7")
-    g.rect(4, 10, 16, 7, "#E9EEF7")
-    g.clear(9, 15, 6, 2)
-    g.rect(6, 11, 3, 1, "#2B3B5C"), g.rect(7, 10, 1, 3, "#2B3B5C")
-    g.px(15, 10, "#FF375F"), g.px(17, 12, "#30D158"), g.px(13, 12, "#0A84FF")
-
-
-def g_text_editor(g):
-    g.rect(5, 4, 12, 16, WHITE)
-    for y, w in ((7, 8), (10, 7), (13, 8), (16, 5)):
-        g.rect(7, y, w, 1, "#8A90A0")
-    for k in range(6):
-        g.rect(13 + k, 18 - k, 2, 2, VIOLET)
-
-
-def g_system_monitor(g):
-    pts = [(4, 15), (7, 15), (9, 10), (11, 18), (13, 7), (15, 15), (19, 15)]
-    for (a, b), (c, d) in zip(pts, pts[1:]):
-        g.line(a, b, c, d, "#3CE37A")
-
-
-def g_trash(g):
-    g.rect(5, 6, 14, 2, "#E5E5EA")
-    g.rect(10, 4, 4, 2, "#E5E5EA")
-    g.rect(6, 9, 12, 11, "#E5E5EA")
-    for x in (9, 12, 15):
-        g.rect(x - 1 if x != 12 else 11, 11, 1 if x != 12 else 2, 7, "#9A9AA2")
-
-
-def g_kit_craft(g):
-    # pencil on a diagonal
-    for k in range(9):
-        g.rect(6 + k, 17 - k, 3, 2, "#FFD60A")
-    g.rect(15, 7, 3, 2, "#FF8FB1"), g.rect(16, 6, 2, 1, "#FF8FB1")
-    g.rect(5, 18, 2, 2, "#FFE7B3"), g.px(4, 20, INK)
-
-
-def g_kit_codecs(g):
-    g.rect(4, 8, 16, 11, "#22222A")
-    for x in range(5, 20, 3):
-        g.px(x, 9, WHITE), g.px(x, 17, WHITE)
-    for k in range(3):
-        g.rect(10, 11 + k, 2 + 2 * k, 1, WHITE)
-        g.rect(10, 15 - k, 2 + 2 * k, 1, WHITE)
-    g.rect(10, 13, 6, 1, WHITE)
-
-
-def g_kit_dev(g):
-    c = WHITE
-    for k in range(4):
-        g.rect(8 - k, 10 + k, 2, 1, c), g.rect(8 - k, 16 - k, 2, 1, c)
-        g.rect(14 + k, 10 + k, 2, 1, c), g.rect(14 + k, 16 - k, 2, 1, c)
-    g.rect(5, 13, 1, 1, c), g.rect(18, 13, 1, 1, c)
-    g.line(13, 9, 10, 18, "#B8A6FF")
-
-
-def g_kit_ai(g):
-    c = WHITE
-    g.art(5, 7, [
-        "......w......",
-        "......w......",
-        ".....www.....",
-        ".....www.....",
-        "....wwwww....",
-        "wwwwwwwwwwwww",
-        "....wwwww....",
-        ".....www.....",
-        ".....www.....",
-        "......w......",
-        "......w......",
-    ], {"w": c})
-    g.art(16, 6, [".y.", "yyy", ".y."], {"y": "#FFD60A"})
-
-
-def g_kit_creative(g):
-    g.disc(11.5, 13.5, 6.3, "#FFF3E0")
-    g.disc(15.5, 16.5, 1.6, "#9C3BD6")
-    for (x, y, c) in ((8, 11, "#FF3B30"), (11, 9, "#FFCC00"), (15, 11, "#34C759"), (8, 15, "#0A84FF")):
-        g.rect(x - 1, y - 1, 2, 2, c)
-
-
-def g_kit_gaming(g):
-    g.rect(5, 10, 14, 7, WHITE)
-    g.rect(4, 12, 16, 7, WHITE)
-    g.clear(9, 17, 6, 2)
-    g.rect(6, 13, 3, 1, "#0F8A47"), g.rect(7, 12, 1, 3, "#0F8A47")
-    g.px(16, 12, "#FF375F"), g.px(17, 14, "#0A84FF")
-
-
-def build_apps():
-    app("files", "#5DB2FF", "#1B5FD9", g_files)
-    app("mail", "#6AC8FF", "#1A6CEB", g_mail)
-    app("calendar", "#FFFFFF", "#E4E4EA", g_calendar, glyph_shadow=False)
-    app("notes", "#FFE07A", "#F5B400", g_notes)
-    app("photos", "#FFFFFF", "#E6E6EE", g_photos, glyph_shadow=False)
-    app("settings", "#B9BEC7", "#5E6470", g_settings)
-    app("software", "#A48DFF", "#5434E0", g_store)
-    app("terminal", "#3A3A44", "#121216", g_terminal)
-    app("browser", "#62D0FF", "#2463EB", g_browser)
-    app("installer", "#8E70FF", "#3B22B0", g_installer)
-    app("control-center", "#5A5E6A", "#24262E", g_control_center)
-    app("plugin-maker", "#3DD6A8", "#0E8466", g_plugin_maker)
-    app("launcher", "#4A4E5A", "#1E2027", g_launcher)
-    app("music", "#FF7A93", "#E31F4C", g_music)
-    app("calculator", "#4A4A50", "#1C1C20", g_calculator)
-    app("games", "#3A4F78", "#101A30", g_games)
-    app("text-editor", "#F2F2F6", "#D6D8E0", g_text_editor)
-    app("system-monitor", "#33333C", "#101014", g_system_monitor)
-    app("trash", "#9A9AA4", "#5A5A64", g_trash)
-    app("kit-craft-suite", "#FFA94D", "#E2560B", g_kit_craft, kit=True)
-    app("kit-codecs", "#FF6F91", "#C21858", g_kit_codecs, kit=True)
-    app("kit-dev", "#33466E", "#0E1628", g_kit_dev, kit=True)
-    app("kit-ai", "#9B85FF", "#3E6BF0", g_kit_ai, kit=True)
-    app("kit-creative", "#E58CFF", "#8A2BD9", g_kit_creative, kit=True)
-    app("kit-gaming", "#45D477", "#0E8243", g_kit_gaming, kit=True)
-    build_places()
-
-
-# ---- places, devices, mimetypes: the same cells, other silhouettes ----------------------
-def rect_cells(x, y, w, h):
-    return {(i, j) for j in range(y, y + h) for i in range(x, x + w)}
-
-
-def folder_shape():
-    back = rect_cells(2, 4, 8, 2) | rect_cells(2, 5, 20, 3)
-    front = rect_cells(2, 8, 20, 12)
-    cells = back | front
-    for c in ((2, 4), (9, 4), (2, 19), (21, 19), (21, 5)):
-        cells.discard(c)
-
-    def post(grid):
-        for (i, j), (col, a, r) in list(grid.items()):
-            if j < 8:
-                grid[(i, j)] = (mix(col, "#000000", 0.16), a, r)
-            elif j == 8:
-                grid[(i, j)] = (mix(col, "#FFFFFF", 0.35), a, r)
-    return cells, post
-
-
-def page_shape():
-    cells = {(i, j) for (i, j) in rect_cells(5, 2, 14, 20) if i - j <= 12}
-    cells -= {(5, 2), (5, 21), (18, 21)}
-
-    def post(grid):
-        for (i, j) in list(grid):
-            if 14 <= i <= 18 and 2 <= j <= 6 and (i - 14) <= (j - 2):
-                grid[(i, j)] = ("#D2D6E0", 1.0, "tile")
-    return cells, post
-
-
-def drive_shape():
-    cells = rect_cells(2, 7, 20, 11) - {(2, 7), (21, 7), (2, 17), (21, 17)}
-    return cells, None
-
-
-def stick_shape():
-    body = rect_cells(7, 7, 10, 14) - {(7, 7), (16, 7), (7, 20), (16, 20)}
-    plug = rect_cells(9, 2, 6, 5)
-
-    def post(grid):
-        for (i, j) in list(grid):
-            if j < 7:
-                dark = (i, j) in ((10, 3), (13, 3), (10, 4), (13, 4))
-                grid[(i, j)] = ("#6E737D" if dark else "#C7CBD3", 1.0, "tile")
-    return body | plug, post
-
-
-def globe_shape():
-    return {(i, j) for j in range(N) for i in range(N) if math.hypot(i + 0.5 - 12, j + 0.5 - 12) <= 9.6}, None
-
-
-PAPER = ({(7, 0), (8, 0), (13, 0), (14, 0), (15, 0)} | rect_cells(6, 1, 5, 1) | rect_cells(12, 1, 6, 1)
-         | rect_cells(5, 2, 14, 3))
-
-
-def bin_full_shape():
-    cells, post = bin_shape()
-    cells = (cells - rect_cells(10, 2, 4, 2)) | PAPER
-
-    def post2(grid):
-        post(grid)
-        for (i, j) in PAPER:
-            if (i, j) in grid:
-                col = "#FFD60A" if i <= 9 else ("#5DB2FF" if i >= 15 else "#FFFFFF")
-                if bayer(i, j) > 0.72:
-                    col = mix(col, "#000000", 0.25)
-                grid[(i, j)] = (col, 1.0, "tile")
-    return cells, post2
-
-
-def bin_shape():
-    lid = rect_cells(4, 4, 16, 2)
-    knob = rect_cells(10, 2, 4, 2)
-    body = {(i, j) for j in range(6, 21) for i in range(5 + (j - 6) // 7, 19 - (j - 6) // 7)}
-
-    def post(grid):
-        for (i, j), (col, a, r) in list(grid.items()):
-            if j < 6:
-                grid[(i, j)] = (mix(col, "#FFFFFF", 0.2), a, r)
-    return lid | knob | body, post
-
-
-FOLDER = ("#74BDFF", "#2F7FEF")
-EMBOSS = "#1A4FB8"
-
-
-EMBOSS_LIGHT = "#B8DCFF"
-
-
-def emboss(art, x=7, y=11):
-    """Glyph pressed into the folder front: dark cells with a light lip under them."""
-    def d(g):
-        g.art(x, y, art, {"#": EMBOSS})
-        dark = set(g.c)
-        for (i, j) in dark:
-            if (i, j + 1) not in dark:
-                g.px(i, j + 1, EMBOSS_LIGHT)
-    return d
-
-
-GLYPH_ART = {
-    "folder": [],
-    "folder-documents": ["..######..", "..#....#..", "..#.##.#..", "..#....#..", "..#.##.#..", "..######.."],
-    "folder-download": ["....##....", "....##....", "..######..", "...####...", "....##....", ".########."],
-    "folder-music": ["....####..", "....#..#..", "....#..#..", "..###.##..", "..###.##..", ".........."],
-    "folder-pictures": ["......##..", "......##..", "...#......", "..###..#..", ".#####.##.", "##########"],
-    "folder-publicshare": ["....##....", "...####...", "....##....", "..######..", ".########.", ".........."],
-    "folder-templates": ["..##.##...", "..#...#...", "..........", "..#...#...", "..##.##...", ".........."],
-    "folder-videos": ["...#......", "...###....", "...#####..", "...###....", "...#......", ".........."],
-    "user-home": ["....##....", "...####...", "..######..", ".########.", "..##..##..", "..##..##.."],
-    "user-desktop": [".########.", ".#......#.", ".#......#.", ".########.", "....##....", "..######.."],
-}
-
-
-def page_glyph(kind):
-    def d(g):
-        grey = "#B9BEC9"
-        if kind == "pdf":
-            g.rect(6, 12, 12, 7, "#E5372C")
-            g.art(7, 13, ["##.##..###", "#.##.#.#..", "##.#.#.##.", "#..#.#.#..", "#..##..#.."], {"#": WHITE})
-        elif kind == "exec":
-            g.disc(12, 14, 4.2, "#6E737D")
-            g.disc(12, 14, 1.6, WHITE)
-            for a in range(0, 360, 45):
-                t = math.radians(a)
-                g.px(int(12 + 4.6 * math.cos(t)), int(14 + 4.6 * math.sin(t)), "#6E737D")
-        elif kind == "audio":
-            g.rect(11, 9, 2, 8, "#FF2D55")
-            g.rect(13, 9, 3, 2, "#FF2D55")
-            g.disc(10.5, 17, 2.1, "#FF2D55")
-        elif kind == "image":
-            g.rect(7, 10, 10, 9, "#DCEBFF")
-            g.disc(14.5, 12.5, 1.4, "#FFB800")
-            for k in range(5):
-                g.rect(8 + k, 17 - k, 1, k + 1, "#34C759")
-                g.rect(12 + k, 14 + k // 2, 1, 4 - k // 2, "#2AA34A")
-        elif kind == "package":
-            g.rect(7, 10, 10, 8, "#C8935A")
-            g.rect(7, 10, 10, 2, "#E0AE76")
-            g.rect(11, 10, 2, 4, "#8A5A2B")
-        elif kind == "video":
-            g.rect(7, 10, 10, 8, "#2C2C34")
-            g.art(10, 11, ["#...", "##..", "###.", "##..", "#..."], {"#": WHITE})
-        elif kind == "document":
-            g.rect(7, 9, 4, 4, "#2F7BF0")
-            for y in (14, 16, 18):
-                g.rect(7, y, 10, 1, "#7FA8E8")
-            g.rect(12, 10, 5, 1, "#7FA8E8")
-            g.rect(12, 12, 5, 1, "#7FA8E8")
-        elif kind == "presentation":
-            g.rect(7, 10, 10, 7, "#FF9500")
-            g.rect(9, 13, 2, 3, WHITE)
-            g.rect(12, 12, 2, 4, WHITE)
-            g.rect(15, 11, 1, 5, WHITE)
-        elif kind == "spreadsheet":
-            for r in range(5):
-                for c in range(3):
-                    g.rect(7 + c * 4, 9 + r * 2, 3, 1, "#34C759" if r == 0 else "#9ADBA9")
-        else:  # generic text
-            for y, w in ((9, 8), (11, 10), (13, 9), (15, 10), (17, 6)):
-                g.rect(7, y, w, 1, grey)
-    return d
-
-
-def g_globe(g):
-    for j in range(N):
-        for i in range(N):
-            dx, dy = i + 0.5 - 12, j + 0.5 - 12
-            if math.hypot(dx, dy) > 9.6:
-                continue
-            meridian = 4.6 * math.sqrt(max(0.0, 1 - (dy / 9.6) ** 2))
-            if j in (7, 12, 16) or abs(dx) < 0.6 or abs(abs(dx) - meridian) < 0.5:
-                g.px(i, j, "#D6ECFF")
-
-
-def g_bin(full):
-    def d(g):
-        for x in (8, 11, 14):
-            g.rect(x, 9, 2 if x == 11 else 1, 9, "#6E737D")
-        if full:
-            pass
-    return d
-
-
-def g_disk(g):
-    g.rect(4, 13, 9, 1, "#6E737D")
-    g.rect(17, 12, 2, 2, "#34C759")
-
-
-def g_stick(g):
-    g.rect(10, 11, 4, 2, "#8B6CFF")
-    g.rect(10, 15, 4, 1, "#6E737D")
-
-
-def build_places():
-    for n, art in GLYPH_ART.items():
-        app(n, *FOLDER, emboss(art), shape=folder_shape, ctx="places", glyph_shadow=False)
-    app("network-workgroup", "#62D0FF", "#2463EB", g_globe, shape=globe_shape, ctx="places")
-    app("user-trash", "#C9CCD3", "#7D818B", g_bin(False), shape=bin_shape, ctx="places")
-    app("user-trash-full", "#C9CCD3", "#7D818B", g_bin(True), shape=bin_full_shape, ctx="places")
-    app("drive-harddisk", "#D9DCE2", "#8D929C", g_disk, shape=drive_shape, ctx="devices")
-    app("drive-removable-media", "#5A5E6A", "#24262E", g_stick, shape=stick_shape, ctx="devices")
-    for n, kind in (("application-pdf", "pdf"), ("application-x-executable", "exec"), ("application-x-generic", "generic"),
-                    ("audio-x-generic", "audio"), ("image-x-generic", "image"), ("package-x-generic", "package"),
-                    ("text-x-generic", "generic"), ("video-x-generic", "video"), ("x-office-document", "document"),
-                    ("x-office-presentation", "presentation"), ("x-office-spreadsheet", "spreadsheet")):
-        app(n, "#FFFFFF", "#ECEEF3", page_glyph(kind), shape=page_shape, ctx="mimetypes", glyph_shadow=False)
-
-
-# Names other apps and desktop files ask for, installed as symlinks (install.sh, aliases.tsv).
-ALIASES = {
-    "files": "org.gnome.Nautilus system-file-manager thunar org.xfce.thunar pcmanfm nemo",
-    "terminal": "utilities-terminal org.gnome.Terminal foot kitty Alacritty org.wezfurlong.wezterm xfce4-terminal com.mitchellh.ghostty",
-    "browser": "helium firefox web-browser org.mozilla.firefox chromium librewolf epiphany",
-    "settings": "preferences-system org.gnome.Settings gnome-control-center nwg-look org.wolos.settings",
-    "software": "system-software-install org.gnome.Software octopkg org.wolos.store wolos-store",
-    "music": "multimedia-audio-player org.gnome.Music audacious rhythmbox elisa io.bassi.Amberol",
-    "photos": "multimedia-photo-viewer org.gnome.eog org.gnome.Loupe org.gnome.Shotwell ristretto",
-    "notes": "accessories-notes org.gnome.gitlab.cheywood.Iotas xpad org.gnome.Gnote",
-    "calendar": "office-calendar org.gnome.Calendar",
-    "mail": "internet-mail mail-client thunderbird org.mozilla.Thunderbird evolution org.gnome.Geary",
-    "calculator": "accessories-calculator org.gnome.Calculator galculator qalculate-gtk",
-    "games": "steam applications-games lutris",
-    "text-editor": "accessories-text-editor org.gnome.TextEditor org.gnome.gedit mousepad code codium",
-    "system-monitor": "utilities-system-monitor org.gnome.SystemMonitor htop btop",
-    "trash": "user-trash user-trash-full",
-    "launcher": "system-search fuzzel",
-    "installer": "org.wolos.installer",
-    "control-center": "org.wolos.control-center",
-    "plugin-maker": "org.wolos.plugin-maker",
-}
-
 
 # ======================================================================================
 # PNG
 # ======================================================================================
-def APP_NAMES():
-    return [n for n in APPS if APPS[n][6] == "apps"]
-
-
-def icon_path(n):
-    ctx = APPS[n][6]
-    if ctx == "apps":
-        return os.path.join(APP_DIR, f"wolos-{n}.svg")
-    return os.path.join(DESIGN, "icons", ctx, f"{n}.svg")
-
-
 def png_bytes(w, h, rows):
     """rows: list of list of (r, g, b, a) 0..255 ints."""
     raw = bytearray()
@@ -1719,12 +1208,6 @@ def png_bytes(w, h, rows):
     return (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 6, 0, 0, 0)) +
             chunk(b"IDAT", zlib.compress(bytes(raw), 9)) + chunk(b"IEND", b""))
 
-
-def straight(acc):
-    a = acc[3]
-    if a <= 1e-6:
-        return (0, 0, 0, 0)
-    return tuple(int(round(min(1.0, acc[q] / a) * 255)) for q in range(3)) + (int(round(min(a, 1.0) * 255)),)
 
 
 # design/icons laid out as a theme (kit/style.rs links design/icons/* under a temp WolOS dir in
@@ -1845,7 +1328,7 @@ def write(path, data):
 
 def sheet(path):
     """Contact sheet: app icons at 128 on light and 48 on dark, symbolics at 32 and 16 both ways."""
-    names = sorted(APPS)
+    names = sorted(full_colour_names())
     syms = sorted(SYMBOLIC)
     W = 1100
     cols128 = W // 136
@@ -1887,12 +1370,12 @@ def sheet(path):
     y = 16
     order = []
     for k, n in enumerate(names):
-        blit_rgba(8 + (k % cols128) * 136, y + (k // cols128) * 140, render_app(n, 128))
+        blit_rgba(8 + (k % cols128) * 136, y + (k // cols128) * 140, render_full(n, 128))
         order.append(f"app128 r{k // cols128} c{k % cols128} {n}")
     y += rows128 * 140 + 16
     band(y - 8, y + 72, dark)
     for k, n in enumerate(names):
-        blit_rgba(8 + k * 52, y + 8, render_app(n, 48))
+        blit_rgba(8 + k * 52, y + 8, render_full(n, 48))
     y += 64 + 24
     for k, n in enumerate(syms):
         al = render_symbolic(n, 32)
@@ -1914,9 +1397,33 @@ def sheet(path):
     write(os.path.splitext(path)[0] + ".txt", "\n".join(order) + "\n")
 
 
+def full_colour_names():
+    """Names of the full-colour icons (card apps, places, devices, mimetypes) on disk."""
+    out = []
+    for ctx in ("apps", "places", "devices", "mimetypes"):
+        d = os.path.join(DESIGN, "icons", ctx)
+        for fn in sorted(os.listdir(d)):
+            if fn.endswith(".svg"):
+                out.append(fn[:-4].removeprefix("wolos-") if ctx == "apps" else fn[:-4])
+    return out
+
+
+def render_full(name, size):
+    """Premultiplied RGBA rows of a written full-colour icon (rsvg-convert, tools/icons/build.py)."""
+    return icon_build().render_rgba(name, size)
+
+
+def icon_build():
+    """tools/icons/build.py (the Wonderland card generator), imported lazily."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("wolos_icons_build", os.path.join(HERE, "icons", "build.py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
 def main(argv):
     build_symbolic()
-    build_apps()
     overlay = os.path.normpath(os.path.join(DESIGN, "..", "desktop", "overlay"))
     sheet_out = None
     only = None
@@ -1929,6 +1436,8 @@ def main(argv):
             overlay = a.pop(0)
         elif k == "--only-sheet":
             only = "sheet"
+        elif k == "--symbolic-only":
+            only = "symbolic"
         else:
             sys.exit(f"icons.py: unknown argument {k}")
     if only != "sheet":
@@ -1939,22 +1448,16 @@ def main(argv):
                 os.remove(os.path.join(SYM_DIR, f))
         for n in SYMBOLIC:
             write(os.path.join(SYM_DIR, n + ".svg"), symbolic_svg(n))
-        for n in APPS:
-            write(icon_path(n), app_svg(n))
+    if only == "symbolic":
+        print(f"icons.py: {len(SYMBOLIC)} symbolic (full-colour icons, aliases and overlay untouched)")
+    if only is None:
         write(os.path.join(DESIGN, "icons", "index.theme"), INDEX_THEME)
         write(os.path.join(DESIGN, "icons", "dev.theme"), DEV_THEME)
-        write(os.path.join(DESIGN, "icons", "aliases.tsv"),
-              "# wolos-<icon>\tfreedesktop/app icon names (tab-separated). install.sh symlinks these. Generated by tools/icons.py.\n" +
-              "".join(f"{k}\t{v}\n" for k, v in ALIASES.items()))
         theme = os.path.join(overlay, "usr", "share", "icons", "WolOS")
         if os.path.isdir(os.path.dirname(os.path.dirname(theme))):
             write(os.path.join(theme, "index.theme"), INDEX_THEME)
-            for size in PNG_SIZES:
-                for n in APP_NAMES():
-                    rows = [[straight(p) for p in r] for r in render_app(n, size)]
-                    write(os.path.join(theme, f"{size}x{size}", "apps", f"wolos-{n}.png"), png_bytes(size, size, rows))
-        print(f"icons.py: {len(SYMBOLIC)} symbolic, {len(APP_NAMES())} app icons x {len(PNG_SIZES)} PNG sizes, "
-              f"{len(APPS) - len(APP_NAMES())} places/devices/mimetypes")
+        icon_build().build(overlay)     # cards, places, devices, mimetypes, aliases.tsv, app PNGs
+        print(f"icons.py: {len(SYMBOLIC)} symbolic")
     if sheet_out:
         sheet(sheet_out)
         print(f"icons.py: sheet {sheet_out}")
