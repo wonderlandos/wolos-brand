@@ -13,7 +13,7 @@ grep -v '^#' "$src/aliases.tsv" | while IFS="$(printf '\t')" read -r base names;
     ln -sf "../apps/wolos-$base.svg" "$dst/scalable/$d/$n.svg"
   done
 done
-# Places, devices, mimetypes (design/tools/places.py); replace any app-icon alias of the same name.
+# Places, devices, mimetypes (design/tools/icons/build.py); replace any app-icon alias of the same name.
 for ctx in places devices mimetypes; do
   mkdir -p "$dst/scalable/$ctx"
   for f in "$src/$ctx"/*.svg; do
@@ -27,4 +27,6 @@ done
 for n in system-search-symbolic system-shutdown-symbolic; do
   ln -sf "../status/$n.svg" "$dst/symbolic/actions/$n.svg"
 done
-command -v gtk-update-icon-cache >/dev/null 2>&1 && gtk-update-icon-cache -f -t "$dst" || true
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+  gtk-update-icon-cache -f -t "$dst" || true
+fi

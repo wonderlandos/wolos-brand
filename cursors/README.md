@@ -1,6 +1,6 @@
 # Cursors
 
-No custom build. Use an existing macOS-like theme from ports.
+No custom build. Use an existing outlined cursor theme from the packages, chosen to sit with the WolOS ramp (crisp dark arrow, light outline).
 
 | Choice | Theme name | Port (verify) |
 |---|---|---|
@@ -13,6 +13,6 @@ If primary is absent, ship fallback; do not block the image.
 Apply (size 24):
 
 ```sh
-hyprctl setcursor capitaine-cursors 24        # Hyprland: env = XCURSOR_THEME,capitaine-cursors
+hyprctl setcursor capitaine-cursors 24        # compositor: env = XCURSOR_THEME,capitaine-cursors
 gsettings set org.gnome.desktop.interface cursor-theme capitaine-cursors
 ```

@@ -1,12 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 # Copyright (c) 2026 Julia Klee
-"""Scenes: the Setup Assistant welcome, the lock-screen peek, the character sheet."""
+"""Scenes: the character sheet (the welcome scene is welcome.py, the lock-screen peek is brand/mascots.py)."""
 import math
 import random
 from kit import Canvas, f, path, sample, sparkle, svg, band
 from parts import glow, motes
 from keyhole import mark_paths, rays
-import rabbit
 
 
 def stars(cv, box, n, seed, avoid=()):
@@ -25,27 +24,6 @@ def stars(cv, box, n, seed, avoid=()):
             continue
         out += sparkle(x, y, rnd.uniform(3, 5), "#fff", rnd.uniform(.6, .9))
     return out
-
-
-def peek():
-    """320x200: the Rabbit pops up from the bottom edge of the lock screen."""
-    W, H = 320, 200
-    rc = Canvas("lp")
-    body = rabbit.rabbit(rc, shadow=False, arms=False)
-    g = f'<g transform="translate(10 4) scale(.6) rotate(-9 252 230)">{body}</g>'
-    # paws gripping the edge
-    from rabbit import furry, down
-    from kit import ellipse_pts
-    pw = ""
-    for px, rot in ((112, -12), (210, 10)):
-        pts = ellipse_pts(px, 194, 21, 14, 10, rot)
-        pw += f'<ellipse cx="{px + 3}" cy="200" rx="22" ry="7" fill="#2B1B66" opacity=".35" filter="{rc.blur(3)}"/>'
-        s, d, poly = furry(rc, pts, [(0.8, 0.2, .6)], px, down(px, 170), 18, amp=2.5, shade=("#6C58B4", .45, 6, 4))
-        pw += s
-        pw += (f'<path d="M{px - 7} 186q2 8 0 14M{px + 4} 186q2 8 0 14" stroke="#8C7AC8" stroke-width="1.3" fill="none" '
-               f'opacity=".8" transform="rotate({rot} {px} 194)"/>')
-    g += pw
-    return svg(W, H, [rc], g, "Hello again")
 
 
 def sheet(cast):

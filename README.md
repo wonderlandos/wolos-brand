@@ -1,24 +1,26 @@
 # WolOS design
 
-Wonderland theme: rabbit-eared keyhole (looking-glass). One accent: violet `#7C5CFF` (dark `#9B85FF`). macOS-like neutrals.
+Wonderland theme: four nested doors, the small door into Wonderland with light coming through. One accent: violet `#7C5CFF` (dark `#8B6CFF`, as in `tokens/colors.json`). WolOS neutrals (a faint violet hue).
 
 | Path | Content | Installs to |
 |---|---|---|
-| `brand/wolos-mark.svg` | Logo mark, 64 viewBox, legible at 16px | `/usr/local/share/wolos/brand/` |
-| `brand/wolos-wordmark{,-dark}.svg` | Mark + "WolOS" (Inter) | `/usr/local/share/wolos/brand/` |
-| `brand/wolos-glyph-symbolic.svg` | Monochrome menubar glyph | icon theme `wolos-logo-symbolic` |
+| `brand/wolos-mark.svg` | Logo mark (nested doors), 64 viewBox; `-on-dark`, `-mono`, `-mono-white`, `-16`, `-16-on-dark` variants: see `brand/README.md` | `/usr/local/share/wolos/brand/` |
+| `brand/wolos-wordmark{,-dark}.svg` | Mark + "WolOS", 360x96, drawn letters (no font needed) | `/usr/local/share/wolos/brand/` |
+| `brand/wolos-glyph-symbolic.svg` | Monochrome menubar glyph, 16 grid, `currentColor` | icon theme `wolos-logo-symbolic` |
 | `brand/wolos-boot.svg` | Boot splash 1920x1080 | `/usr/local/share/wolos/brand/` |
 | `brand/wolos-splash.png` | Kernel splash: the mark of `wolos-boot.svg`, 256x256 8-bit RGBA (the loader reads PNG only) | `/boot/images/wolos.png` |
 | `tokens/colors.{css,json,sh}` | Light/dark palette, radii, blur, fonts | `/usr/local/share/wolos/tokens/` |
-| `icons/apps/wolos-*.svg` | 16 squircle app icons, 1024 grid | `/usr/local/share/icons/WolOS/scalable/apps/` |
-| `icons/symbolic/*-symbolic.svg` | 16px menubar glyphs (freedesktop names) | `/usr/local/share/icons/WolOS/symbolic/status/` |
+| `icons/apps/wolos-*.svg`, `icons/{places,devices,mimetypes}/*.svg` | Full-colour icons drawn as vectors on a 1024 canvas by the generator `tools/icons/build.py`: crafted objects on the soft card (apps, `crafted_a.py`, `crafted_b.py`) and pressed paper (places, devices, mimetypes, `paper_set.py`); `icons/apps/small/` holds the small variants (larger glyph, lighter ramp on dark tiles, fewer details). PNG 48/128/512 are renders (`tools/icons/overlay.py`) in `desktop/overlay/usr/share/icons/WolOS`; CI runs `build.py --check` and `overlay.py --check`, so nothing is edited by hand | `/usr/share/icons/WolOS/scalable/apps/` |
+| `icons/symbolic/*-symbolic.svg` | Symbolic set: 16 grid, 1.5 px lines as filled outlines, 2 px radius, currentColor (`tools/icons.py`) | `/usr/share/icons/WolOS/symbolic/status/` |
 | `icons/index.theme`, `aliases.tsv` | Theme `WolOS`, `Inherits=Adwaita,hicolor`; alias map | `/usr/local/share/icons/WolOS/` |
 | `wallpapers/wonderland-{day,night,dusk}.svg` | 3840x2160 | `/usr/local/share/wolos/wallpapers/` |
 | `cursors/README.md` | Port cursor choice | n/a |
 
+GTK render check: GTK 4 draws SVG icons with its own renderer, and some filter chains librsvg draws right come out there as grey or dark blocks. `bash design/tools/icons/gtkcheck/check.sh [svg ...]` compiles `gtkcheck.c` (cc + the gtk4 headers), starts a private `gtk4-broadwayd`, draws every full-colour icon (`icons/apps`, `apps/small`, places, devices, mimetypes) through `GtkIconPaintable` and the cairo renderer, and fails when the RMSE against the `rsvg-convert` render of the same size is above 0.02 at 48 or 128 px (premultiplied RGBA, `GTKCHECK_RMSE` overrides). Without one of its tools it prints `SKIPPED: ...` and exits 77. The shell test `icons_v2::gtk_draws_every_full_colour_icon_like_librsvg` runs it (so it runs on the forge with the rest of the tests) and prints a `*** SKIPPED ... ***` line when it cannot. Arch lane: `.claude/bin/local-lane.sh run 'bash design/tools/icons/gtkcheck/check.sh'`. Known traps, handled by the generator: (1) GTK sizes a filter's source from the geometry of what is filtered, so a thin stroke (a bare stem) or an offset copy collapses it and the shadow floods a block: `svgk.gtk_safe` (run by `Cv.svg`) draws every filtered element inside a group that opens with `svgk.PAD`, a canvas-sized rect with no pixels, moving the element's transform, clip-path, mask and opacity to an outer group; (2) GTK has no lighting primitives (`feSpecularLighting`, `feDiffuseLighting` draw black): the settings gear's bevel is a colour matrix, a white wash and a shifted-alpha shade; (3) GTK and librsvg blur a thin stroke differently at icon sizes: a soft ring is `svgk.soft_ring`, a radial gradient. `gtkcheck/known-failures.txt` lists icons still allowed to fail (empty now; a listed icon that passes is an error). Filters are allowed in the full-colour sets only because gtkcheck proves GTK draws them like librsvg; outside them (symbolic, store) no icon uses a filter (`icons_v2::icons_outside_the_full_colour_sets_have_no_filter`). A renderer that ignores filters must still draw each icon: `icons_v2::full_colour_icons_read_with_their_filters_ignored` renders it with its `filter` attributes removed and fails above RMSE 0.08 at 48 or 128 px; `FILTER_ONLY_KNOWN` there lists icons still allowed to fail (empty; paper grain is `svgk.grained`, an invisible shape whose noise is clipped to it).
 Install icons: `sh design/icons/install.sh [dest]` (copies SVGs, symlinks aliases like `firefox`, `utilities-terminal`, `org.gnome.Nautilus`, runs `gtk-update-icon-cache`).
 Tokens: source `colors.sh` (`WOL_THEME=dark` selects dark), import `colors.css` in GTK/Waybar/swaync CSS.
 Fonts (ports): `x11-fonts/inter`, `x11-fonts/jetbrains-mono`, `x11-fonts/noto-basic`.
-Rules: SVG only (except `brand/wolos-splash.png`); app icons use the shared squircle template; symbolic icons are single-color `#2e3436` (GTK recolors).
+Brand and the rabbit are generated (`tools/gen.py` and `tools/illus/build.py` call the same code): `python3 -I design/tools/brand/build.py design [site-drop dir]` (stdlib, plus `rsvg-convert`); every drawing is fill-only (strokes are expanded to outlines by `tools/brand/outline.py`).
+Rules: SVG only (except `brand/wolos-splash.png`, `brand/os_wolos.png`, the illustration PNGs and the PNGs `tools/icons.py` renders); every icon comes from `python3 tools/icons.py [--sheet out.png]`; symbolic icons are fill-only `currentColor` (GTK recolors them for light and dark).
 
 License: art is under the Wonderland Brand License 1.0 (`LICENSE`, `LicenseRef-Wonderland-Brand-1.0`); `tools/` is GPL-2.0-or-later; `icons/store/` keeps each icon's own license. WolOS, the WolOS logo and the WolOS characters are reserved marks of Julia Klee. © 2026 Julia Klee.

@@ -5,10 +5,13 @@ light pours through it across the grass, and the Rabbit (late, of course) stands
 The left 55 % stays calm sky for the title."""
 import math
 import random
+import os
+import sys
+sys.path.insert(1, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "brand"))
 from kit import Canvas, f, path, fluffy, sparkle, svg
 from parts import glow, motes
 from keyhole import mark_paths
-import rabbit
+import mascots  # noqa: E402  (the flat Rabbit: design/tools/brand)
 
 W, H = 480, 320
 KX, K = 316, 2.9            # the door: the WolOS keyhole, as a doorway
@@ -283,15 +286,13 @@ def card(cv, x, y, w, h, rot, face, blur=0):
 def rabbit_in_light(cv):
     """The Rabbit, defined once and used twice: himself, and his long shadow away from the door."""
     rc = Canvas("swr")
-    old = rabbit.DETAIL
-    rabbit.DETAIL = .3
-    body = rabbit.rabbit(rc, shadow=False)
-    rabbit.DETAIL = old
+    body = mascots.rabbit_pose()
     rid = cv.id("rab")
     cv.defs.append(f'<g id="{rid}">{body}</g>')
-    s, tx, ty = .4, 328, 101
+    s = .3
+    fx, fy = 404, 296                              # where his feet meet the grass
+    tx, ty = fx - mascots.FEET[0] * s, fy - mascots.FEET[1] * s
     place = f"translate({tx} {ty}) scale({s})"
-    fx, fy = tx + 262 * s, ty + 494 * s            # where his feet meet the grass
     # shadow: everything above the grass is laid down to the right and towards us
     k, q = .55, .36
     shadow_m = f"matrix(1 0 {f(-k)} {f(-q)} {f(k * fy)} {f((1 + q) * fy)})"

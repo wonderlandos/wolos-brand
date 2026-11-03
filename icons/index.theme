@@ -1,8 +1,23 @@
 [Icon Theme]
 Name=WolOS
-Comment=WolOS (Wonderland OS) icon theme
+Comment=WolOS (Wonderland OS) icons: one geometry, design/tools/icons.py
 Inherits=Adwaita,hicolor
-Directories=scalable/apps,scalable/places,scalable/devices,scalable/mimetypes,symbolic/status,symbolic/actions
+Directories=48x48/apps,128x128/apps,512x512/apps,scalable/apps,scalable/places,scalable/devices,scalable/mimetypes,symbolic/status,symbolic/actions
+
+[48x48/apps]
+Size=48
+Context=Applications
+Type=Fixed
+
+[128x128/apps]
+Size=128
+Context=Applications
+Type=Fixed
+
+[512x512/apps]
+Size=512
+Context=Applications
+Type=Fixed
 
 [scalable/apps]
 Size=128

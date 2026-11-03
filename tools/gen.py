@@ -5,6 +5,8 @@ for s in ["brand","tokens","icons/apps","icons/symbolic","wallpapers","cursors"]
     os.makedirs(f"{D}/{s}", exist_ok=True)
 
 def w(p, s):
+    if p.startswith("icons/"):
+        return  # icons, theme and aliases: tools/icons.py (icon set v2)
     with open(f"{D}/{p}", "w") as f: f.write(s.strip()+"\n")
 
 ACCENT = "#7C5CFF"   # looking-glass violet
@@ -68,7 +70,7 @@ apps = {
 <path d="M230 380 H620 M230 470 H700 M230 560 H560" stroke="#6b5f3a" stroke-width="14" stroke-linecap="round" stroke-opacity=".55"/>'''),
 "calendar": ("#FFFFFF","#F2F2F5", f'''<rect x="100" y="100" width="824" height="230" fill="#FF3B30"/>
 <text x="512" y="270" font-family="Inter, sans-serif" font-weight="700" font-size="120" text-anchor="middle" fill="{W}">OCT</text>
-<text x="512" y="760" font-family="Inter, sans-serif" font-weight="300" font-size="400" text-anchor="middle" fill="#1c1c1e">26</text>'''),
+<text x="512" y="760" font-family="Inter, sans-serif" font-weight="300" font-size="400" text-anchor="middle" fill="#181521">26</text>'''),
 "mail": ("#6AC8FF","#1A73F0", f'''<rect x="232" y="322" width="560" height="380" rx="40" fill="{W}"/><path d="M252 352 L512 552 L772 352" fill="none" stroke="#1A73F0" stroke-opacity=".55" stroke-width="26" stroke-linejoin="round"/>'''),
 "calculator": ("#4A4A50","#1E1E22", ''.join(f'<circle cx="{332+x*180}" cy="{332+y*180}" r="72" fill="{"#FF9F0A" if x==2 else ("#A5A5AA" if y==0 else "#5A5A60")}"/>' for x in range(3) for y in range(3))+f'<path d="M692 312 v40 M672 332 h40 M672 512 h40 M672 692 h40 M672 676 h40" stroke="{W}" stroke-width="12" stroke-linecap="round"/>'),
 "games": ("#2B3B5C","#0E1628", f'''<path d="M300 420 q-100 0-120 140 l-20 140 q-6 70 60 70 q40 0 80-60 l40-60 h344 l40 60 q40 60 80 60 q66 0 60-70 l-20-140 q-20-140-120-140Z" fill="#E9EEF7"/>
@@ -87,32 +89,12 @@ apps = {
 for n,(a,b,body) in apps.items(): app(n,a,b,body)
 
 # ---------- brand ----------
-# mark: keyhole whose top is a looking-glass oval with two rabbit ears
-MARK_PATH = "M44 8 C44 2 52 2 52 10 L50 22 M20 8 C20 2 12 2 12 10 L14 22"
-def mark(size_box=64):
-    return '''<g>
-<path d="M22 22 C17 14 16 4 21 3 C26 2 28 12 28 21Z M42 22 C47 14 48 4 43 3 C38 2 36 12 36 21Z" fill="url(#mg)"/>
-<circle cx="32" cy="33" r="15" fill="url(#mg)"/>
-<path d="M27 40 L24 60 H40 L37 40Z" fill="url(#mg)"/>
-<circle cx="32" cy="32" r="6" fill="#fff"/><path d="M29.5 35 L28 46 H36 L34.5 35Z" fill="#fff"/>
-</g>'''
-MG = f'<linearGradient id="mg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B49CFF"/><stop offset="1" stop-color="#5B3BE8"/></linearGradient>'
-w("brand/wolos-mark.svg", f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64"><defs>{MG}</defs>{mark()}</svg>')
-# symbolic menubar glyph (monochrome, 16px)
-GLYPH = '<path fill="currentColor" fill-rule="evenodd" d="M5.4 5.6C4.2 3.8 4 1 5.3.7 6.6.4 7.1 3 7.1 5.2ZM10.6 5.6c1.2-1.8 1.4-4.6.1-4.9C9.4.4 8.9 3 8.9 5.2ZM8 4.4a4 4 0 0 1 1.6 7.7L10.3 15.5H5.7L6.4 12.1A4 4 0 0 1 8 4.4ZM8 6.9a1.4 1.4 0 0 0-.7 2.6L6.9 12.6H9.1L8.7 9.5A1.4 1.4 0 0 0 8 6.9Z"/>'
-w("brand/wolos-glyph-symbolic.svg", f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" style="color:#2e3436">{GLYPH}</svg>')
-def wordmark(fill, fname):
-    w(fname, f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 96" width="360" height="96"><defs>{MG}</defs>
-<g transform="translate(8 16)">{mark()}</g>
-<text x="92" y="66" font-family="Inter, 'SF Pro Display', 'Helvetica Neue', sans-serif" font-size="56" font-weight="600" letter-spacing="-1.5" fill="{fill}">Wol<tspan fill="url(#mg)" font-weight="700">OS</tspan></text></svg>''')
-wordmark("#1C1C1E", "brand/wolos-wordmark.svg")
-wordmark("#F5F5F7", "brand/wolos-wordmark-dark.svg")
-w("brand/wolos-boot.svg", f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080"><defs>
-<linearGradient id="mg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#D9D0FF"/></linearGradient></defs>
-<rect width="1920" height="1080" fill="#000"/>
-<g transform="translate(864 360) scale(3)">{mark().replace('fill="#fff"','fill="#000"')}</g>
-<rect x="810" y="720" width="300" height="6" rx="3" fill="#fff" fill-opacity=".22"/><rect x="810" y="720" width="110" height="6" rx="3" fill="#fff"/>
-</svg>''')
+# The mark (nested doors), wordmark, boot splash and the Rabbit are drawn by tools/brand (fill-only,
+# stdlib): brand/*.svg + the splash PNGs, illustrations/white-rabbit*.svg and their PNGs.
+import sys
+sys.path.insert(0, os.path.join(D, "tools", "brand"))
+import build as brand_build
+brand_build.build(D)
 
 # ---------- symbolic icons (16px, Adwaita-style currentColor) ----------
 def sym(name, body):
@@ -152,7 +134,6 @@ sym("preferences-system-notifications-symbolic", '<path d="M8 1.5a4 4 0 0 0-4 4V
 sym("system-search-symbolic", '<circle cx="6.5" cy="6.5" r="4.5" fill="none" stroke="#2e3436" stroke-width="2"/><path d="M10 10 14.5 14.5" stroke="#2e3436" stroke-width="2.2" stroke-linecap="round"/>')
 sym("system-shutdown-symbolic", '<path d="M4.5 4A6 6 0 1 0 11.5 4" fill="none" stroke="#2e3436" stroke-width="1.8" stroke-linecap="round"/><path d="M8 1.5V8" stroke="#2e3436" stroke-width="1.8" stroke-linecap="round"/>')
 sym("preferences-system-time-symbolic", '<circle cx="8" cy="8" r="6.3" fill="none" stroke="#2e3436" stroke-width="1.5"/><path d="M8 4.2V8l2.6 1.8" fill="none" stroke="#2e3436" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>')
-sym("wolos-logo-symbolic", GLYPH.replace('fill="currentColor" ',''))
 
 # ---------- wallpapers ----------
 def wall(name, bg, blobs, extra=""):
@@ -174,38 +155,11 @@ wall("wonderland-dusk", [(0,"#FFD6C2"),(.5,"#C7A6F0"),(1,"#3B2A78")],
      wave("#ffffff",.2,1450)+wave("#2A1F5E",.4,1850))
 
 # ---------- tokens ----------
-tok = {
- "accent": {"light": ACCENT, "dark": ACCENT_D},
- "light": {"bg":"#F5F5F7","surface":"#FFFFFF","surface-2":"#ECECEF","menubar":"rgba(246,246,248,0.72)","dock":"rgba(255,255,255,0.55)","border":"rgba(0,0,0,0.10)","text":"#1C1C1E","text-2":"#6E6E73","shadow":"rgba(0,0,0,0.18)","red":"#FF3B30","orange":"#FF9500","yellow":"#FFCC00","green":"#34C759","blue":"#007AFF","accent":ACCENT,"accent-fg":"#FFFFFF","selection":"rgba(124,92,255,0.22)"},
- "dark": {"bg":"#1C1C1E","surface":"#2C2C2E","surface-2":"#3A3A3C","menubar":"rgba(28,28,30,0.62)","dock":"rgba(40,40,44,0.50)","border":"rgba(255,255,255,0.10)","text":"#F5F5F7","text-2":"#A1A1A6","shadow":"rgba(0,0,0,0.45)","red":"#FF453A","orange":"#FF9F0A","yellow":"#FFD60A","green":"#30D158","blue":"#0A84FF","accent":ACCENT_D,"accent-fg":"#FFFFFF","selection":"rgba(155,133,255,0.30)"},
- "radius": {"sm":"6px","md":"10px","lg":"14px","window":"12px","dock":"18px","icon":"22.5%"},
- "blur": {"menubar":"20px","dock":"24px","popover":"30px","hyprland_size":8,"hyprland_passes":3},
- "font": {"ui":"Inter","ui-fallback":["Inter","Cantarell","Noto Sans","DejaVu Sans","sans-serif"],"mono":"JetBrains Mono","mono-fallback":["JetBrains Mono","Fira Code","DejaVu Sans Mono","monospace"],"size":"13px","size-menubar":"13px","ports":["x11-fonts/inter","x11-fonts/jetbrains-mono","x11-fonts/noto-basic"]},
- "wallpaper": {"light":"wonderland-day.svg","dark":"wonderland-night.svg"},
-}
-w("tokens/colors.json", json.dumps(tok, indent=2))
-css = ["/* WolOS design tokens. Generated alongside colors.json/colors.sh; keep in sync. */", ":root {"]
-def cssblock(p):
-    return [f"  --wol-{k}: {v};" for k,v in tok[p].items()]
-css += cssblock("light")
-css += [f"  --wol-radius-{k}: {v};" for k,v in tok["radius"].items()]
-css += [f"  --wol-blur-{k}: {v};" for k,v in tok["blur"].items() if str(v).endswith("px")]
-css += [f'  --wol-font-ui: {", ".join(repr(f).replace(chr(39),chr(34)) if " " in f else f for f in tok["font"]["ui-fallback"])};',
-        f'  --wol-font-mono: {", ".join(repr(f).replace(chr(39),chr(34)) if " " in f else f for f in tok["font"]["mono-fallback"])};',
-        f'  --wol-font-size: {tok["font"]["size"]};', "}",
-        "@media (prefers-color-scheme: dark) {", "  :root {"] + ["  "+l for l in cssblock("dark")] + ["  }", "}",
-        '[data-theme="dark"] {'] + cssblock("dark") + ["}"]
-w("tokens/colors.css", "\n".join(css))
-sh = ["# WolOS design tokens (POSIX sh). Usage: . /usr/local/share/wolos/tokens/colors.sh", ": \"${WOL_THEME:=light}\""]
-for p in ("light","dark"):
-    for k,v in tok[p].items(): sh.append(f'WOL_{p.upper()}_{k.upper().replace("-","_")}=\'{v}\'')
-sh += ['if [ "$WOL_THEME" = dark ]; then _p=DARK; else _p=LIGHT; fi']
-for k in tok["light"]:
-    K=k.upper().replace("-","_"); sh.append(f'eval "WOL_{K}=\\${{WOL_${{_p}}_{K}}}"')
-sh += [f"WOL_RADIUS_{k.upper()}='{v}'" for k,v in tok["radius"].items()]
-sh += [f"WOL_BLUR_{k.upper()}='{v}'" for k,v in tok["blur"].items()]
-sh += [f"WOL_FONT_UI='{tok['font']['ui']}'", f"WOL_FONT_MONO='{tok['font']['mono']}'", "unset _p"]
-w("tokens/colors.sh", "\n".join(sh))
+# One source: tools/tokens.py (colors.json, colors.css, colors.sh and the icon palette).
+import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import tokens  # noqa: E402
+tokens.main()
 
 # ---------- icon theme ----------
 w("icons/index.theme", """[Icon Theme]

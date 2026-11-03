@@ -6,7 +6,7 @@ latency.py [RUNS] -> median and p95 ms.
 
 `vk`/`vp` print the monotonic ms they send the input (STAMP=1); other commands are stamped at
 spawn. `dmg X Y W H` prints a pixel hash of the region the surface appears in for every new
-frame (Hyprland reports full damage per screencopy frame, so damage rects cannot be used).
+frame (the compositor reports full damage per screencopy frame, so damage rects cannot be used).
 Latency = first frame after the stamp whose region hash differs from the last one before it."""
 import os, statistics, subprocess, sys, threading, time
 
