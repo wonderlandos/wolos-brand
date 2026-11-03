@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 """Contact sheets of the full-colour set (a review tool; needs rsvg-convert and ImageMagick).
 
-  python3 -I design/tools/icons/sheet.py OUT_DIR [--before DIR] [--only apps,places,...]
+  python3 -I design/tools/icons/sheet.py OUT_DIR [--before DIR] [--only apps,places,...] [--names a,b,...]
 
 Writes OUT_DIR/sheet-<size>-<light|dark>.png: with --before (a copy of icons/ as it was) the sheet has
 two blocks, before and after; 48 px cells are the real 48 px renders (the small variant), enlarged 2x
@@ -26,10 +26,10 @@ _T = json.load(open(os.path.join(palette.DESIGN, "tokens", "colors.json"), encod
 GROUND = {m: (_T[m]["bg"], _T[m]["text"]) for m in ("light", "dark")}
 
 
-def cells(tmp, before, size, only):
+def cells(tmp, before, size, only, names=None):
     after, bef = [], []
     for ic in families.all_icons():
-        if only and ic.ctx not in only:
+        if (only and ic.ctx not in only) or (names and ic.name not in names):
             continue
         p = os.path.join(tmp, f"{ic.ctx}-{ic.name}-{size}.svg")
         with open(p, "w", encoding="utf-8") as f:
@@ -74,10 +74,11 @@ def main(argv):
     outdir = argv[0]
     before = argv[argv.index("--before") + 1] if "--before" in argv else None
     only = argv[argv.index("--only") + 1].split(",") if "--only" in argv else None
+    names = argv[argv.index("--names") + 1].split(",") if "--names" in argv else None
     os.makedirs(outdir, exist_ok=True)
     for size, scale, cols in ((128, 1, 13), (48, 2, 13)):
         with tempfile.TemporaryDirectory() as tmp:
-            bef, aft = cells(tmp, before, size, only)
+            bef, aft = cells(tmp, before, size, only, names)
             for mode, (bg, fg) in GROUND.items():
                 parts = []
                 if before:

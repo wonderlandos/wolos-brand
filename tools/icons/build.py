@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 """Full-colour icons of the WolOS theme: crafted objects on the soft card (apps) and pressed paper
-(places, devices, mimetypes), .claude/brand/icons-premium/LANGUAGE-v2.md.
+(places, devices, mimetypes), design/icons/LANGUAGE.md.
 
   python3 -I design/tools/icons.py            (the entry: symbolic set, then this)
   python3 -I design/tools/icons/build.py [--check] [--overlay DIR] [-v]
@@ -10,7 +10,7 @@ Writes design/icons/apps/wolos-<name>.svg, design/icons/{places,devices,mimetype
 glyph, a lighter ramp on dark tiles, fewer details), design/icons/aliases.tsv, and the app PNGs at
 48/128/512 under <overlay>/usr/share/icons/WolOS (tools/icons/overlay.py renders them with
 rsvg-convert, the renderer GTK itself loads SVG with: 128 and 512 from the full drawing, 48 from the
-small one). Nothing is written when a check fails
+small one), design/icons/places-aliases.tsv. Nothing is written when a check fails
 (checks.py). --check runs the checks and the renders and also fails when a written SVG differs from
 what the generator draws now (CI lock: the drawings come from this tool, never by hand); it writes nothing."""
 import os
@@ -42,9 +42,9 @@ ALIASES = {
     "terminal": "utilities-terminal org.gnome.Terminal foot kitty Alacritty org.wezfurlong.wezterm xfce4-terminal com.mitchellh.ghostty",
     "browser": "helium firefox web-browser org.mozilla.firefox chromium librewolf epiphany",
     "settings": "preferences-system org.gnome.Settings gnome-control-center nwg-look org.wolos.settings",
-    "software": "system-software-install org.gnome.Software octopkg org.wolos.store wolos-store",
+    "software": "system-software-install org.gnome.Software octopkg org.wolos.store wolos-store org.wolos.flatpak-consent",
     "music": "multimedia-audio-player org.gnome.Music audacious rhythmbox elisa io.bassi.Amberol",
-    "photos": "multimedia-photo-viewer org.gnome.eog org.gnome.Loupe org.gnome.Shotwell ristretto",
+    "photos": "multimedia-photo-viewer org.gnome.eog org.gnome.Loupe org.gnome.Shotwell ristretto org.wolos.gallery",
     "notes": "accessories-notes org.gnome.gitlab.cheywood.Iotas xpad org.gnome.Gnote",
     "calendar": "office-calendar org.gnome.Calendar",
     "mail": "internet-mail mail-client thunderbird org.mozilla.Thunderbird evolution org.gnome.Geary",
@@ -54,10 +54,90 @@ ALIASES = {
     "system-monitor": "utilities-system-monitor org.gnome.SystemMonitor htop btop",
     "trash": "user-trash user-trash-full",
     "launcher": "system-search fuzzel",
-    "installer": "org.wolos.installer",
+    "installer": "org.wolos.installer org.wolos.setup",
     "control-center": "org.wolos.control-center",
     "plugin-maker": "org.wolos.plugin-maker",
+    "clock": "org.gnome.clocks gnome-clocks preferences-system-time alarm-clock",
+    "documents": "org.gnome.Papers org.gnome.Evince evince x-office-document-viewer",
+    "videos": "io.github.celluloid_player.Celluloid celluloid mpv multimedia-video-player",
+    "archive": "org.gnome.FileRoller file-roller utilities-file-archiver",
+    "disk-usage": "org.gnome.baobab baobab utilities-disk-usage",
 }
+
+# Names inside the places, devices and mimetypes sets (the file in design/icons/<context>/): what
+# GIO asks for (volume monitors, shared-mime-info's generic icons and the common specific types).
+# Written to places-aliases.tsv; install.sh symlinks them next to the file.
+PLACE_ALIASES = {
+    "places": {
+        "folder": "folder-open inode-directory",
+        "folder-download": "folder-downloads",
+        "network-workgroup": "network-server folder-remote",
+        "user-home": "folder-home",
+    },
+    "devices": {
+        "drive-harddisk": "drive-harddisk-system drive-multidisk drive-harddisk-solidstate drive-harddisk-usb drive-harddisk-ieee1394",
+        "drive-removable-media": "drive-removable-media-usb media-removable",
+        "drive-optical": "media-optical media-optical-cd media-optical-dvd media-optical-bd media-optical-cd-audio",
+        "media-flash": "media-flash-sd-mmc media-flash-memory-stick media-flash-cf media-flash-sm",
+        "phone": "phone-apple-iphone multimedia-player",
+        "camera-photo": "camera",
+        "printer": "printer-network printer-remote",
+    },
+    "mimetypes": {
+        "text-x-generic": "text-plain text-x-generic-template",
+        "image-x-generic": "image-png image-jpeg image-svg+xml image-webp image-gif image-heif",
+        "audio-x-generic": "audio-mpeg audio-flac audio-ogg audio-x-wav",
+        "video-x-generic": "video-mp4 video-x-matroska video-webm",
+        "package-x-generic": "application-zip application-x-compressed-tar application-x-tar application-x-7z-compressed application-zstd",
+        "x-office-document": "application-vnd.oasis.opendocument.text application-vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "x-office-spreadsheet": "application-vnd.oasis.opendocument.spreadsheet application-vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "x-office-presentation": "application-vnd.oasis.opendocument.presentation application-vnd.openxmlformats-officedocument.presentationml.presentation",
+        "x-office-drawing": "application-vnd.oasis.opendocument.graphics",
+        "x-office-calendar": "text-calendar",
+        "x-office-address-book": "text-vcard text-x-vcard",
+        "application-x-executable": "application-x-sharedlib application-x-shellscript application-x-msdownload",
+        "application-x-generic": "application-octet-stream unknown",
+        "text-x-script": "text-x-python text-x-python3 text-x-csrc text-x-chdr text-x-c++src text-rust application-x-ruby application-x-perl application-javascript application-json",
+        "text-html": "application-xhtml+xml",
+        "font-x-generic": "font-ttf font-otf application-x-font-ttf",
+        "application-x-cd-image": "application-x-iso9660-image application-vnd.efi.iso application-x-raw-disk-image",
+    },
+}
+ALIASES_HEAD = "# wolos-<icon>\tfreedesktop/app icon names (tab-separated). install.sh symlinks these. Generated by tools/icons.py.\n"
+PLACES_HEAD = "# context\tfile\taliases (generated by design/tools/icons/build.py; install.sh symlinks these)\n"
+
+
+def alias_files():
+    """{path: text} of the two alias tables the generator writes."""
+    apps = ALIASES_HEAD + "".join(f"{k}\t{v}\n" for k, v in ALIASES.items())
+    places = PLACES_HEAD + "".join(f"{ctx}\t{name}\t{al}\n" for ctx, m in PLACE_ALIASES.items() for name, al in m.items())
+    return {os.path.join(ICONS, "aliases.tsv"): apps, os.path.join(ICONS, "places-aliases.tsv"): places}
+
+
+def alias_errors(icons):
+    """Alias rows that name a drawing the set does not have, a name two rows claim, or a places alias
+    that is also a drawing (install.sh lets a place drawing replace an app alias of its name)."""
+    out, seen, placed = [], {}, set()
+    have = {(i.ctx, i.name) for i in icons}
+    for k, v in ALIASES.items():
+        if ("apps", k) not in have:
+            out.append(f"aliases.tsv: {k} is not an app icon of the set")
+        for a in v.split():
+            seen.setdefault(a, []).append(f"apps/{k}")
+    for ctx, m in PLACE_ALIASES.items():
+        for k, v in m.items():
+            if (ctx, k) not in have:
+                out.append(f"places-aliases.tsv: {ctx}/{k} is not drawn")
+            for a in v.split():
+                seen.setdefault(a, []).append(f"{ctx}/{k}")
+                placed.add(a)
+    names = {i.name for i in icons} | {f"wolos-{i.name}" for i in icons if i.ctx == "apps"}
+    for a, by in seen.items():
+        if len(by) > 1:
+            out.append(f"alias {a} is claimed by {', '.join(by)}")
+        if a in names and a in placed:   # an app alias a place drawing replaces (user-trash) is install.sh's rule
+            out.append(f"alias {a} is also a drawing of its own")
+    return out
 
 
 def file_name(icon):
@@ -86,6 +166,7 @@ def generate(deep=True):
         e, m = checks.check(ic, deep)
         errs += e
         rows.append((ic.name, m))
+    errs += alias_errors(icons)
     if errs:
         print("\n".join(errs), file=sys.stderr)
         sys.exit(f"icons: {len(errs)} check(s) failed, nothing written")
@@ -122,6 +203,13 @@ def drift(icons):
             continue
         if have != want:
             out.append(f"{os.path.relpath(p, DESIGN)}: differs from the generator (run python3 design/tools/icons.py)")
+    for p, want in alias_files().items():
+        try:
+            with open(p, encoding="utf-8", newline="") as f:
+                if f.read() != want:
+                    out.append(f"{os.path.relpath(p, DESIGN)}: differs from the generator's alias tables (build.py)")
+        except OSError:
+            out.append(f"{os.path.relpath(p, DESIGN)}: missing")
     for ic in icons:
         if ic.ctx == "apps":
             p = os.path.join(ICONS, "apps", "small", file_name(ic))
@@ -162,9 +250,8 @@ def build(overlay=None, check_only=False, verbose=False):
         if ic.ctx == "apps":     # the drawing the 48 px PNG is rendered from (overlay.py)
             write(os.path.join(small, file_name(ic)), ic.svg(True))
     mark = install_brand()
-    write(os.path.join(ICONS, "aliases.tsv"),
-          "# wolos-<icon>\tfreedesktop/app icon names (tab-separated). install.sh symlinks these. Generated by tools/icons.py.\n" +
-          "".join(f"{k}\t{v}\n" for k, v in ALIASES.items()))
+    for p, text in alias_files().items():
+        write(p, text)
     pngs = 0
     if overlay:
         import overlay as ov       # the overlay PNGs are renders of the SVGs written above (tools/icons/overlay.py)

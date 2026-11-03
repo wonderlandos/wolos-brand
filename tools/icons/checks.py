@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-"""The rules every full-colour icon is held to before anything is written (LANGUAGE-v2 sections 2-6).
+"""The rules every full-colour icon is held to before anything is written (design/icons/LANGUAGE.md sections 3, 9 and 10).
 
 Static, on the SVG text: parses; the 1024 canvas; no <image>, <text>, <script>, <style>, <use> or
 foreign content; filters from the rsvg-safe primitives only (the same list as
