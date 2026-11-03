@@ -1,20 +1,21 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-"""Full-colour icons of the WolOS theme: the Wonderland card (.claude/brand/icons-apps/LANGUAGE.md).
+"""Full-colour icons of the WolOS theme: crafted objects on the soft card (apps) and pressed paper
+(places, devices, mimetypes), .claude/brand/icons-premium/LANGUAGE-v2.md.
 
   python3 -I design/tools/icons.py            (the entry: symbolic set, then this)
-  python3 -I design/tools/icons/build.py [--check] [--overlay DIR]
+  python3 -I design/tools/icons/build.py [--check] [--overlay DIR] [-v]
 
-Writes design/icons/apps/wolos-<name>.svg, design/icons/{places,devices,mimetypes}/<name>.svg,
-design/icons/aliases.tsv, and the app PNGs at 48/128/512 under <overlay>/usr/share/icons/WolOS
-(rendered from the SVGs with rsvg-convert, the renderer GTK itself loads them with). Nothing is
-written when a check fails (checks.py); --check runs the checks and the renders only."""
+Writes design/icons/apps/wolos-<name>.svg, design/icons/{places,devices,mimetypes}/<name>.svg
+(1024 canvas, the full variant), design/icons/apps/small/wolos-<name>.svg (the small variant: a larger
+glyph, a lighter ramp on dark tiles, fewer details), design/icons/aliases.tsv, and the app PNGs at
+48/128/512 under <overlay>/usr/share/icons/WolOS (tools/icons/overlay.py renders them with
+rsvg-convert, the renderer GTK itself loads SVG with: 128 and 512 from the full drawing, 48 from the
+small one). Nothing is written when a check fails
+(checks.py). --check runs the checks and the renders and also fails when a written SVG differs from
+what the generator draws now (CI lock: the drawings come from this tool, never by hand); it writes nothing."""
 import os
 import shutil
-import struct
-import subprocess
 import sys
-import tempfile
-import zlib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 if HERE not in sys.path:
@@ -23,9 +24,9 @@ if HERE not in sys.path:
 import checks  # noqa: E402
 import families  # noqa: E402
 from palette import DESIGN  # noqa: E402
+from raster import decode_png, render_png  # noqa: E402
 
 ICONS = os.path.join(DESIGN, "icons")
-PNG_SIZES = (48, 128, 512)
 KEEP = {"wolos-mark"}      # the brand mark: design/brand, not drawn here
 # Installed copies of the brand drawings (design/brand is the source, drawn by tools/brand/):
 # icon file -> brand file. A regeneration copies them again, so it never reverts the logo.
@@ -67,80 +68,24 @@ def path_of(icon, root=ICONS):
     return os.path.join(root, icon.ctx, file_name(icon))
 
 
-def rsvg():
-    exe = shutil.which("rsvg-convert")
-    if not exe:
-        sys.exit("icons: rsvg-convert not found (librsvg); it renders the app PNGs")
-    return exe
-
-
-def render_png(svg_path, size):
-    """PNG bytes of an SVG at size x size (rsvg-convert)."""
-    r = subprocess.run([rsvg(), "-w", str(size), "-h", str(size), svg_path], capture_output=True)
-    if r.returncode != 0 or not r.stdout.startswith(b"\x89PNG"):
-        raise RuntimeError(f"{svg_path} @{size}: {r.stderr.decode(errors='replace').strip()}")
-    return r.stdout
-
-
-def decode_png(data):
-    """RGBA rows (floats 0..1, premultiplied) of an 8-bit RGBA PNG (what rsvg-convert writes)."""
-    w, h, depth, ctype = struct.unpack(">IIBB", data[16:26])
-    if depth != 8 or ctype != 6:
-        raise ValueError("decode_png: only 8-bit RGBA")
-    raw, pos = b"", 8
-    while pos < len(data):
-        ln, = struct.unpack(">I", data[pos:pos + 4])
-        tag = data[pos + 4:pos + 8]
-        if tag == b"IDAT":
-            raw += data[pos + 8:pos + 8 + ln]
-        pos += 12 + ln
-    raw = zlib.decompress(raw)
-    stride, rows, prev = w * 4, [], bytearray(w * 4)
-    for y in range(h):
-        ft, line = raw[y * (stride + 1)], bytearray(raw[y * (stride + 1) + 1:(y + 1) * (stride + 1)])
-        for i in range(stride):
-            a = line[i - 4] if i >= 4 else 0
-            b = prev[i]
-            c = prev[i - 4] if i >= 4 else 0
-            if ft == 1:
-                line[i] = (line[i] + a) & 255
-            elif ft == 2:
-                line[i] = (line[i] + b) & 255
-            elif ft == 3:
-                line[i] = (line[i] + (a + b) // 2) & 255
-            elif ft == 4:
-                p = a + b - c
-                pa, pb, pc = abs(p - a), abs(p - b), abs(p - c)
-                line[i] = (line[i] + (a if pa <= pb and pa <= pc else b if pb <= pc else c)) & 255
-        rows.append([(line[x] / 255 * line[x + 3] / 255, line[x + 1] / 255 * line[x + 3] / 255,
-                      line[x + 2] / 255 * line[x + 3] / 255, line[x + 3] / 255) for x in range(0, stride, 4)])
-        prev = line
-    return rows
-
-
 def render_rgba(name, size):
     """Premultiplied RGBA rows of a written full-colour icon (the symbolic contact sheet uses it)."""
     for ctx in ("apps", "places", "devices", "mimetypes"):
         for fn in (f"wolos-{name}.svg", f"{name}.svg"):
             p = os.path.join(ICONS, ctx, fn)
             if os.path.isfile(p):
-                return decode_png(render_png(p, size))
+                return [[(r * a, g * a, bl * a, a) for r, g, bl, a in row] for row in decode_png(render_png(p, size))[2]]
     raise FileNotFoundError(name)
 
 
-def generate():
+def generate(deep=True):
     """The icons and the check report; exits 1 (nothing written) when a rule breaks."""
     icons = families.all_icons()
-    errs, rows = checks.check_all(icons)
-    with tempfile.TemporaryDirectory() as t:
-        for ic in icons:
-            p = os.path.join(t, file_name(ic))
-            with open(p, "w", encoding="utf-8") as f:
-                f.write(ic.svg)
-            try:
-                render_png(p, 32)
-            except RuntimeError as e:
-                errs.append(f"{ic.name}: does not render: {e}")
+    errs, rows = [], []
+    for ic in icons:
+        e, m = checks.check(ic, deep)
+        errs += e
+        rows.append((ic.name, m))
     if errs:
         print("\n".join(errs), file=sys.stderr)
         sys.exit(f"icons: {len(errs)} check(s) failed, nothing written")
@@ -163,13 +108,45 @@ def install_brand():
     return os.path.join(ICONS, "apps", "wolos-mark.svg")
 
 
+def drift(icons):
+    """Written SVGs that differ from what the generator draws now, and drawings that are missing."""
+    out = []
+    for ic in icons:
+        p = path_of(ic)
+        want = ic.svg(False)
+        try:
+            with open(p, encoding="utf-8", newline="") as f:
+                have = f.read()
+        except OSError:
+            out.append(f"{os.path.relpath(p, DESIGN)}: missing")
+            continue
+        if have != want:
+            out.append(f"{os.path.relpath(p, DESIGN)}: differs from the generator (run python3 design/tools/icons.py)")
+    for ic in icons:
+        if ic.ctx == "apps":
+            p = os.path.join(ICONS, "apps", "small", file_name(ic))
+            try:
+                with open(p, encoding="utf-8", newline="") as f:
+                    if f.read() != ic.svg(True):
+                        out.append(f"{os.path.relpath(p, DESIGN)}: differs from the generator")
+            except OSError:
+                out.append(f"{os.path.relpath(p, DESIGN)}: missing")
+    return out
+
+
 def build(overlay=None, check_only=False, verbose=False):
     icons, rows = generate()
     if verbose:
         for name, m in rows:
-            print(f"  {name:26s} " + "  ".join(f"{k} {v:5.2f}" for k, v in m.items()))
+            for v in ("full", "small"):
+                mm = m.get(v, {})
+                print(f"  {name:26s} {v:5s} " + "  ".join(f"{k} {x:5.2f}" for k, x in mm.items()))
     if check_only:
-        print(f"icons: {len(icons)} full-colour icons pass the checks (nothing written)")
+        stale = drift(icons)
+        if stale:
+            print("\n".join(stale), file=sys.stderr)
+            sys.exit(f"icons: {len(stale)} drawing(s) out of date")
+        print(f"icons: {len(icons)} full-colour icons pass the checks and match the generator (nothing written)")
         return icons
     names = {ctx: {file_name(i) for i in icons if i.ctx == ctx} for ctx in ("apps", "places", "devices", "mimetypes")}
     for ctx, keep in names.items():
@@ -178,26 +155,25 @@ def build(overlay=None, check_only=False, verbose=False):
         for fn in os.listdir(d):   # an icon the set no longer draws is a stale file
             if fn.endswith(".svg") and fn not in keep and fn[:-4] not in KEEP:
                 os.remove(os.path.join(d, fn))
+    small = os.path.join(ICONS, "apps", "small")
+    shutil.rmtree(small, ignore_errors=True)
     for ic in icons:
-        write(path_of(ic), ic.svg)
+        write(path_of(ic), ic.svg(False))
+        if ic.ctx == "apps":     # the drawing the 48 px PNG is rendered from (overlay.py)
+            write(os.path.join(small, file_name(ic)), ic.svg(True))
     mark = install_brand()
     write(os.path.join(ICONS, "aliases.tsv"),
           "# wolos-<icon>\tfreedesktop/app icon names (tab-separated). install.sh symlinks these. Generated by tools/icons.py.\n" +
           "".join(f"{k}\t{v}\n" for k, v in ALIASES.items()))
     pngs = 0
     if overlay:
+        import overlay as ov       # the overlay PNGs are renders of the SVGs written above (tools/icons/overlay.py)
         theme = os.path.join(overlay, "usr", "share", "icons", "WolOS")
         if os.path.isdir(os.path.dirname(os.path.dirname(theme))):
-            for size in PNG_SIZES:
-                for ic in icons:
-                    if ic.ctx == "apps":
-                        write(os.path.join(theme, f"{size}x{size}", "apps", f"wolos-{ic.name}.png"),
-                              render_png(path_of(ic), size))
-                        pngs += 1
-                write(os.path.join(theme, f"{size}x{size}", "apps", "wolos-mark.png"), render_png(mark, size))
-                pngs += 1
+            ov.THEME = theme
+            pngs = ov.write(ov.sources())
     apps = sum(1 for i in icons if i.ctx == "apps")
-    print(f"icons: {apps} app cards, {len(icons) - apps} places/devices/mimetypes, {pngs} PNGs (rsvg-convert)")
+    print(f"icons: {apps} app icons, {len(icons) - apps} places/devices/mimetypes, {pngs} PNGs (rsvg-convert)")
     return icons
 
 

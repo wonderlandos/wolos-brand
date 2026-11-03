@@ -89,32 +89,12 @@ apps = {
 for n,(a,b,body) in apps.items(): app(n,a,b,body)
 
 # ---------- brand ----------
-# mark: keyhole whose top is a looking-glass oval with two rabbit ears
-MARK_PATH = "M44 8 C44 2 52 2 52 10 L50 22 M20 8 C20 2 12 2 12 10 L14 22"
-def mark(size_box=64):
-    return '''<g>
-<path d="M22 22 C17 14 16 4 21 3 C26 2 28 12 28 21Z M42 22 C47 14 48 4 43 3 C38 2 36 12 36 21Z" fill="url(#mg)"/>
-<circle cx="32" cy="33" r="15" fill="url(#mg)"/>
-<path d="M27 40 L24 60 H40 L37 40Z" fill="url(#mg)"/>
-<circle cx="32" cy="32" r="6" fill="#fff"/><path d="M29.5 35 L28 46 H36 L34.5 35Z" fill="#fff"/>
-</g>'''
-MG = f'<linearGradient id="mg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B49CFF"/><stop offset="1" stop-color="#5B3BE8"/></linearGradient>'
-w("brand/wolos-mark.svg", f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64"><defs>{MG}</defs>{mark()}</svg>')
-# symbolic menubar glyph (monochrome, 16px)
-GLYPH = '<path fill="currentColor" fill-rule="evenodd" d="M5.4 5.6C4.2 3.8 4 1 5.3.7 6.6.4 7.1 3 7.1 5.2ZM10.6 5.6c1.2-1.8 1.4-4.6.1-4.9C9.4.4 8.9 3 8.9 5.2ZM8 4.4a4 4 0 0 1 1.6 7.7L10.3 15.5H5.7L6.4 12.1A4 4 0 0 1 8 4.4ZM8 6.9a1.4 1.4 0 0 0-.7 2.6L6.9 12.6H9.1L8.7 9.5A1.4 1.4 0 0 0 8 6.9Z"/>'
-w("brand/wolos-glyph-symbolic.svg", f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" style="color:#2e3436">{GLYPH}</svg>')
-def wordmark(fill, fname):
-    w(fname, f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 96" width="360" height="96"><defs>{MG}</defs>
-<g transform="translate(8 16)">{mark()}</g>
-<text x="92" y="66" font-family="Inter, 'SF Pro Display', 'Helvetica Neue', sans-serif" font-size="56" font-weight="600" letter-spacing="-1.5" fill="{fill}">Wol<tspan fill="url(#mg)" font-weight="700">OS</tspan></text></svg>''')
-wordmark("#1C1C1E", "brand/wolos-wordmark.svg")
-wordmark("#F5F5F7", "brand/wolos-wordmark-dark.svg")
-w("brand/wolos-boot.svg", f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080"><defs>
-<linearGradient id="mg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#D9D0FF"/></linearGradient></defs>
-<rect width="1920" height="1080" fill="#000"/>
-<g transform="translate(864 360) scale(3)">{mark().replace('fill="#fff"','fill="#000"')}</g>
-<rect x="810" y="720" width="300" height="6" rx="3" fill="#fff" fill-opacity=".22"/><rect x="810" y="720" width="110" height="6" rx="3" fill="#fff"/>
-</svg>''')
+# The mark (nested doors), wordmark, boot splash and the Rabbit are drawn by tools/brand (fill-only,
+# stdlib): brand/*.svg + the splash PNGs, illustrations/white-rabbit*.svg and their PNGs.
+import sys
+sys.path.insert(0, os.path.join(D, "tools", "brand"))
+import build as brand_build
+brand_build.build(D)
 
 # ---------- symbolic icons (16px, Adwaita-style currentColor) ----------
 def sym(name, body):
@@ -154,7 +134,6 @@ sym("preferences-system-notifications-symbolic", '<path d="M8 1.5a4 4 0 0 0-4 4V
 sym("system-search-symbolic", '<circle cx="6.5" cy="6.5" r="4.5" fill="none" stroke="#2e3436" stroke-width="2"/><path d="M10 10 14.5 14.5" stroke="#2e3436" stroke-width="2.2" stroke-linecap="round"/>')
 sym("system-shutdown-symbolic", '<path d="M4.5 4A6 6 0 1 0 11.5 4" fill="none" stroke="#2e3436" stroke-width="1.8" stroke-linecap="round"/><path d="M8 1.5V8" stroke="#2e3436" stroke-width="1.8" stroke-linecap="round"/>')
 sym("preferences-system-time-symbolic", '<circle cx="8" cy="8" r="6.3" fill="none" stroke="#2e3436" stroke-width="1.5"/><path d="M8 4.2V8l2.6 1.8" fill="none" stroke="#2e3436" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>')
-sym("wolos-logo-symbolic", GLYPH.replace('fill="currentColor" ',''))
 
 # ---------- wallpapers ----------
 def wall(name, bg, blobs, extra=""):

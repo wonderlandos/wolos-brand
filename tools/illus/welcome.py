@@ -289,8 +289,8 @@ def rabbit_in_light(cv):
     body = mascots.rabbit_pose()
     rid = cv.id("rab")
     cv.defs.append(f'<g id="{rid}">{body}</g>')
-    s = .33
-    fx, fy = 433, 299                              # where his feet meet the grass
+    s = .3
+    fx, fy = 404, 296                              # where his feet meet the grass
     tx, ty = fx - mascots.FEET[0] * s, fy - mascots.FEET[1] * s
     place = f"translate({tx} {ty}) scale({s})"
     # shadow: everything above the grass is laid down to the right and towards us

@@ -37,7 +37,7 @@ def png(src, out, px, py=None):
 
 def rgba(path):
     """Force 8-bit RGBA (colour type 6): the loader and the checks read PNG32 only."""
-    subprocess.run(["convert", path, "-define", "png:color-type=6", f"PNG32:{path}"], check=True)
+    subprocess.run(["convert", path, "-strip", "-define", "png:color-type=6", f"PNG32:{path}"], check=True)
 
 
 def placed(inner, x, y, height):

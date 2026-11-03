@@ -15,8 +15,8 @@ Everything here is generated: `python3 -I design/tools/brand/build.py design` (f
 | `wolos-glyph-symbolic.svg` | 16 | Menubar glyph: one path, `currentColor`, GTK recolours it. Icon theme names `wolos-glyph-symbolic` and `wolos-logo-symbolic`. |
 | `wolos-wordmark.svg` | 360x96 | Mark and "WolOS" for light grounds. At least 96 px wide. |
 | `wolos-wordmark-dark.svg` | 360x96 | The same for dark grounds. |
-| `wolos-boot.svg` | 1920x1080 | Boot splash: the mark on black with the progress bar. |
-| `wolos-splash.png` | 256x256 | Kernel and plymouth splash: the mark on black, 8-bit RGBA. Installed to `/boot/images/wolos.png` and the plymouth theme. |
+| `wolos-boot.svg` | 1920x1080 | Boot splash: the white mono mark on black with the progress bar. |
+| `wolos-splash.png` | 256x256 | Kernel and plymouth splash: the white mono mark on black, 8-bit RGBA. Installed to `/boot/images/wolos.png` and the plymouth theme. |
 | `os_wolos.png` | 128x128 | Raster `wolos-mark.svg`, transparent. |
 
 Rules
