@@ -154,7 +154,10 @@ def check(path):
     res["layers"] = (not last_is_shadow and not orphan, f"{len(shadows)} shadows, orphan {len(orphan)}")
     res["centring"] = centring(path)
     res["nearmiss"] = nearmiss(path)
-    s16 = render(path, 16)
+    # 16 px is drawn from the small variant when one exists (icons/apps/small, east/*/small)
+    import os as _os
+    sib = _os.path.join(_os.path.dirname(path), "small", _os.path.basename(path))
+    s16 = render(sib if _os.path.exists(sib) else path, 16)
     m = s16[..., 3] > 0.9
     L = lum(s16[..., :3])[m]
     if L.size:
