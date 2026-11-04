@@ -1,0 +1,197 @@
+{
+ "frame": [
+  975,
+  102
+ ],
+ "nodes": [
+  {
+   "id": "frame",
+   "rect": [
+    0,
+    0,
+    975,
+    102
+   ],
+   "role": "box"
+  },
+  {
+   "id": "shelf",
+   "rect": [
+    32,
+    24,
+    911,
+    70
+   ],
+   "role": "opening",
+   "parent": "frame",
+   "radius": 24
+  },
+  {
+   "id": "t0",
+   "rect": [
+    45.0,
+    29.0,
+    60,
+    60
+   ],
+   "role": "control",
+   "parent": "shelf",
+   "group": "tiles"
+  },
+  {
+   "id": "t1",
+   "rect": [
+    113.0,
+    29.0,
+    60,
+    60
+   ],
+   "role": "control",
+   "parent": "shelf",
+   "group": "tiles"
+  },
+  {
+   "id": "t2",
+   "rect": [
+    181.0,
+    29.0,
+    60,
+    60
+   ],
+   "role": "control",
+   "parent": "shelf",
+   "group": "tiles"
+  },
+  {
+   "id": "t3",
+   "rect": [
+    249.0,
+    29.0,
+    60,
+    60
+   ],
+   "role": "control",
+   "parent": "shelf",
+   "group": "tiles"
+  },
+  {
+   "id": "t4",
+   "rect": [
+    317.0,
+    29.0,
+    60,
+    60
+   ],
+   "role": "control",
+   "parent": "shelf",
+   "group": "tiles"
+  },
+  {
+   "id": "t5",
+   "rect": [
+    385.0,
+    29.0,
+    60,
+    60
+   ],
+   "role": "control",
+   "parent": "shelf",
+   "group": "tiles"
+  },
+  {
+   "id": "t6",
+   "rect": [
+    453.0,
+    29.0,
+    60,
+    60
+   ],
+   "role": "control",
+   "parent": "shelf",
+   "group": "tiles"
+  },
+  {
+   "id": "t7",
+   "rect": [
+    521.0,
+    29.0,
+    60,
+    60
+   ],
+   "role": "control",
+   "parent": "shelf",
+   "group": "tiles"
+  },
+  {
+   "id": "t8",
+   "rect": [
+    589.0,
+    29.0,
+    60,
+    60
+   ],
+   "role": "control",
+   "parent": "shelf",
+   "group": "tiles"
+  },
+  {
+   "id": "t9",
+   "rect": [
+    657.0,
+    29.0,
+    60,
+    60
+   ],
+   "role": "control",
+   "parent": "shelf",
+   "group": "tiles"
+  },
+  {
+   "id": "t10",
+   "rect": [
+    725.0,
+    29.0,
+    60,
+    60
+   ],
+   "role": "control",
+   "parent": "shelf",
+   "group": "tiles"
+  },
+  {
+   "id": "sep",
+   "rect": [
+    793.0,
+    39.0,
+    1,
+    40.0
+   ],
+   "role": "line",
+   "parent": "shelf"
+  },
+  {
+   "id": "t11",
+   "rect": [
+    802.0,
+    29.0,
+    60,
+    60
+   ],
+   "role": "control",
+   "parent": "shelf",
+   "group": "tiles"
+  },
+  {
+   "id": "t12",
+   "rect": [
+    870.0,
+    29.0,
+    60,
+    60
+   ],
+   "role": "control",
+   "parent": "shelf",
+   "group": "tiles"
+  }
+ ]
+}

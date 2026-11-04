@@ -1,0 +1,132 @@
+{
+ "prim-current": [
+  74.0,
+  {
+   "qi": 100.0,
+   "sha": 88.3,
+   "forms": 80.9,
+   "zones": 75.0,
+   "palette": 100.0,
+   "light": 67.7,
+   "proportion": 34.0,
+   "density": 46.4
+  }
+ ],
+ "dock-current-light": [
+  75.7,
+  {
+   "qi": 85.6,
+   "sha": 94.9,
+   "forms": 100.0,
+   "zones": 95.5,
+   "palette": 87.5,
+   "light": 44.0,
+   "proportion": 37.0,
+   "density": 60.7
+  }
+ ],
+ "cc-current-light": [
+  71.0,
+  {
+   "qi": 76.3,
+   "sha": 56.6,
+   "forms": 72.5,
+   "zones": 97.2,
+   "palette": 87.5,
+   "light": 75.2,
+   "proportion": 35.5,
+   "density": 67.6
+  }
+ ],
+ "dock-current-dark": [
+  80.0,
+  {
+   "qi": 65.7,
+   "sha": 95.2,
+   "forms": 100.0,
+   "zones": 95.4,
+   "palette": 87.5,
+   "light": 81.6,
+   "proportion": 49.1,
+   "density": 65.2
+  }
+ ],
+ "cc-current-dark": [
+  60.5,
+  {
+   "qi": 78.8,
+   "sha": 0.0,
+   "forms": 69.0,
+   "zones": 97.8,
+   "palette": 87.5,
+   "light": 56.3,
+   "proportion": 34.5,
+   "density": 60.4
+  }
+ ],
+ "prim-proposed": [
+  73.7,
+  {
+   "qi": 94.9,
+   "sha": 98.2,
+   "forms": 73.1,
+   "zones": 74.9,
+   "palette": 100.0,
+   "light": 51.4,
+   "proportion": 45.1,
+   "density": 51.6
+  }
+ ],
+ "dock-proposed-light": [
+  77.0,
+  {
+   "qi": 80.3,
+   "sha": 95.2,
+   "forms": 100.0,
+   "zones": 96.1,
+   "palette": 87.5,
+   "light": 49.6,
+   "proportion": 46.8,
+   "density": 60.8
+  }
+ ],
+ "cc-proposed-light": [
+  75.3,
+  {
+   "qi": 78.3,
+   "sha": 55.9,
+   "forms": 73.2,
+   "zones": 96.9,
+   "palette": 87.5,
+   "light": 76.0,
+   "proportion": 65.7,
+   "density": 69.3
+  }
+ ],
+ "dock-proposed-dark": [
+  79.8,
+  {
+   "qi": 63.4,
+   "sha": 95.5,
+   "forms": 100.0,
+   "zones": 96.1,
+   "palette": 87.5,
+   "light": 80.4,
+   "proportion": 45.2,
+   "density": 70.2
+  }
+ ],
+ "cc-proposed-dark": [
+  66.3,
+  {
+   "qi": 71.7,
+   "sha": 7.3,
+   "forms": 73.3,
+   "zones": 97.8,
+   "palette": 87.5,
+   "light": 62.1,
+   "proportion": 63.7,
+   "density": 67.2
+  }
+ ]
+}

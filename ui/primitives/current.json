@@ -1,0 +1,279 @@
+{
+ "frame": [
+  576,
+  432
+ ],
+ "nodes": [
+  {
+   "id": "frame",
+   "rect": [
+    0,
+    0,
+    576,
+    432
+   ],
+   "role": "box",
+   "fill": "#F3F1F8"
+  },
+  {
+   "id": "panel",
+   "rect": [
+    24,
+    24,
+    528,
+    384
+   ],
+   "role": "opening",
+   "fill": "#F8F7FB",
+   "parent": "frame",
+   "radius": 16
+  },
+  {
+   "id": "btn0",
+   "rect": [
+    48,
+    48,
+    68,
+    24
+   ],
+   "role": "control",
+   "fill": "#E9E7F0",
+   "parent": "panel",
+   "radius": 6,
+   "group": "row1"
+  },
+  {
+   "id": "btn1",
+   "rect": [
+    124,
+    48,
+    68,
+    24
+   ],
+   "role": "control",
+   "fill": "#7C5CFF",
+   "parent": "panel",
+   "radius": 6,
+   "group": "row1"
+  },
+  {
+   "id": "btn2",
+   "rect": [
+    200,
+    48,
+    68,
+    24
+   ],
+   "role": "control",
+   "fill": "#CF3A68",
+   "parent": "panel",
+   "radius": 6,
+   "group": "row1"
+  },
+  {
+   "id": "iconbtn",
+   "rect": [
+    276,
+    48,
+    24,
+    24
+   ],
+   "role": "control",
+   "fill": "#E9E7F0",
+   "parent": "panel",
+   "radius": 6,
+   "group": "row1"
+  },
+  {
+   "id": "sw0",
+   "rect": [
+    48,
+    96,
+    30,
+    18
+   ],
+   "role": "control",
+   "fill": "#CFCDD6",
+   "parent": "panel",
+   "radius": 9,
+   "group": "row2"
+  },
+  {
+   "id": "sw1",
+   "rect": [
+    94,
+    96,
+    30,
+    18
+   ],
+   "role": "control",
+   "fill": "#7C5CFF",
+   "parent": "panel",
+   "radius": 9,
+   "group": "row2"
+  },
+  {
+   "id": "slider",
+   "rect": [
+    140,
+    97.0,
+    148,
+    16
+   ],
+   "role": "control",
+   "fill": "#7C5CFF",
+   "parent": "panel",
+   "radius": 8,
+   "group": "row2"
+  },
+  {
+   "id": "circ0",
+   "rect": [
+    304,
+    91.0,
+    28,
+    28
+   ],
+   "role": "control",
+   "fill": "#CFCDD6",
+   "parent": "panel",
+   "radius": 14,
+   "group": "row2"
+  },
+  {
+   "id": "circ1",
+   "rect": [
+    340,
+    91.0,
+    28,
+    28
+   ],
+   "role": "control",
+   "fill": "#7C5CFF",
+   "parent": "panel",
+   "radius": 14,
+   "group": "row2"
+  },
+  {
+   "id": "entry",
+   "rect": [
+    48,
+    148,
+    216,
+    24
+   ],
+   "role": "control",
+   "fill": "#E9E7F0",
+   "parent": "panel",
+   "radius": 6,
+   "group": "row3"
+  },
+  {
+   "id": "segmented",
+   "rect": [
+    288,
+    148,
+    160,
+    24
+   ],
+   "role": "control",
+   "fill": "#E9E7F0",
+   "parent": "panel",
+   "radius": 6,
+   "group": "row3"
+  },
+  {
+   "id": "card",
+   "rect": [
+    48,
+    196,
+    480,
+    80
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 10
+  },
+  {
+   "id": "row0",
+   "rect": [
+    48,
+    196,
+    480,
+    40
+   ],
+   "role": "text",
+   "parent": "card",
+   "group": "rows"
+  },
+  {
+   "id": "row1",
+   "rect": [
+    48,
+    236,
+    480,
+    40
+   ],
+   "role": "text",
+   "parent": "card",
+   "group": "rows"
+  },
+  {
+   "id": "tile0",
+   "rect": [
+    48,
+    300,
+    114,
+    76
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 10,
+   "group": "tiles"
+  },
+  {
+   "id": "tile1",
+   "rect": [
+    170,
+    300,
+    114,
+    76
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 10,
+   "group": "tiles"
+  },
+  {
+   "id": "tile2",
+   "rect": [
+    292,
+    300,
+    114,
+    76
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 10,
+   "group": "tiles"
+  },
+  {
+   "id": "tile3",
+   "rect": [
+    414,
+    300,
+    114,
+    76
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 10,
+   "group": "tiles"
+  }
+ ]
+}

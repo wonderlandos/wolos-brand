@@ -1,0 +1,444 @@
+{
+ "frame": [
+  400,
+  720
+ ],
+ "nodes": [
+  {
+   "id": "frame",
+   "rect": [
+    0,
+    0,
+    400,
+    720
+   ],
+   "role": "box"
+  },
+  {
+   "id": "panel",
+   "rect": [
+    32,
+    24,
+    336,
+    600
+   ],
+   "role": "opening",
+   "parent": "frame",
+   "radius": 24
+  },
+  {
+   "id": "connectivity",
+   "rect": [
+    44,
+    36,
+    152,
+    84
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 12,
+   "group": "top"
+  },
+  {
+   "id": "connectivity0",
+   "rect": [
+    56,
+    48,
+    28,
+    28
+   ],
+   "role": "control",
+   "parent": "connectivity",
+   "radius": 14
+  },
+  {
+   "id": "connectivity1",
+   "rect": [
+    56,
+    80,
+    28,
+    28
+   ],
+   "role": "control",
+   "parent": "connectivity",
+   "radius": 14
+  },
+  {
+   "id": "modes",
+   "rect": [
+    204,
+    36,
+    152,
+    84
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 12,
+   "group": "top"
+  },
+  {
+   "id": "modes0",
+   "rect": [
+    216,
+    48,
+    28,
+    28
+   ],
+   "role": "control",
+   "parent": "modes",
+   "radius": 14
+  },
+  {
+   "id": "modes1",
+   "rect": [
+    216,
+    80,
+    28,
+    28
+   ],
+   "role": "control",
+   "parent": "modes",
+   "radius": 14
+  },
+  {
+   "id": "sound",
+   "rect": [
+    44,
+    128,
+    312,
+    64
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 12,
+   "group": "mods"
+  },
+  {
+   "id": "sound-bar",
+   "rect": [
+    56,
+    156,
+    268,
+    24
+   ],
+   "role": "control",
+   "parent": "sound",
+   "radius": 12
+  },
+  {
+   "id": "np",
+   "rect": [
+    44,
+    200,
+    312,
+    64
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 12,
+   "group": "mods"
+  },
+  {
+   "id": "np-art",
+   "rect": [
+    56,
+    212,
+    40,
+    40
+   ],
+   "role": "box",
+   "parent": "np",
+   "radius": 8
+  },
+  {
+   "id": "display",
+   "rect": [
+    44,
+    272,
+    312,
+    64
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 12,
+   "group": "mods"
+  },
+  {
+   "id": "display-bar",
+   "rect": [
+    56,
+    300,
+    268,
+    24
+   ],
+   "role": "control",
+   "parent": "display",
+   "radius": 12
+  },
+  {
+   "id": "tile0",
+   "rect": [
+    44,
+    344,
+    72,
+    84
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 12,
+   "group": "tiles0"
+  },
+  {
+   "id": "tile0c",
+   "rect": [
+    66.0,
+    356,
+    28,
+    28
+   ],
+   "role": "control",
+   "parent": "tile0",
+   "radius": 14
+  },
+  {
+   "id": "tile1",
+   "rect": [
+    124,
+    344,
+    72,
+    84
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 12,
+   "group": "tiles0"
+  },
+  {
+   "id": "tile1c",
+   "rect": [
+    146.0,
+    356,
+    28,
+    28
+   ],
+   "role": "control",
+   "parent": "tile1",
+   "radius": 14
+  },
+  {
+   "id": "tile2",
+   "rect": [
+    204,
+    344,
+    72,
+    84
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 12,
+   "group": "tiles0"
+  },
+  {
+   "id": "tile2c",
+   "rect": [
+    226.0,
+    356,
+    28,
+    28
+   ],
+   "role": "control",
+   "parent": "tile2",
+   "radius": 14
+  },
+  {
+   "id": "tile3",
+   "rect": [
+    284,
+    344,
+    72,
+    84
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 12,
+   "group": "tiles0"
+  },
+  {
+   "id": "tile3c",
+   "rect": [
+    306.0,
+    356,
+    28,
+    28
+   ],
+   "role": "control",
+   "parent": "tile3",
+   "radius": 14
+  },
+  {
+   "id": "tile4",
+   "rect": [
+    44,
+    436,
+    72,
+    84
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 12,
+   "group": "tiles1"
+  },
+  {
+   "id": "tile4c",
+   "rect": [
+    66.0,
+    448,
+    28,
+    28
+   ],
+   "role": "control",
+   "parent": "tile4",
+   "radius": 14
+  },
+  {
+   "id": "tile5",
+   "rect": [
+    124,
+    436,
+    72,
+    84
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 12,
+   "group": "tiles1"
+  },
+  {
+   "id": "tile5c",
+   "rect": [
+    146.0,
+    448,
+    28,
+    28
+   ],
+   "role": "control",
+   "parent": "tile5",
+   "radius": 14
+  },
+  {
+   "id": "tile6",
+   "rect": [
+    204,
+    436,
+    72,
+    84
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 12,
+   "group": "tiles1"
+  },
+  {
+   "id": "tile6c",
+   "rect": [
+    226.0,
+    448,
+    28,
+    28
+   ],
+   "role": "control",
+   "parent": "tile6",
+   "radius": 14
+  },
+  {
+   "id": "tile7",
+   "rect": [
+    284,
+    436,
+    72,
+    84
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 12,
+   "group": "tiles1"
+  },
+  {
+   "id": "tile7c",
+   "rect": [
+    306.0,
+    448,
+    28,
+    28
+   ],
+   "role": "control",
+   "parent": "tile7",
+   "radius": 14
+  },
+  {
+   "id": "tile8",
+   "rect": [
+    44,
+    528,
+    72,
+    84
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 12,
+   "group": "tiles2"
+  },
+  {
+   "id": "tile8c",
+   "rect": [
+    66.0,
+    540,
+    28,
+    28
+   ],
+   "role": "control",
+   "parent": "tile8",
+   "radius": 14
+  },
+  {
+   "id": "tile9",
+   "rect": [
+    124,
+    528,
+    72,
+    84
+   ],
+   "role": "box",
+   "fill": "#FFFFFF",
+   "parent": "panel",
+   "radius": 12,
+   "group": "tiles2"
+  },
+  {
+   "id": "tile9c",
+   "rect": [
+    146.0,
+    540,
+    28,
+    28
+   ],
+   "role": "control",
+   "parent": "tile9",
+   "radius": 14
+  }
+ ]
+}
