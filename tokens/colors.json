@@ -1,48 +1,47 @@
 {
   "accent": {
-    "light": "#6D48EB",
-    "dark": "#9181FF",
-    "fill": "#7452F5"
+    "light": "#7452F5",
+    "dark": "#7452F5"
   },
   "light": {
     "bg": "#F1F1FA",
     "surface": "#FFFFFF",
     "surface-2": "#EBEBF3",
-    "menubar": "rgba(245,244,249,0.72)",
+    "sidebar": "rgba(235,235,243,0.92)",
+    "menubar": "rgba(241,241,250,0.72)",
     "dock": "rgba(255,255,255,0.55)",
-    "border": "rgba(34,27,54,0.12)",
+    "border": "rgba(21,21,32,0.12)",
     "text": "#151520",
     "text-2": "#565563",
-    "shadow": "rgba(24,21,33,0.18)",
-    "red": "#CF3A68",
-    "orange": "#D9541E",
-    "yellow": "#E0A21F",
-    "green": "#1C9A6E",
-    "blue": "#1D64B0",
-    "accent": "#6D48EB",
-    "accent-fill": "#7452F5",
+    "shadow": "rgba(21,21,32,0.18)",
+    "red": "#BB3F27",
+    "orange": "#C06400",
+    "yellow": "#C58A00",
+    "green": "#00863C",
+    "blue": "#007292",
+    "accent": "#7452F5",
     "accent-fg": "#FFFFFF",
-    "selection": "rgba(124,92,255,0.22)"
+    "selection": "rgba(116,82,245,0.22)"
   },
   "dark": {
     "bg": "#15151D",
     "surface": "#292932",
     "surface-2": "#383741",
-    "menubar": "rgba(25,23,32,0.62)",
-    "dock": "rgba(39,37,47,0.50)",
-    "border": "rgba(237,232,255,0.12)",
+    "sidebar": "rgba(32,32,42,0.92)",
+    "menubar": "rgba(21,21,29,0.62)",
+    "dock": "rgba(41,41,50,0.5)",
+    "border": "rgba(248,248,252,0.12)",
     "text": "#F8F8FC",
     "text-2": "#B4B4BB",
-    "shadow": "rgba(8,6,14,0.45)",
-    "red": "#F2678F",
-    "orange": "#FF8A55",
-    "yellow": "#FFC94A",
-    "green": "#5BE3B0",
-    "blue": "#6AAEF2",
-    "accent": "#9181FF",
-    "accent-fill": "#7452F5",
+    "shadow": "rgba(2,2,6,0.45)",
+    "red": "#EE7E66",
+    "orange": "#F2944C",
+    "yellow": "#FFD189",
+    "green": "#6BC681",
+    "blue": "#35BEEE",
+    "accent": "#7452F5",
     "accent-fg": "#FFFFFF",
-    "selection": "rgba(155,133,255,0.30)"
+    "selection": "rgba(145,129,255,0.3)"
   },
   "icon": {
     "grid": 64,
@@ -100,18 +99,6 @@
         "pop": "#CF3A68"
       }
     }
-  },
-  "elevation": {
-    "light": [
-      "1px 2px 4px color-mix(in oklab, #151520 12%, transparent)",
-      "2px 4px 12px color-mix(in oklab, #151520 16%, transparent)",
-      "3px 6px 24px color-mix(in oklab, #151520 22%, transparent)"
-    ],
-    "dark": [
-      "1px 2px 4px color-mix(in oklab, #08080E 40%, transparent)",
-      "2px 4px 12px color-mix(in oklab, #08080E 48%, transparent)",
-      "3px 6px 24px color-mix(in oklab, #08080E 56%, transparent)"
-    ]
   },
   "radius": {
     "sm": "8px",

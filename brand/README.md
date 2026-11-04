@@ -2,7 +2,9 @@
 
 The mark is four nested doors on one floor line: the small door into Wonderland, with light coming through. Flat fills only, no gradients, no strokes. Colours come from `../tokens/colors.json`: accent `#7C5CFF` (light) and `#8B6CFF` (dark), plus three steps of the same hue for depth (`#4B2FD6`, `#33208A`; on dark `#5E3FE6`, `#36209A`) and the tint `#E9E3FF` for the lit door. The wordmark is drawn (one round-capped stroke weight, expanded to outlines), so it needs no font. The ink is the WolOS neutral ramp from the same tokens (`light.text` `#181521` on light, `dark.text` `#F6F5FB` on dark); the generator reads it, so a token retune reaches the brand on the next build.
 
-Everything here is generated: `python3 -I design/tools/brand/build.py design` (from the repository root; needs `rsvg-convert`, and `convert` for the site favicon). The `-ja` files are the exception: the katakana is outlined once from Noto Sans CJK JP (SIL OFL 1.1, no font embedded) by the CJK brand tool (`.claude/brand/cjk/src/final.py` in the product checkout); `build.py` does not rebuild them.
+The Keyhole character (`../illustrations/keyhole.svg`, drawn by `../tools/illus/keyhole.py`) is this mark made as an object, so the mascot cast and the logo tell one story. It keeps the mark's geometry exactly: `mark_paths()` and `door_set()` read the four doors from `../tools/brand/marks.py`, so a change to the mark reaches the character, the Setup welcome doorway and the maker's mark on the Pocket Watch on the next build. Only the finish is the cast's crafted, lit style, not the flat mark: the outer door is violet lacquer in the accent `#7C5CFF` with a thin brass bead, the next two doors are set deeper in `#4B2FD6` and `#33208A`, each with a brass lip and the shadow its lip casts, and the little door is open. Through it is a garden washed out by its own light (`#E9E3FF` going to white), and that light falls on the lacquer and on the brass sill, which is the mark's floor line. There are no ears, no pixel detail and no flat icon shapes. The order of the colours and the shape of the doors never change, and the mark itself stays flat.
+
+Everything here is generated: `python3 -I design/tools/brand/build.py design` (from the repository root; needs `rsvg-convert`, and `convert` for the site favicon).
 
 | File | viewBox | Use |
 |---|---|---|
@@ -18,17 +20,9 @@ Everything here is generated: `python3 -I design/tools/brand/build.py design` (f
 | `wolos-boot.svg` | 1920x1080 | Boot splash: the white mono mark on black with the progress bar. |
 | `wolos-splash.png` | 256x256 | Kernel and plymouth splash: the white mono mark on black, 8-bit RGBA. Installed to `/boot/images/wolos.png` and the plymouth theme. |
 | `os_wolos.png` | 128x128 | Raster `wolos-mark.svg`, transparent. |
-| `wolos-wordmark-ja.svg` | 6254x1834 (1x 218x64) | Japanese mark: ウォロス alone, Noto Sans CJK JP Black, centred, transparent, for light grounds. No door, no Chinese. Japanese pages, store listing, merch. At least 18 px ink height. |
-| `wolos-wordmark-ja-dark.svg` | 6254x1834 | The same for dark grounds. |
-| `wolos-wordmark-ja-boot.svg` | 2129x990.34 (1x 480x223) | WolOS over ウォルOS (Noto Sans CJK JP Medium), centred, transparent, for light grounds. Boot and start screens. At least 320 px wide (the ウォルOS line is then about 15 px tall). |
-| `wolos-wordmark-ja-boot-dark.svg` | 2129x990.34 | The same for dark grounds (the boot one). |
-| `wolos-boot-ja.svg` | 1920x1080 | Japanese boot splash 16:9: `wolos-wordmark-ja-boot-dark` centred on `dark.bg` `#191720`, letters 640 px wide. |
-| `wolos-boot-ja-2560x1600.svg` | 2560x1600 | The same at 16:10 (letters 853 px wide). |
-| `wolos-splash-ja.png` | 480x190 | Plymouth-ready: the boot lockup in `dark.text` on transparent, 8-bit RGBA; the theme script draws the background. |
 
 Rules
 - Clear space around the lockup is half the cap height of the wordmark; around the mark alone, one fifth of its width.
-- Japanese marks: clear space is half the ink height around `wolos-wordmark-ja`, half the WolOS cap height around the boot lockup (both are built into the artboards). Never set ウォロス or ウォルOS in a live font, re-track it, add the door mark or a Chinese line to it.
 - Below 96 px wide use the mark alone. Below 24 px use `wolos-mark-16*.svg` or the glyph.
 - Do not recolour the doors, add a gradient or a shadow, stretch it, or put it on a busy photo (use `-mono-white`).
 
