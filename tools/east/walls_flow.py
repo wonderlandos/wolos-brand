@@ -412,7 +412,7 @@ def form_sig_gate(doc, fr, P):
 
 
 # ---------------------------------------------------------------- contemporary register (matte)
-def grain(doc, fr, P, opacity=0.12, seed=3):
+def grain(doc, fr, P, opacity=0.16, seed=3):
     """Paper grain: one small tile of tiny light and dark specks, repeated over the frame."""
     rnd = random.Random(seed)
     s = 192
@@ -433,12 +433,14 @@ def matte_backdrop(doc, fr, P):
     doc.add(f'<rect width="{W}" height="{H}" fill="{g}"/>')
 
 
-def sheet(doc, fr, P, pts, thick, ca, cb, shadow=0.16, opacity=1.0, blur=0, fibres=84, seed=1):
+def sheet(doc, fr, P, pts, thick, ca, cb, shadow=0.16, opacity=None, blur=0, fibres=84, seed=1):
     """A matte sheet laid along a path, full width where it enters, fading on the landing. A soft coloured
     shadow beneath lifts it like cut paper; inside, fibres run along the flow (fine lines of varying
     weight, light on the lit side and shade on the other) so the field has a micro-texture. No outline,
     no highlight, no gloss."""
     W, H = fr.w, fr.h
+    if opacity is None:
+        opacity = 0.86 if P["_name"] != "night" else 1.0
     rnd = random.Random(seed)
     m = resample([(x * W, y * H) for x, y in pts], 56)
     nrm = []
@@ -485,8 +487,9 @@ def sheet(doc, fr, P, pts, thick, ca, cb, shadow=0.16, opacity=1.0, blur=0, fibr
             sw = fr.s * rnd.choice((1.6, 2.2, 3.0, 4.2))
             (lit if off < 0.05 else shd).append((ds, sw, rnd.uniform(0.16, 0.46)))
         out = [f'<g clip-path="url(#{c})" fill="none" stroke-linecap="round">']
-        for col, group in ((P["lit"], lit), (P["shade"], shd)):
-            out += [f'<path d="{ds}" stroke="{col}" stroke-width="{f(sw)}" opacity="{f(op)}"/>' for ds, sw, op in group]
+        day = P["_name"] != "night"
+        for col, group in (((P["ridge4"] if day else P["lit"]), lit), (P["shade"], shd)):
+            out += [f'<path d="{ds}" stroke="{col}" stroke-width="{f(sw)}" opacity="{f(min(0.8, op * (1.9 if day else 1)))}"/>' for ds, sw, op in group]
         out.append("</g>")
         doc.add("".join(out))
 
@@ -536,6 +539,7 @@ def form_m_gate(doc, fr, P):
     """Signature C (matte): the gate in the flow. Reading: enters by the light NO, the sheets part around the
     round void (the moon gate) and close behind it, landing at the SE."""
     W, H = fr.w, fr.h
+    night = P["_name"] == "night"
     asp = W / H
     matte_backdrop(doc, fr, P)
     c, R, land = (0.58, 0.54), 0.20, (0.80, 0.72)
@@ -575,8 +579,33 @@ def form_m_gate(doc, fr, P):
         sheet(doc, fr, P, pts, 0.40 - 0.05 * i, L[i], L[min(4, i + 1)], shadow=0.14, blur=fr.l(8) if i == 0 else 0, seed=i)
         if i == 1:
             haze(doc, fr, P, pts, 0.26)
+    def field_line(x0, y0):
+        x, y = x0, y0
+        out = [(x, y)]
+        for _ in range(260):
+            vx, vy = field(x, y)
+            x += vx * 0.010 / asp
+            y += vy * 0.010
+            if math.hypot((x - c[0]) * asp, y - c[1]) < R * 1.04:
+                x += (x - c[0]) * 0.04
+                y += (y - c[1]) * 0.04
+            out.append((x, y))
+            if x > 1.1 or y > 1.12:
+                break
+        return out
+    air = random.Random(8)
+    ds = []
+    for k in range(46):
+        pts = field_line(air.uniform(0.0, 1.0), -0.08)
+        seg = pts[int(len(pts) * air.uniform(0, 0.2)): int(len(pts) * air.uniform(0.6, 1.0))]
+        if len(seg) > 5:
+            ds.append((f"M" + " ".join(f"{f(x * W)} {f(y * H)}" if i == 0 else f"L{f(x * W)} {f(y * H)}" for i, (x, y) in enumerate(seg)), fr.s * air.choice((1.2, 1.8, 2.6, 3.6)), air.uniform(0.14, 0.4)))
+    col = P["ridge4"] if not night else P["lit"]
+    doc.add("".join(f'<path d="{d_}" fill="none" stroke="{col}" stroke-width="{f(w_)}" opacity="{f(o_)}" stroke-linecap="round"/>' for d_, w_, o_ in ds))
     cx, cy, Rp = c[0] * W, c[1] * H, R * H
     doc.add(f'<circle cx="{f(cx)}" cy="{f(cy)}" r="{f(Rp)}" fill="{lin(doc, [(0, L[0], 1), (1, L[1], 1)], (cx - Rp, cy - Rp), (cx + Rp, cy + Rp))}"/>')
+    rings = "".join(f'<circle cx="{f(cx)}" cy="{f(cy)}" r="{f(Rp * (0.35 + 0.065 * k))}" fill="none" stroke="{P["shade"] if not night else P["lit"]}" stroke-width="{f(fr.s * (1.2 + (k % 3)))}" opacity="{f(0.10 + 0.02 * (k % 4))}"/>' for k in range(10))
+    doc.add(rings)
     quiet_accent(doc, fr, P, land[0] * W, land[1] * H, 0.2 * H)
     grain(doc, fr, P)
 
@@ -621,6 +650,6 @@ def threads(doc, fr, P, line_fn, n=64, seed=4):
         if len(seg) < 6:
             continue
         ds = "M" + " ".join(f"{f(x * W)} {f(y * H)}" if i == 0 else f"L{f(x * W)} {f(y * H)}" for i, (x, y) in enumerate(seg))
-        col = P["lit"] if k % 3 else P["shade"]
+        col = (P["ridge4"] if P["_name"] != "night" else P["lit"]) if k % 3 else P["shade"]
         out.append(f'<path d="{ds}" fill="none" stroke="{col}" stroke-width="{f(fr.s * rnd.choice((1.2, 1.8, 2.6, 3.6, 5.0)))}" opacity="{f(rnd.uniform(0.16, 0.5))}" stroke-linecap="round"/>')
     doc.add("".join(out))

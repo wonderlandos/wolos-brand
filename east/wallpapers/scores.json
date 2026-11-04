@@ -373,6 +373,72 @@
   "total": 81.3,
   "zones": 95.2
  },
+ "sigfold-day-4k.svg": {
+  "density": 80.8,
+  "forms": 85.0,
+  "light": 72.1,
+  "palette": 100.0,
+  "proportion": 46.7,
+  "qi": 96.2,
+  "sha": 100.0,
+  "total": 84.6,
+  "zones": 95.9
+ },
+ "sigfold-night-4k.svg": {
+  "density": 77.6,
+  "forms": 90.0,
+  "light": 72.5,
+  "palette": 100.0,
+  "proportion": 46.0,
+  "qi": 96.2,
+  "sha": 100.0,
+  "total": 84.6,
+  "zones": 94.7
+ },
+ "siggate-day-4k.svg": {
+  "density": 75.4,
+  "forms": 88.0,
+  "light": 54.2,
+  "palette": 100.0,
+  "proportion": 39.1,
+  "qi": 96.2,
+  "sha": 100.0,
+  "total": 81.0,
+  "zones": 95.5
+ },
+ "siggate-night-4k.svg": {
+  "density": 74.7,
+  "forms": 92.5,
+  "light": 55.6,
+  "palette": 100.0,
+  "proportion": 41.0,
+  "qi": 100.0,
+  "sha": 100.0,
+  "total": 82.3,
+  "zones": 94.4
+ },
+ "sigjuzhe-day-4k.svg": {
+  "density": 84.1,
+  "forms": 72.5,
+  "light": 77.0,
+  "palette": 100.0,
+  "proportion": 48.6,
+  "qi": 92.9,
+  "sha": 100.0,
+  "total": 83.8,
+  "zones": 95.0
+ },
+ "sigjuzhe-night-4k.svg": {
+  "density": 73.2,
+  "forms": 100.0,
+  "light": 75.2,
+  "palette": 100.0,
+  "proportion": 44.7,
+  "qi": 98.8,
+  "sha": 100.0,
+  "total": 85.7,
+  "zones": 94.0
+ },
  "veil-day-16x10.svg": {
   "density": 75.3,
   "forms": 92.5,
