@@ -9,8 +9,11 @@ the folders that no generator draws, (3) the check itself stopped noticing eithe
 generator output depends on the installed icons (the loop that made the A2 set unreproducible).
 Stdlib only; reads the committed tree and writes nothing there."""
 import os
+import importlib.util
+import shutil
 import subprocess
 import sys
+import tempfile
 import unittest
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -21,6 +24,7 @@ import build  # noqa: E402
 import families  # noqa: E402
 
 SET = build.DESIGN
+ENTRY = os.path.join(HERE, "..", "icons.py")      # tools/icons.py, the entry (symbolic set + themes + build.py)
 A2_FROM_TYPES = {"settings", "software", "files", "terminal", "browser"}
 
 
@@ -86,6 +90,61 @@ class Lock(unittest.TestCase):
         )
         out = subprocess.run([sys.executable, "-I", "-c", code], capture_output=True, text=True, check=True).stdout.strip()
         self.assertEqual(out, "", "the generators read the installed icons:\n" + out)
+
+
+class Entry(unittest.TestCase):
+    """tools/icons.py (the entry) must not undo the installed symbolic set either."""
+
+    @classmethod
+    def setUpClass(cls):
+        spec = importlib.util.spec_from_file_location("wolos_icons_entry", ENTRY)
+        cls.I = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cls.I)
+        cls.I.build_symbolic()
+
+    def test_symbolic_themes_and_24px_are_the_generators(self):
+        self.assertEqual(self.I.check_all(None), [])
+
+    def test_ui_drawing_is_installed_not_the_old_one(self):
+        files, _ = self.I.symbolic_files()
+        ui = self.I.ui_symbolic()
+        for n in sorted(ui.glyphs.ICONS):
+            self.assertEqual(files[os.path.join(self.I.SYM_DIR, n + "-symbolic.svg")], ui.draw(n, 16), n)
+            self.assertEqual(files[os.path.join(self.I.SYM24_DIR, n + "-symbolic.svg")], ui.draw(n, 24), n)
+        self.assertEqual(ui.check(), [])
+
+    def test_theme_sections_and_directories_agree(self):
+        for n, t in (("index.theme", self.I.INDEX_THEME), ("dev.theme", self.I.DEV_THEME)):
+            self.assertEqual(self.I.theme_errors(n, t), [], n)
+        bug = self.I.INDEX_THEME.replace("symbolic24/status\n", "symbolic24/\n", 1)   # the bug that hid the 24 px set
+        self.assertNotEqual(bug, self.I.INDEX_THEME)
+        got = "\n".join(self.I.theme_errors("index.theme", bug))
+        self.assertIn("[symbolic24/status] is not in Directories", got)
+        self.assertIn("Directories lists symbolic24/ but there is no [symbolic24/] section", got)
+
+    def test_tampered_symbolic_and_stray_files_are_caught(self):
+        with tempfile.TemporaryDirectory() as t:
+            icons = os.path.join(t, "icons")
+            for d in ("symbolic", "symbolic24"):
+                shutil.copytree(os.path.join(SET, "icons", d), os.path.join(icons, d))
+            for f in ("index.theme", "dev.theme"):
+                shutil.copy(os.path.join(SET, "icons", f), icons)
+            saved = (self.I.DESIGN, self.I.SYM_DIR, self.I.SYM24_DIR)
+            self.I.DESIGN, self.I.SYM_DIR, self.I.SYM24_DIR = t, os.path.join(icons, "symbolic"), os.path.join(icons, "symbolic24")
+            try:
+                with open(os.path.join(icons, "symbolic", "go-next-symbolic.svg"), "a") as f:
+                    f.write(" ")
+                with open(os.path.join(icons, "index.theme"), "a") as f:
+                    f.write("\n")
+                with open(os.path.join(icons, "symbolic24", "stray-symbolic.svg"), "w") as f:
+                    f.write("<svg/>")
+                os.remove(os.path.join(icons, "symbolic", "view-more-symbolic.svg"))
+                bad = self.I.check_all(None)
+            finally:
+                self.I.DESIGN, self.I.SYM_DIR, self.I.SYM24_DIR = saved
+        text = "\n".join(bad)
+        for want in ("go-next-symbolic.svg: differs", "index.theme: differs", "stray-symbolic.svg: no generator", "view-more-symbolic.svg: missing"):
+            self.assertIn(want, text)
 
 
 if __name__ == "__main__":
