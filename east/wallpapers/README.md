@@ -31,6 +31,17 @@ Rebuild: `python3 -I tools/east/walls.py themes siggate`
 - time: under 1 second (it only writes SVG text; 12 worker processes); disk: 133 MB. Rendering a file with
   rsvg-convert takes a few seconds at 4k, so a build step should NOT rasterise them.
 - If the image must stay small, generate only the sizes and modes in use, or only the active theme at login.
+- `--out DIR` writes them to DIR instead (the image build stages them: wolos-pkgbuilds `wolos-system/PKGBUILD`
+  `_east_walls_build`, installed to `/usr/share/wolos/wallpapers/themes/`).
+
+## The parameter set (the desktop's transition)
+`python3 -I tools/east/walls.py gate --params [--theme ID] [--out FILE]` prints the Moon Gate's parameters as
+JSON: the ring (centre, radius, squash, width, twist) and the sun (centre, radius) from `walls_sig3d.GATE`, x as
+a share of the frame width and y and lengths as shares of its height, and for day and night the ring light,
+ribbon dye and sun colours `calculus.derive()` gives them (`--theme`: that theme's dye). The image ships it as
+`/usr/share/wolos/wallpapers/wolos-gate.params.json`; on a day/night or theme change the shell moves the ring
+light, the ribbon dye and the sun from the old picture to the new one over 600 ms instead of a cross-fade
+(wolos-shell `src/kit/gate.rs`, which falls back to the same values built in).
 
 ## Other forms in this directory
 `sigjuzhe-*` (the lifted eave) and `sigfold-*` (the screen fold) are variations of the same renderer;
