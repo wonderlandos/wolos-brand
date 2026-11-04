@@ -367,7 +367,7 @@ def main(argv):
     print("wrote", os.path.normpath(out))
 
 
-if __name__ == "__main__" and "--a2" not in sys.argv:
+if __name__ == "__main__" and "--a2" not in sys.argv and "--store" not in sys.argv:
     main(sys.argv[1:])
 
 
@@ -510,20 +510,17 @@ STORE_A2 = from_oklch(K.ladder(L0, 2), C0 * 16 / 21, HUE["earth"])
 
 def a2_store(small=False):
     a2_setup(); doc = Doc(S, S, "store, bold A2"); c = STORE_A2; a2_card(doc, c)
-    # a carrier bag, portrait, under two rope handles on its axis. The ropes are the card's own deep
-    # tone, so their feet stay visible where they cross the white mouth and end at eyelets: a handle
-    # must be seen to hold the bag (lead 07:13Z: "a alça parece desconectada").
-    rope_back, rope = shade(c, -10), shade(c, -5)   # the back rope is in the bag's shadow: darker than the front one
-    g2(doc, handle(10.5, 8.4, 6.4, 4.4, 1.0 if not small else 1.3), rope_back, small=small)
+    # one smooth rope handle on the bag's axis, drawn BEHIND the bag: its feet go behind the mouth,
+    # and two rivets on the front mark where it holds (lead 07:13Z / 07:16Z: the handle must read
+    # as attached, and one clean loop, not two)
+    rope = shade(c, -8)
+    g2(doc, handle(10.5, 9.0, 7.0, 4.6, 1.0 if not small else 1.4), rope, small=small)
     b = bag_mouth(4.0, 17.0, 7.0, 19.0, sag=0.5)
     g2(doc, b, under=c, small=small)
-    g2(doc, handle(10.5, 9.0, 6.4, 3.9, 0.95 if not small else 1.3), rope, elev="accent", small=small)
-    for x in (7.3, 13.7):
-        doc.add(f'<path d="{circle(X(x), X(9.0), 0.62 * FEN)}" fill="{rope}"/>')
-        if not small:
-            doc.add(f'<path d="{circle(X(x), X(9.0), 0.28 * FEN)}" fill="{leaf(c)}"/>')
-    seal = circle(X(10.5), X(14.0), (2.6 if not small else 3.0) * FEN)
-    g2(doc, seal + keyhole_at(X(10.5), X(14.0), 1.3 * FEN), CARD["settings"], elev="accent", small=small, rule="evenodd")
+    for x in (7.0, 14.0):
+        doc.add(f'<path d="{circle(X(x), X(8.4), (0.55 if not small else 0.75) * FEN)}" fill="{rope}"/>')
+    seal = circle(X(10.5), X(13.8), (2.6 if not small else 3.0) * FEN)
+    g2(doc, seal + keyhole_at(X(10.5), X(13.8), 1.3 * FEN), CARD["settings"], elev="accent", small=small, rule="evenodd")
     return doc.svg()
 
 
@@ -593,3 +590,58 @@ def main_a2(out):
 
 if __name__ == "__main__" and "--a2" in sys.argv:
     main_a2(os.path.join(HERE, "..", "..", "east", "types"))
+
+
+# ---- Store options (lead 07:16Z: why a bag? back to the Chinese references and the Western symbols)
+def store_front(small=False):
+    """A shop front: the awning is an eave (two juzhe slopes from a ridge, the corners flicked up),
+    scalloped along its lip; under it a door whose window is the keyhole."""
+    a2_setup(); doc = Doc(S, S, "store, shop front"); c = STORE_A2; a2_card(doc, c)
+    # the house body under the eave: 13 wide, from y 8.5 to 18.5
+    body = rrect(X(4.0), X(8.5), 13 * FEN, 10 * FEN, 0.8 * FEN)
+    g2(doc, body, leaf(c), small=small)
+    # the door, the landing: violet with the keyhole cut
+    door = (f"M{f(X(8.3))} {f(X(18.5))}V{f(X(13.4))}A{f(2.2 * FEN)} {f(2.2 * FEN)} 0 0 1 {f(X(12.7))} {f(X(13.4))}V{f(X(18.5))}Z")
+    g2(doc, door + keyhole_at(X(10.5), X(14.6), 1.2 * FEN), CARD["settings"], elev="accent", small=small, rule="evenodd")
+    # the eave: ridge at y 3.0, eaves at y 6.6 with the corners lifted 0.8 fen; scalloped lip at y 8.8
+    left = juzhe(X(10.5), X(3.0), X(2.4), X(6.6), purlins=4, first=0.12)[::-1]
+    right = juzhe(X(10.5), X(3.0), X(18.6), X(6.6), purlins=4, first=0.12)
+    roof = left + right[1:]
+    lip = []
+    n = 5
+    for i in range(n, -1, -1):
+        x = 2.4 + (18.6 - 2.4) * i / n
+        lip.append((X(x), X(8.0)))
+    d = (f"M{f(X(1.6))} {f(X(5.8))}L{f(roof[0][0])} {f(roof[0][1])}" + smooth(roof) + f"L{f(X(19.4))} {f(X(5.8))}L{f(X(18.6))} {f(X(8.0))}")
+    for i in range(n, 0, -1):          # scallops: half-circles hanging from the lip
+        x0, x1 = 2.4 + (18.6 - 2.4) * i / n, 2.4 + (18.6 - 2.4) * (i - 1) / n
+        r = (x0 - x1) / 2 * FEN
+        d += f"A{f(r)} {f(r * 0.7)} 0 0 1 {f(X(x1))} {f(X(8.0))}"
+    d += "Z"
+    g2(doc, d, small=small)
+    return doc.svg()
+
+
+def store_coin(small=False):
+    """The cash coin: round outside (heaven), square inside (earth); the keyhole is the square hole."""
+    a2_setup(); doc = Doc(S, S, "store, cash coin"); c = STORE_A2; a2_card(doc, c)
+    outer = circle(X(10.5), X(10.5), 7.5 * FEN)
+    hole = rrect(X(8.0), X(8.0), 5 * FEN, 5 * FEN, 0.6 * FEN)
+    g2(doc, outer + hole, small=small, rule="evenodd")
+    if not small:
+        ring = circle(X(10.5), X(10.5), 6.2 * FEN) + circle(X(10.5), X(10.5), 5.6 * FEN)
+        doc.add(f'<path d="{ring}" fill-rule="evenodd" fill="{leaf(c)}"/>')
+        hole_shadow(doc, hole)
+    g2(doc, keyhole_at(X(10.5), X(10.5), 1.9 * FEN), CARD["settings"], elev="accent", small=small)
+    return doc.svg()
+
+
+def main_store_options(out):
+    os.makedirs(os.path.join(out, "store-options", "small"), exist_ok=True)
+    for name, fn in (("bag", a2_store), ("front", store_front), ("coin", store_coin)):
+        for small in (False, True):
+            open(os.path.join(out, "store-options", "small" if small else "", f"wolos-store-{name}.svg"), "w").write(fn(small))
+
+
+if __name__ == "__main__" and "--store" in sys.argv:
+    main_store_options(os.path.join(HERE, "..", "..", "east", "types"))
