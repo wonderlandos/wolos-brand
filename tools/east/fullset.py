@@ -432,7 +432,7 @@ def bin_icon(full):
                 f"Q{f(X(17.1))} {f(X(foot))} {f(X(15.6))} {f(X(foot))}H{f(X(5.4))}Q{f(X(3.9))} {f(X(foot))} {f(X(3.6))} {f(X(foot) - 1.6 * F)}Z")
         if full:      # the paper is INSIDE: drawn before the body, so the front wall covers it and
             # only the crumpled tops show above the rim (lead 07:50Z: it sat on top of the bin)
-            sheets = ((7.0, 6.6, 3.3, 3, WHITE), (14.0, 6.8, 3.1, 7, WHITE), (10.6, 5.6, 3.0, 11, GOLD)) if not small else ((8.0, 6.4, 3.4, 3, WHITE), (13.2, 6.2, 3.2, 11, GOLD))
+            sheets = ((7.0, 5.2, 3.3, 3, WHITE), (14.0, 5.4, 3.1, 7, WHITE), (10.6, 4.0, 3.0, 11, GOLD)) if not small else ((8.0, 5.0, 3.4, 3, WHITE), (13.2, 4.8, 3.2, 11, GOLD))
             for (cx, cy, r, sd, c) in sheets:
                 g(doc, crumple(X, F, cx, cy, r, sd), c, small, "accent" if c == GOLD else "glyph")
         BIN = shade(VIOLET, -3)    # one step deeper: holds 3:1 under the white paper at 16 px
