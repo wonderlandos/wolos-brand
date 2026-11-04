@@ -410,19 +410,46 @@ def folder_icon(symbol, colour=None):
     return fn
 
 
+def crumple(X, F, cx, cy, r, seed):
+    """A crumpled sheet: a rounded polygon with uneven radii (paper, not a ball)."""
+    import random
+    rnd = random.Random(seed)
+    pts = []
+    for k in range(9):
+        ang = k / 9 * 2 * math.pi
+        rr = r * rnd.uniform(0.78, 1.0)
+        pts.append((X(cx) + rr * F * math.cos(ang), X(cy) + rr * F * math.sin(ang)))
+    return "M" + "L".join(f"{f(x)} {f(y)}" for x, y in pts) + "Z"
+
+
 def bin_icon(full):
     def fn(small=False):
         doc, X, F = bare(f"user trash{' full' if full else ''}, A2")
-        lid = rrect(X(0.0), X(3.6), 21 * F, 2.6 * F, 1.3 * F) + rrect(X(7.5), X(1.6), 6 * F, 2.4 * F, 1.0 * F)   # the full 21 fen
-        body = (f"M{f(X(1.6))} {f(X(7.0))}H{f(X(19.4))}L{f(X(17.8))} {f(X(19.6))}Q{f(X(17.6))} {f(X(21))} {f(X(16.2))} {f(X(21))}"
-                f"H{f(X(4.8))}Q{f(X(3.4))} {f(X(21))} {f(X(3.2))} {f(X(19.6))}Z")
-        g(doc, lid + body, VIOLET, small)
-        if full:      # the paper overflows over the lid (drawn after it, so it reads full)
-            g(doc, circle(X(7.4), X(3.2), 3.0 * F), WHITE, small)
-            g(doc, circle(X(13.2), X(2.8), 2.6 * F), GOLD, small, "accent")
-        for x in ((7.6, 10.5, 13.4) if not small else (8.0, 13.0)):
-            w = 0.9 if not small else 1.6
-            flat(doc, rrect(X(x) - w / 2 * F, X(10.6), w * F, 8.2 * F, w / 2 * F), WHITE if small else T.leaf(VIOLET))
+        # body: tapered (21 fen at the rim, 15 at the foot), rounded foot; a rim band in the leaf
+        # tint; three soft grooves; lid: a shallow juzhe dome with a handle
+        top, foot = 7.0, 21.0
+        body = (f"M{f(X(1.8))} {f(X(top))}H{f(X(19.2))}L{f(X(17.4))} {f(X(foot) - 1.6 * F)}"
+                f"Q{f(X(17.1))} {f(X(foot))} {f(X(15.6))} {f(X(foot))}H{f(X(5.4))}Q{f(X(3.9))} {f(X(foot))} {f(X(3.6))} {f(X(foot) - 1.6 * F)}Z")
+        if full:      # the paper is INSIDE: drawn before the body, so the front wall covers it and
+            # only the crumpled tops show above the rim (lead 07:50Z: it sat on top of the bin)
+            sheets = ((7.0, 6.6, 3.3, 3, WHITE), (14.0, 6.8, 3.1, 7, WHITE), (10.6, 5.6, 3.0, 11, GOLD)) if not small else ((8.0, 6.4, 3.4, 3, WHITE), (13.2, 6.2, 3.2, 11, GOLD))
+            for (cx, cy, r, sd, c) in sheets:
+                g(doc, crumple(X, F, cx, cy, r, sd), c, small, "accent" if c == GOLD else "glyph")
+        BIN = shade(VIOLET, -3)    # one step deeper: holds 3:1 under the white paper at 16 px
+        g(doc, body, BIN, small)
+        flat(doc, rrect(X(1.8), X(top), 17.4 * F, 1.8 * F, 0.6 * F) if False else f"M{f(X(1.8))} {f(X(top))}H{f(X(19.2))}L{f(X(18.95))} {f(X(top + 1.6))}H{f(X(2.05))}Z", shade(BIN, 6))
+        if True:
+            for x0, x1 in (((7.2, 7.8), (10.2, 10.5), (13.8, 13.2)) if not small else ((7.6, 8.0), (13.4, 13.0))):
+                w = 0.9 if not small else 2.2
+                groove = T.ribbon([(X(x0), X(top + 3.6)), (X(x1), X(foot - 2.4))], w * F)
+                flat(doc, groove, shade(BIN, 6) if not small else WHITE)
+        if full:
+            return doc.svg()
+        dome = juzhe(X(10.5), X(3.4), X(0.4), X(5.6), purlins=3, first=0.14)[::-1] + juzhe(X(10.5), X(3.4), X(20.6), X(5.6), purlins=3, first=0.14)[1:]
+        lid = f"M{f(dome[0][0])} {f(dome[0][1])}" + smooth(dome) + f"L{f(X(20.6))} {f(X(6.6))}Q{f(X(20.6))} {f(X(7.0))} {f(X(20.2))} {f(X(7.0))}H{f(X(0.8))}Q{f(X(0.4))} {f(X(7.0))} {f(X(0.4))} {f(X(6.6))}Z"
+        handle = rrect(X(8.0), X(1.6), 5 * F, 2.4 * F, 1.2 * F) + rrect(X(9.2), X(2.4), 2.6 * F, 1.2 * F, 0.6 * F)
+        g(doc, lid, VIOLET, small)
+        g(doc, handle, VIOLET, small, rule="evenodd")
         return doc.svg()
     return fn
 
