@@ -134,9 +134,11 @@ def check(path):
     if n:
         big = lab == (np.argmax(ndimage.sum(solid, lab, range(1, n + 1))) + 1)
         filled = ndimage.binary_fill_holes(big)
+        ys, xs = np.nonzero(filled)
+        carded = filled.sum() / ((xs.ptp() + 1) * (ys.ptp() + 1)) > 0.8      # a card fills its box
         core = ndimage.binary_erosion(filled, iterations=round(512 / 24))
         mn = al[core].min() if core.any() else 1.0
-        res["holes"] = (mn >= 0.99, f"core alpha min {mn:.3f}")
+        res["holes"] = (mn >= 0.99 or not carded, f"core alpha min {mn:.3f}" + ("" if carded else " (cardless object: open shapes allowed)"))
     else:
         res["holes"] = (False, "no opaque card")
     src = open(path, encoding="utf-8").read()

@@ -185,6 +185,8 @@ def r_palette(p):
                 bad.append((lab2hex(regs[i]["lab"]), lab2hex(regs[j]["lab"]), rel, round(small, 3)))
         tot += n * s
         sws += n
+    if sws == 0:                      # one region only: nothing neighbours anything
+        return 100.0, {"pairs": 0}
     return 100 * tot / sws, {"pairs": len(pairs), "over_budget": bad[:6]}
 
 

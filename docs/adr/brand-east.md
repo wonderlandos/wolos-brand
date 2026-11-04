@@ -206,6 +206,29 @@ Symbolic set (`icons/symbolic`, 326 icons): unchanged by Type A. It stays single
 
 Doctor (`webapps/doctor`): wood, jade card, heart, cinnabar pulse.
 
+### 8.3 Applying the calculus to the site and the UI (lead 07:22Z: balance, never extreme, always the flow)
+
+The icons show the measure: keep what the Western eye already reads, change the geometry where it improves. For the site:
+
+1. **Module.** Every length is a whole fen (4 px), and the important ones are named: spacing 4/8/12/16/24/40/60/84, radius 8/12/16/24, type 11/16, 13/20, 16/24, 24/36, 27/40, 40/60 (`tokens/tokens-east.json`). A content column of 576 px is one door-light ruler. Hero and panel widths and heights land in the good bands (cai, yi, guan, ben).
+2. **Flow (qi).**
+   - Entry is the upper left: logo and first heading.
+   - Every page has one landing, the primary action, at least 7:5 heavier than the next mass.
+   - The path from entry to landing turns at least once: a Z or S reading, never one straight shot.
+   - No dense corner without an exit, and no dead end.
+3. **Sha.** No full-bleed straight rule that runs into the frame edge or cuts through content: separators are inset and end before the edge. No sharp corner aimed at the primary action: corners are radius 8 or more.
+4. **Forms.** Anchors (header, hero visual, footer) are mountain forms: weight low, a base. Flowing content (lists, cards, timelines) is water: continuous steps, each step at most 1/3 of the diagonal. Nothing heavy sits over something light without support.
+5. **Zones.** Weight is balanced over the nine-square grid. The centre holds content, no zone is empty or overloaded, and neighbours differ gently.
+6. **Palette.** Violet (water) may neighbour white, jade and blue at any size. Gold and cinnabar are accents, at most 1/7 of a screen. The light accent is `#7452F5` (4.5:1 under white).
+7. **Light.**
+   - One source, upper left; shadows at 1:2, coloured by the surface they fall on, never grey.
+   - Elevation 1/2/3 = (1,2)/(2,4)/(3,6) px.
+   - A front plane is never darker than the plane of the same material behind it.
+8. **Density.** Ground, second plane and first plane in shares near 21 : 15 : 6. Ground (breathing space) is 1/3 to 3/5 of the screen: full, not bloated.
+9. **Craft.** Nothing clipped at an edge, nothing off-centre in its container (0.15 fen), no near-miss gaps (under 0.6 fen without touching), 16 px or 3:1 minimum where icons appear.
+
+**Balance.** These rules are gates, not a style to exaggerate. Where a rule and the lead's eye disagree, the eye decides, and the score only guards against regressions. Measure a page with `tools/east/score.py PNG --kind screen [--tree layout.json]`: a DOM box tree gives exact lengths, and Playwright screenshots work.
+
 ## 9. Marks
 
 The zucai stack (`tools/east/marks_east.py`, `east/marks`):
