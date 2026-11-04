@@ -55,19 +55,31 @@ def form_3d_fold(doc, fr, P):
     grain(doc, fr, P)
 
 
+# The Moon Gate's parameter set (walls.py gate --params exports it with the colours of each mode): x is a share
+# of the frame width, y and every length a share of its height. The shell's parametric transition reads it.
+GATE = {
+    "ring": {"cx": 0.58, "cy": 0.50, "r": 0.23, "squash": 0.82, "depth": 0.5, "width": 0.115, "twist": 1.0, "twist0": 0.4,
+             "tone": {"day": (0.15, 0.88), "night": (0.15, 0.88)}, "emit": {"day": None, "night": 0.85}, "chroma": 4.5},
+    "sun": {"cx": 0.84, "cy": 0.80, "r": 0.24, "stretch": 1.5},
+    "ribbons": {"tone": {"day": (0.0, 0.9), "night": (0.0, 0.62)}, "chroma": 5.5},
+}
+
+
 def form_3d_gate(doc, fr, P):
     """C, the gate in the flow (the WolOS signature). Reading: ribbons enter by the light NO, part around a closed ring
     (the moon gate), pass above and below it and leave by the right and bottom edges; the ring has no end, nothing
     crosses its void (clean ground for the windows), and the SE is where the ribbons gather."""
     W, H = fr.w, fr.h
     night = P["_name"] == "night"
+    mode = "night" if night else "day"
     a = _asp(fr)
+    G, S, B = GATE["ring"], GATE["sun"], GATE["ribbons"]
     matte_backdrop(doc, fr, P)
-    quiet_accent(doc, fr, P, 0.84 * W, 0.80 * H, 0.24 * H)
+    quiet_accent(doc, fr, P, S["cx"] * W, S["cy"] * H, S["r"] * H)
     sc = Scene(doc, fr, P, night)
-    cx, cy, R = 0.58 * a, 0.50, 0.23
-    ring = [(cx + R * math.cos(2 * math.pi * k / 12), cy + R * 0.82 * math.sin(2 * math.pi * k / 12), R * 0.5 * math.sin(2 * math.pi * k / 12)) for k in range(12)]
-    em = (lambda s: 0.85) if night else None
+    cx, cy, R = G["cx"] * a, G["cy"], G["r"]
+    ring = [(cx + R * math.cos(2 * math.pi * k / 12), cy + R * G["squash"] * math.sin(2 * math.pi * k / 12), R * G["depth"] * math.sin(2 * math.pi * k / 12)) for k in range(12)]
+    em = (lambda s: G["emit"]["night"]) if night else None
     # through ribbons: far ones first; two above the ring, two below, none across the void
     paths = [
         (-0.22, [(-0.22, 0.04), (0.15, 0.03), (0.45, 0.09), (0.70, 0.15), (0.89, 0.40), (1.03, 0.68), (1.24, 0.80)], 0.16, 0.24),
@@ -78,9 +90,10 @@ def form_3d_gate(doc, fr, P):
     for j, (z, pts, w, fade) in enumerate(paths):
         ctrl = _c(fr, [(x, y, z + 0.015 * i) for i, (x, y) in enumerate(pts)])
         st = ribbon(ctrl, lambda s, w=w: w * (0.94 + 0.06 * math.sin(6.28 * s + j)), lambda s, j=j: 0.55 + 0.9 * math.sin(2 * math.pi * (s * 0.9 + j * 0.17)), N=190, M=3, cup=0.13)
-        sc.add(st, tone=(0.0, 0.62 if night else 0.9), fade=fade if z < 0 else 0.0, chroma=5.5, emit=(lambda s: 0.03 + 0.25 * s ** 2) if night else None, fibres=False)
+        sc.add(st, tone=B["tone"][mode], fade=fade if z < 0 else 0.0, chroma=B["chroma"], emit=(lambda s: 0.03 + 0.25 * s ** 2) if night else None, fibres=False)
     # the ring: closed, one full twist, the light of the night
-    strips = ribbon(ring, lambda s: 0.115, lambda s: 2 * math.pi * s + 0.4, N=200, M=4, cup=0.12, closed=True, ref=lambda p: (p[0] - cx, p[1] - cy, 0.0))
-    sc.add(strips, tone=(0.15, 0.88), chroma=4.5, emit=em)
+    strips = ribbon(ring, lambda s: G["width"], lambda s: 2 * math.pi * G["twist"] * s + G["twist0"], N=200, M=4, cup=0.12, closed=True, ref=lambda p: (p[0] - cx, p[1] - cy, 0.0))
+    sc.add(strips, tone=G["tone"][mode], chroma=G["chroma"], emit=em)
     sc.render(shadow_op=0.22, glow=night)
     grain(doc, fr, P)
+    return sc
