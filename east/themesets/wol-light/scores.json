@@ -1,0 +1,768 @@
+{
+ "id": "wol-light",
+ "name": "WolOS Light",
+ "variant": "light",
+ "accent": "#7c5cff",
+ "surface": "#f3f1f8",
+ "base": "#7554F6",
+ "icons": [
+  [
+   "core",
+   "wolos-settings"
+  ],
+  [
+   "core",
+   "wolos-store"
+  ],
+  [
+   "core",
+   "wolos-files"
+  ],
+  [
+   "core",
+   "wolos-console"
+  ],
+  [
+   "core",
+   "wolos-doctor"
+  ],
+  [
+   "core",
+   "wolos-atlas-folio"
+  ],
+  [
+   "apps",
+   "calculator"
+  ],
+  [
+   "apps",
+   "calendar"
+  ],
+  [
+   "apps",
+   "control-center"
+  ],
+  [
+   "apps",
+   "games"
+  ],
+  [
+   "apps",
+   "installer"
+  ],
+  [
+   "apps",
+   "launcher"
+  ],
+  [
+   "apps",
+   "kit-ai"
+  ],
+  [
+   "apps",
+   "kit-codecs"
+  ],
+  [
+   "apps",
+   "kit-craft-suite"
+  ],
+  [
+   "apps",
+   "kit-creative"
+  ],
+  [
+   "apps",
+   "kit-dev"
+  ],
+  [
+   "apps",
+   "kit-gaming"
+  ],
+  [
+   "apps",
+   "mail"
+  ],
+  [
+   "apps",
+   "music"
+  ],
+  [
+   "apps",
+   "notes"
+  ],
+  [
+   "apps",
+   "photos"
+  ],
+  [
+   "apps",
+   "plugin-maker"
+  ],
+  [
+   "apps",
+   "system-monitor"
+  ],
+  [
+   "apps",
+   "text-editor"
+  ],
+  [
+   "apps",
+   "trash"
+  ],
+  [
+   "third",
+   "gimp"
+  ],
+  [
+   "third",
+   "photocraft"
+  ],
+  [
+   "third",
+   "vectorcraft"
+  ],
+  [
+   "third",
+   "pdfcraft"
+  ],
+  [
+   "third",
+   "wordcraft"
+  ],
+  [
+   "third",
+   "deckcraft"
+  ],
+  [
+   "third",
+   "filmcraft"
+  ],
+  [
+   "third",
+   "soundcraft"
+  ],
+  [
+   "third",
+   "cadcraft"
+  ],
+  [
+   "third",
+   "designcraft"
+  ],
+  [
+   "third",
+   "figcraft"
+  ],
+  [
+   "third",
+   "effectcraft"
+  ],
+  [
+   "third",
+   "lightcraft"
+  ],
+  [
+   "third",
+   "materialcraft"
+  ],
+  [
+   "third",
+   "texturecraft"
+  ],
+  [
+   "third",
+   "gridcraft"
+  ]
+ ],
+ "scores": {
+  "wolos-settings": {
+   "total": 84.1,
+   "craft": [],
+   "rules": {
+    "qi": 90.9,
+    "sha": 79.9,
+    "forms": 95.0,
+    "zones": 96.9,
+    "palette": 100.0,
+    "light": 67.2,
+    "proportion": 68.4,
+    "density": 74.8
+   }
+  },
+  "wolos-store": {
+   "total": 84.7,
+   "craft": [],
+   "rules": {
+    "qi": 74.5,
+    "sha": 91.2,
+    "forms": 100.0,
+    "zones": 95.7,
+    "palette": 100.0,
+    "light": 78.2,
+    "proportion": 66.4,
+    "density": 71.7
+   }
+  },
+  "wolos-files": {
+   "total": 83.2,
+   "craft": [],
+   "rules": {
+    "qi": 84.7,
+    "sha": 77.2,
+    "forms": 100.0,
+    "zones": 75.8,
+    "palette": 100.0,
+    "light": 75.8,
+    "proportion": 77.4,
+    "density": 74.3
+   }
+  },
+  "wolos-console": {
+   "total": 86.8,
+   "craft": [],
+   "rules": {
+    "qi": 96.2,
+    "sha": 73.0,
+    "forms": 90.0,
+    "zones": 92.3,
+    "palette": 100.0,
+    "light": 78.9,
+    "proportion": 80.1,
+    "density": 84.0
+   }
+  },
+  "wolos-doctor": {
+   "total": 87.0,
+   "craft": [],
+   "rules": {
+    "qi": 93.4,
+    "sha": 89.4,
+    "forms": 100.0,
+    "zones": 95.6,
+    "palette": 99.8,
+    "light": 70.3,
+    "proportion": 71.4,
+    "density": 76.3
+   }
+  },
+  "wolos-atlas-folio": {
+   "total": 85.7,
+   "craft": [],
+   "rules": {
+    "qi": 83.1,
+    "sha": 91.1,
+    "forms": 100.0,
+    "zones": 78.1,
+    "palette": 100.0,
+    "light": 82.1,
+    "proportion": 76.0,
+    "density": 75.2
+   }
+  },
+  "calculator": {
+   "total": 84.3,
+   "craft": [],
+   "rules": {
+    "qi": 80.5,
+    "sha": 70.3,
+    "forms": 94.0,
+    "zones": 97.9,
+    "palette": 100.0,
+    "light": 74.8,
+    "proportion": 81.5,
+    "density": 75.6
+   }
+  },
+  "calendar": {
+   "total": 84.1,
+   "craft": [],
+   "rules": {
+    "qi": 82.2,
+    "sha": 83.2,
+    "forms": 100.0,
+    "zones": 76.9,
+    "palette": 98.1,
+    "light": 85.0,
+    "proportion": 77.0,
+    "density": 70.1
+   }
+  },
+  "control-center": {
+   "total": 86.5,
+   "craft": [],
+   "rules": {
+    "qi": 89.2,
+    "sha": 99.4,
+    "forms": 80.5,
+    "zones": 98.2,
+    "palette": 100.0,
+    "light": 73.9,
+    "proportion": 72.0,
+    "density": 78.5
+   }
+  },
+  "games": {
+   "total": 85.6,
+   "craft": [],
+   "rules": {
+    "qi": 86.7,
+    "sha": 87.9,
+    "forms": 100.0,
+    "zones": 96.9,
+    "palette": 100.0,
+    "light": 71.1,
+    "proportion": 70.9,
+    "density": 71.6
+   }
+  },
+  "installer": {
+   "total": 84.7,
+   "craft": [],
+   "rules": {
+    "qi": 87.3,
+    "sha": 96.8,
+    "forms": 100.0,
+    "zones": 76.8,
+    "palette": 100.0,
+    "light": 67.2,
+    "proportion": 74.4,
+    "density": 74.7
+   }
+  },
+  "launcher": {
+   "total": 85.7,
+   "craft": [],
+   "rules": {
+    "qi": 96.2,
+    "sha": 93.1,
+    "forms": 100.0,
+    "zones": 95.6,
+    "palette": 100.0,
+    "light": 65.7,
+    "proportion": 68.8,
+    "density": 66.0
+   }
+  },
+  "kit-ai": {
+   "total": 84.9,
+   "craft": [],
+   "rules": {
+    "qi": 79.1,
+    "sha": 95.2,
+    "forms": 100.0,
+    "zones": 96.3,
+    "palette": 100.0,
+    "light": 72.1,
+    "proportion": 71.6,
+    "density": 64.9
+   }
+  },
+  "kit-codecs": {
+   "total": 86.8,
+   "craft": [],
+   "rules": {
+    "qi": 100.0,
+    "sha": 98.0,
+    "forms": 100.0,
+    "zones": 92.3,
+    "palette": 100.0,
+    "light": 72.0,
+    "proportion": 68.4,
+    "density": 64.0
+   }
+  },
+  "kit-craft-suite": {
+   "total": 81.9,
+   "craft": [],
+   "rules": {
+    "qi": 75.0,
+    "sha": 94.5,
+    "forms": 70.0,
+    "zones": 94.5,
+    "palette": 100.0,
+    "light": 95.5,
+    "proportion": 67.5,
+    "density": 57.9
+   }
+  },
+  "kit-creative": {
+   "total": 87.7,
+   "craft": [],
+   "rules": {
+    "qi": 85.0,
+    "sha": 84.3,
+    "forms": 100.0,
+    "zones": 95.7,
+    "palette": 92.7,
+    "light": 79.1,
+    "proportion": 88.4,
+    "density": 76.2
+   }
+  },
+  "kit-dev": {
+   "total": 79.8,
+   "craft": [],
+   "rules": {
+    "qi": 71.6,
+    "sha": 79.2,
+    "forms": 100.0,
+    "zones": 96.3,
+    "palette": 100.0,
+    "light": 65.7,
+    "proportion": 64.1,
+    "density": 61.5
+   }
+  },
+  "kit-gaming": {
+   "total": 81.3,
+   "craft": [],
+   "rules": {
+    "qi": 67.1,
+    "sha": 92.6,
+    "forms": 100.0,
+    "zones": 74.3,
+    "palette": 100.0,
+    "light": 69.8,
+    "proportion": 74.4,
+    "density": 72.6
+   }
+  },
+  "mail": {
+   "total": 84.2,
+   "craft": [],
+   "rules": {
+    "qi": 87.5,
+    "sha": 76.8,
+    "forms": 100.0,
+    "zones": 76.1,
+    "palette": 100.0,
+    "light": 80.8,
+    "proportion": 76.9,
+    "density": 75.7
+   }
+  },
+  "music": {
+   "total": 83.8,
+   "craft": [],
+   "rules": {
+    "qi": 71.2,
+    "sha": 93.1,
+    "forms": 100.0,
+    "zones": 96.9,
+    "palette": 100.0,
+    "light": 74.1,
+    "proportion": 68.8,
+    "density": 65.9
+   }
+  },
+  "notes": {
+   "total": 84.0,
+   "craft": [],
+   "rules": {
+    "qi": 94.2,
+    "sha": 74.0,
+    "forms": 100.0,
+    "zones": 74.5,
+    "palette": 100.0,
+    "light": 80.6,
+    "proportion": 71.3,
+    "density": 77.1
+   }
+  },
+  "photos": {
+   "total": 84.3,
+   "craft": [],
+   "rules": {
+    "qi": 87.4,
+    "sha": 86.3,
+    "forms": 100.0,
+    "zones": 76.5,
+    "palette": 100.0,
+    "light": 75.5,
+    "proportion": 70.0,
+    "density": 78.7
+   }
+  },
+  "plugin-maker": {
+   "total": 87.0,
+   "craft": [],
+   "rules": {
+    "qi": 100.0,
+    "sha": 93.3,
+    "forms": 100.0,
+    "zones": 93.2,
+    "palette": 100.0,
+    "light": 73.6,
+    "proportion": 69.0,
+    "density": 66.6
+   }
+  },
+  "system-monitor": {
+   "total": 86.7,
+   "craft": [],
+   "rules": {
+    "qi": 98.7,
+    "sha": 97.8,
+    "forms": 99.8,
+    "zones": 94.2,
+    "palette": 100.0,
+    "light": 66.2,
+    "proportion": 69.5,
+    "density": 67.6
+   }
+  },
+  "text-editor": {
+   "total": 83.0,
+   "craft": [],
+   "rules": {
+    "qi": 88.3,
+    "sha": 85.4,
+    "forms": 85.0,
+    "zones": 75.5,
+    "palette": 100.0,
+    "light": 83.9,
+    "proportion": 70.7,
+    "density": 75.6
+   }
+  },
+  "trash": {
+   "total": 81.7,
+   "craft": [],
+   "rules": {
+    "qi": 85.1,
+    "sha": 80.8,
+    "forms": 90.0,
+    "zones": 93.9,
+    "palette": 100.0,
+    "light": 61.4,
+    "proportion": 65.6,
+    "density": 76.7
+   }
+  },
+  "gimp": {
+   "total": 84.5,
+   "craft": [],
+   "rules": {
+    "qi": 80.4,
+    "sha": 88.7,
+    "forms": 90.0,
+    "zones": 93.8,
+    "palette": 100.0,
+    "light": 77.4,
+    "proportion": 71.3,
+    "density": 74.8
+   }
+  },
+  "photocraft": {
+   "total": 85.9,
+   "craft": [],
+   "rules": {
+    "qi": 80.4,
+    "sha": 83.4,
+    "forms": 100.0,
+    "zones": 96.0,
+    "palette": 100.0,
+    "light": 81.0,
+    "proportion": 71.4,
+    "density": 74.7
+   }
+  },
+  "vectorcraft": {
+   "total": 83.7,
+   "craft": [],
+   "rules": {
+    "qi": 77.4,
+    "sha": 86.7,
+    "forms": 100.0,
+    "zones": 97.5,
+    "palette": 99.8,
+    "light": 68.2,
+    "proportion": 63.5,
+    "density": 76.1
+   }
+  },
+  "pdfcraft": {
+   "total": 86.0,
+   "craft": [],
+   "rules": {
+    "qi": 81.6,
+    "sha": 82.2,
+    "forms": 100.0,
+    "zones": 98.0,
+    "palette": 100.0,
+    "light": 83.7,
+    "proportion": 66.4,
+    "density": 76.4
+   }
+  },
+  "wordcraft": {
+   "total": 82.6,
+   "craft": [],
+   "rules": {
+    "qi": 87.9,
+    "sha": 81.6,
+    "forms": 100.0,
+    "zones": 75.1,
+    "palette": 100.0,
+    "light": 73.7,
+    "proportion": 67.0,
+    "density": 75.6
+   }
+  },
+  "deckcraft": {
+   "total": 84.8,
+   "craft": [],
+   "rules": {
+    "qi": 78.4,
+    "sha": 61.6,
+    "forms": 100.0,
+    "zones": 97.1,
+    "palette": 99.9,
+    "light": 85.7,
+    "proportion": 75.6,
+    "density": 80.0
+   }
+  },
+  "filmcraft": {
+   "total": 89.1,
+   "craft": [],
+   "rules": {
+    "qi": 87.8,
+    "sha": 95.5,
+    "forms": 100.0,
+    "zones": 97.9,
+    "palette": 100.0,
+    "light": 85.5,
+    "proportion": 70.4,
+    "density": 75.5
+   }
+  },
+  "soundcraft": {
+   "total": 85.7,
+   "craft": [],
+   "rules": {
+    "qi": 90.7,
+    "sha": 93.2,
+    "forms": 85.0,
+    "zones": 96.3,
+    "palette": 100.0,
+    "light": 70.2,
+    "proportion": 76.9,
+    "density": 73.5
+   }
+  },
+  "cadcraft": {
+   "total": 83.1,
+   "craft": [],
+   "rules": {
+    "qi": 96.2,
+    "sha": 73.3,
+    "forms": 94.0,
+    "zones": 97.0,
+    "palette": 100.0,
+    "light": 69.5,
+    "proportion": 66.4,
+    "density": 68.6
+   }
+  },
+  "designcraft": {
+   "total": 84.0,
+   "craft": [],
+   "rules": {
+    "qi": 84.2,
+    "sha": 86.7,
+    "forms": 100.0,
+    "zones": 97.3,
+    "palette": 100.0,
+    "light": 56.9,
+    "proportion": 72.6,
+    "density": 74.4
+   }
+  },
+  "figcraft": {
+   "total": 84.5,
+   "craft": [],
+   "rules": {
+    "qi": 52.4,
+    "sha": 88.5,
+    "forms": 100.0,
+    "zones": 96.1,
+    "palette": 100.0,
+    "light": 89.3,
+    "proportion": 74.4,
+    "density": 75.3
+   }
+  },
+  "effectcraft": {
+   "total": 85.9,
+   "craft": [],
+   "rules": {
+    "qi": 80.8,
+    "sha": 86.5,
+    "forms": 100.0,
+    "zones": 96.2,
+    "palette": 98.2,
+    "light": 75.0,
+    "proportion": 74.9,
+    "density": 75.4
+   }
+  },
+  "lightcraft": {
+   "total": 86.1,
+   "craft": [],
+   "rules": {
+    "qi": 82.2,
+    "sha": 85.0,
+    "forms": 100.0,
+    "zones": 97.0,
+    "palette": 100.0,
+    "light": 81.8,
+    "proportion": 68.4,
+    "density": 74.3
+   }
+  },
+  "materialcraft": {
+   "total": 82.9,
+   "craft": [],
+   "rules": {
+    "qi": 65.1,
+    "sha": 88.7,
+    "forms": 100.0,
+    "zones": 96.9,
+    "palette": 100.0,
+    "light": 69.7,
+    "proportion": 70.4,
+    "density": 72.4
+   }
+  },
+  "texturecraft": {
+   "total": 85.9,
+   "craft": [],
+   "rules": {
+    "qi": 75.1,
+    "sha": 85.4,
+    "forms": 100.0,
+    "zones": 95.3,
+    "palette": 100.0,
+    "light": 85.0,
+    "proportion": 72.5,
+    "density": 73.9
+   }
+  },
+  "gridcraft": {
+   "total": 84.8,
+   "craft": [],
+   "rules": {
+    "qi": 95.2,
+    "sha": 78.5,
+    "forms": 100.0,
+    "zones": 78.0,
+    "palette": 100.0,
+    "light": 76.6,
+    "proportion": 71.9,
+    "density": 77.9
+   }
+  }
+ }
+}
