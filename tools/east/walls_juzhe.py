@@ -6,16 +6,13 @@ courses, contour strata, dot clusters), muted chroma, atmospheric perspective by
 import math
 import random
 
-import json
-import os
-
 import calculus as K
 from geom import f, smooth, juzhe, rrect
 from walls_lib import (palette, lin, rad, along_light, blurf, cast, poly, sky, disc, bez, resample, pl,
                        mist, birds, pagoda, lattice, dougong, bricks, ridge_end, stair)
 
 
-OPT = json.loads(os.environ.get('WALLS_OPT', '{}'))
+OPT = {}                       # per-form knobs, empty in the shipped forms
 
 
 class grp:

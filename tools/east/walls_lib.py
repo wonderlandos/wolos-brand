@@ -100,7 +100,7 @@ def palette(name, fog=0.0, fog_of=None):
             c = c * MUTE
         if fog and role not in ("fog", "sky0", "sky1", "sky2", "glow", "lightc", "moon"):
             k, c = k + (fk - k) * fog, c + (fc * MUTE - c) * fog
-        out[role] = K.derive(round(k, 2), round(c, 2), K.hue_of(el))
+        out[role] = K.derive(round(k, 2), round(c, 2), K.hue_of(el, K.BASE), K.BASE)
         why[role] = f"derive({round(k, 2)},{round(c, 2)}/21,{el})"
     return out, why
 

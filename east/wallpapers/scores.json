@@ -1,4 +1,48 @@
 {
+ "bloom-day-16x10.svg": {
+  "density": 69.8,
+  "forms": 90.0,
+  "light": 70.3,
+  "palette": 100.0,
+  "proportion": 35.4,
+  "qi": 75.0,
+  "sha": 100.0,
+  "total": 79.6,
+  "zones": 96.0
+ },
+ "bloom-day-4k.svg": {
+  "density": 68.8,
+  "forms": 90.0,
+  "light": 44.6,
+  "palette": 100.0,
+  "proportion": 36.8,
+  "qi": 75.0,
+  "sha": 100.0,
+  "total": 76.4,
+  "zones": 95.8
+ },
+ "bloom-night-16x10.svg": {
+  "density": 72.3,
+  "forms": 78.0,
+  "light": 64.4,
+  "palette": 100.0,
+  "proportion": 40.5,
+  "qi": 77.0,
+  "sha": 100.0,
+  "total": 78.6,
+  "zones": 96.3
+ },
+ "bloom-night-4k.svg": {
+  "density": 72.6,
+  "forms": 83.0,
+  "light": 69.5,
+  "palette": 100.0,
+  "proportion": 35.7,
+  "qi": 72.9,
+  "sha": 100.0,
+  "total": 78.8,
+  "zones": 96.5
+ },
  "brasilia-day-16x10.svg": {
   "density": 61.5,
   "forms": 92.5,
@@ -44,48 +88,92 @@
   "zones": 96.3
  },
  "cachoeira-day-16x10.svg": {
-  "density": 66.9,
-  "forms": 95.7,
-  "light": 67.3,
+  "density": 51.4,
+  "forms": 96.3,
+  "light": 64.7,
   "palette": 100.0,
-  "proportion": 34.6,
-  "qi": 71.2,
-  "sha": 99.8,
-  "total": 78.9,
-  "zones": 95.4
+  "proportion": 37.3,
+  "qi": 75.0,
+  "sha": 99.5,
+  "total": 77.4,
+  "zones": 95.0
  },
  "cachoeira-day-4k.svg": {
-  "density": 66.4,
-  "forms": 93.9,
-  "light": 43.7,
+  "density": 44.0,
+  "forms": 99.2,
+  "light": 67.4,
   "palette": 100.0,
-  "proportion": 36.8,
-  "qi": 75.0,
-  "sha": 99.9,
-  "total": 76.4,
-  "zones": 95.5
+  "proportion": 44.8,
+  "qi": 69.9,
+  "sha": 99.7,
+  "total": 77.5,
+  "zones": 95.1
  },
  "cachoeira-night-16x10.svg": {
-  "density": 74.4,
-  "forms": 100.0,
-  "light": 63.9,
+  "density": 76.4,
+  "forms": 85.0,
+  "light": 60.7,
   "palette": 100.0,
-  "proportion": 44.7,
-  "qi": 87.1,
-  "sha": 100.0,
-  "total": 83.2,
-  "zones": 95.8
+  "proportion": 37.2,
+  "qi": 96.2,
+  "sha": 99.7,
+  "total": 81.4,
+  "zones": 95.9
  },
  "cachoeira-night-4k.svg": {
-  "density": 74.3,
-  "forms": 100.0,
-  "light": 64.5,
+  "density": 76.8,
+  "forms": 92.5,
+  "light": 60.4,
   "palette": 100.0,
-  "proportion": 44.2,
-  "qi": 88.9,
+  "proportion": 40.7,
+  "qi": 96.2,
+  "sha": 99.8,
+  "total": 82.8,
+  "zones": 95.9
+ },
+ "dunes-day-16x10.svg": {
+  "density": 62.9,
+  "forms": 93.9,
+  "light": 40.0,
+  "palette": 100.0,
+  "proportion": 35.4,
+  "qi": 75.0,
   "sha": 100.0,
-  "total": 83.4,
-  "zones": 95.4
+  "total": 75.6,
+  "zones": 97.3
+ },
+ "dunes-day-4k.svg": {
+  "density": 63.2,
+  "forms": 90.0,
+  "light": 35.5,
+  "palette": 100.0,
+  "proportion": 29.3,
+  "qi": 71.2,
+  "sha": 100.0,
+  "total": 73.3,
+  "zones": 97.4
+ },
+ "dunes-night-16x10.svg": {
+  "density": 71.2,
+  "forms": 90.0,
+  "light": 58.7,
+  "palette": 100.0,
+  "proportion": 32.2,
+  "qi": 100.0,
+  "sha": 100.0,
+  "total": 81.2,
+  "zones": 97.1
+ },
+ "dunes-night-4k.svg": {
+  "density": 72.6,
+  "forms": 89.0,
+  "light": 32.2,
+  "palette": 100.0,
+  "proportion": 35.7,
+  "qi": 96.2,
+  "sha": 100.0,
+  "total": 77.9,
+  "zones": 97.4
  },
  "estaiada-day-16x10.svg": {
   "density": 72.3,
@@ -284,5 +372,49 @@
   "sha": 99.7,
   "total": 81.3,
   "zones": 95.2
+ },
+ "veil-day-16x10.svg": {
+  "density": 75.3,
+  "forms": 92.5,
+  "light": 73.4,
+  "palette": 100.0,
+  "proportion": 38.3,
+  "qi": 96.2,
+  "sha": 100.0,
+  "total": 83.9,
+  "zones": 95.5
+ },
+ "veil-day-4k.svg": {
+  "density": 69.6,
+  "forms": 94.0,
+  "light": 70.0,
+  "palette": 100.0,
+  "proportion": 39.4,
+  "qi": 92.5,
+  "sha": 100.0,
+  "total": 82.7,
+  "zones": 96.0
+ },
+ "veil-night-16x10.svg": {
+  "density": 70.4,
+  "forms": 88.0,
+  "light": 67.4,
+  "palette": 100.0,
+  "proportion": 46.2,
+  "qi": 82.1,
+  "sha": 100.0,
+  "total": 81.3,
+  "zones": 96.4
+ },
+ "veil-night-4k.svg": {
+  "density": 70.7,
+  "forms": 88.0,
+  "light": 46.5,
+  "palette": 100.0,
+  "proportion": 35.3,
+  "qi": 80.1,
+  "sha": 100.0,
+  "total": 77.1,
+  "zones": 96.4
  }
 }

@@ -32,12 +32,19 @@ import walls_cachoeira  # noqa: E402
 import walls_brasilia  # noqa: E402
 import walls_estaiada  # noqa: E402
 import walls_rioniteroi  # noqa: E402
+import walls_flow  # noqa: E402
 
 WIP = {"moongate"}            # drawn but not finished: only built with --only
-FORMS = {"juzhe": walls_juzhe.form_juzhe, "moongate": walls_moongate.form_moongate, "cachoeira": walls_cachoeira.form_cachoeira, "brasilia": walls_brasilia.form_brasilia, "estaiada": walls_estaiada.form_estaiada, "rioniteroi": walls_rioniteroi.form_rioniteroi}
+FORMS = {"juzhe": walls_juzhe.form_juzhe, "moongate": walls_moongate.form_moongate, "cachoeira": walls_cachoeira.form_cachoeira, "brasilia": walls_brasilia.form_brasilia, "estaiada": walls_estaiada.form_estaiada, "rioniteroi": walls_rioniteroi.form_rioniteroi,
+         "veil": walls_flow.form_veil, "sigjuzhe": walls_flow.form_m_juzhe, "sigfold": walls_flow.form_m_fold, "siggate": walls_flow.form_m_gate, "bloom": walls_flow.form_bloom, "dunes": walls_flow.form_dunes}
+
+
+FLOW_FORMS = {"veil", "bloom", "dunes", "sigjuzhe", "sigfold", "siggate"}
+FLOW_MUTE = 0.95               # the abstracts carry their chroma; the scenes were muted to 0.6
 
 
 def build(form, pal, size):
+    lib.MUTE = FLOW_MUTE if form in FLOW_FORMS else 0.6
     W, H = SIZES[size]
     fr = Frame(W, H)
     P, why = palette(pal)
@@ -65,8 +72,50 @@ def score_files(files, out_json):
     json.dump(d, open(out_json, "w"), indent=1, sort_keys=True)
 
 
+def _theme_job(job):
+    """One theme: the base from its accent, a flow family, day and night, every size."""
+    tid, fam, out, sizes = job
+    lib.MUTE = FLOW_MUTE
+    import themesets as TS
+    th = TS.themes()[tid]
+    TS._set_base(TS.theme_base(th["tokens"]["accent"]))
+    done = []
+    for mode in ("day", "night"):
+        for s in sizes:
+            W, H = SIZES[s]
+            fr = Frame(W, H)
+            P, why = palette(mode)
+            P["_name"] = mode
+            doc = Doc(W, H, f"WolOS east wallpaper: {fam} flow, theme {tid}, {mode}")
+            if fam == "dunes":
+                walls_flow.form_dunes(doc, fr, P)
+            elif fam == "bloom":
+                walls_flow.form_bloom(doc, fr, P)
+            else:
+                walls_flow.form_family(doc, fr, P, fam)
+            svg = doc.svg().replace('<svg xmlns="http://www.w3.org/2000/svg"', '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"', 1)
+            path = os.path.join(out, f"flow-{tid}-{mode}-{s}.svg")
+            with open(path, "w") as fh:
+                fh.write(svg)
+            done.append(path)
+    return tid, fam, done
+
+
+def themes_run(out, sizes):
+    import themesets as TS
+    from par import fanout
+    ids = sorted(TS.themes())
+    os.makedirs(out, exist_ok=True)
+    jobs = [(t, walls_flow.FAMILY_ORDER[i % len(walls_flow.FAMILY_ORDER)], out, sizes) for i, t in enumerate(ids)]
+    for tid, fam, done in fanout(_theme_job, jobs, workers=12):
+        print(tid, fam, len(done))
+
+
 def main(argv):
     import argparse
+    if argv and argv[0] == "themes":
+        themes_run(os.path.join(HERE, "..", "..", "east", "wallpapers", "themes"), list(SIZES))
+        return
     if argv and argv[0] == "score":
         files = argv[1:]
         score_files(files, os.path.join(os.path.dirname(os.path.abspath(files[0])), "scores.json"))
