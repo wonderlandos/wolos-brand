@@ -84,11 +84,22 @@ SHENG = {("wood", "fire"), ("fire", "earth"), ("earth", "metal"), ("metal", "wat
 KE = {("wood", "earth"), ("earth", "water"), ("water", "fire"), ("fire", "metal"), ("metal", "wood")}
 
 
+class LCH(tuple):
+    """An OKLCH triple (L, C, h in degrees), so element() does not read it as sRGB."""
+
+
 def element(c, base_hue=None):
     """Element of a colour, as a one-element frozenset. Violet (zi) is the intermediate colour of
     the north (black over cinnabar), and the north is water: zi counts as water. Low-chroma
     colours are white/metal (light) or black/water (dark), whatever their tint."""
-    L, C, h = oklch(c) if isinstance(c, (str, tuple)) else c
+    # a hex string or an sRGB tuple (0..1) is converted; an ("lch", L, C, h) tuple or an LCH list
+    # from the scorer is used as is (an OKLCH tuple passed as RGB was a bug, fixed 2026-11-04)
+    if isinstance(c, str):
+        L, C, h = oklch(c)
+    elif isinstance(c, LCH):
+        L, C, h = c
+    else:
+        L, C, h = oklch(tuple(c))
     if C < 0.035:
         return frozenset({"metal"}) if L > 0.55 else frozenset({"water"})
     if 130 <= h < 215:

@@ -191,8 +191,9 @@ def r_palette(p):
 
 
 def _lch(lab):
+    from colour import LCH
     L, a, b = lab
-    return float(L), float(math.hypot(a, b)), math.degrees(math.atan2(b, a)) % 360
+    return LCH((float(L), float(math.hypot(a, b)), math.degrees(math.atan2(b, a)) % 360))
 
 
 def r_light(p):
