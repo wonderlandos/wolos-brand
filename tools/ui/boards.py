@@ -14,7 +14,7 @@ from PIL import Image, ImageDraw
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-sys.path.insert(0, os.path.join(HERE, "..", "east"))
+sys.path.insert(0, os.path.join(HERE, "..", "brand"))
 import board as B  # noqa: E402
 import calculus as K  # noqa: E402
 import geom  # noqa: E402
@@ -123,7 +123,7 @@ def symbolic(out):
 
 def primitives(out):
     import subprocess as sp
-    sys.path.insert(0, os.path.join(HERE, "..", "east"))
+    sys.path.insert(0, os.path.join(HERE, "..", "brand"))
     import score as SC
     base = os.path.join(D, "ui", "primitives")
     rows = []

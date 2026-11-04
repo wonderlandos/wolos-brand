@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-"""Score screens (tools/east/score.py, kind screen, with the layout tree) and compose current-vs-proposed boards.
+"""Score screens (tools/brand/score.py, kind screen, with the layout tree) and compose current-vs-proposed boards.
 
   scored(png, tree)  -> {"rules": {...}, "total": x}
   compose(title, rows, out, notes)   rows = [(label, golden_png_or_None, cur_png, new_png, scores...)]"""
@@ -9,8 +9,8 @@ import sys
 from concurrent.futures import ThreadPoolExecutor
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-EAST = os.path.normpath(os.path.join(HERE, "..", "east"))
-sys.path.insert(0, EAST)
+BRAND = os.path.normpath(os.path.join(HERE, "..", "brand"))
+sys.path.insert(0, BRAND)
 import board as EB  # noqa: E402  (fonts, colours, scored)
 import score as SC  # noqa: E402
 from PIL import Image, ImageDraw  # noqa: E402

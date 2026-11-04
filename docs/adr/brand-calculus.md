@@ -1,0 +1,264 @@
+# ADR brand-calculus: the brand design calculus
+
+Status: proposal (study on design branch `wave3/brand`; nothing installed reads it).
+Date: 2026-11-04. Lead direction: a Western entry point, Chinese harmony first and Korean density second. Change the geometry, not just the finish. Identity stays: tokens, keyhole, Folio, type, and the katakana ウォルOS as a small centred element at the bottom of the mark. Every step proves itself side by side with a score.
+
+Code: `tools/brand/` (calculus `calculus.py`, colour `colour.py`, geometry `geom.py`, scorer `score.py`, token scorer `score_tokens.py`, boards `board.py`, `boards.py`, `dir_sheets.py`). Studies: `brand/` (icons, directions, types, marks, wallpapers). Token proposal: `tokens/tokens-brand.json`.
+
+## 1. Proportion: the construction ruler
+
+**Module (cai-fen, Yingzao fashi, 1103).** A building is measured in *fen*, the 1/15 part of the height of the standard timber section (*cai*). The named sections, in fen:
+
+| name | section | here |
+|---|---|---|
+| cai | 15 high x 10 wide | 60 x 40 px |
+| zhi (filler block) | 6 high x 4 thick | 24 x 16 px |
+| zucai = cai + zhi | 21 | 84 px |
+
+1 fen = `U` = 4 px = 0.25 rem (`calculus.py`). Named lengths (`NAMED`), in fen: 1, 2, 3, 4, 6, 10, 15, 21, 30, 42, 60, 84, 144. In px: 4, 8, 12, 16, 24, 40, 60, 84, 120, 168, 240, 336, 576. `module_fit` scores 1.0 on a named length, 0.6 on any whole fen, and 0 off the module.
+
+Allowed ratios (`RATIOS`): 1:1, cai 3:2 (15:10), zucai 7:5 (21:15, close to the square root of 2), 2:1, zhi 3:2.
+
+Type: line height on the module, size = 2/3 of the line (the cai section 10:15). caption 11/16, body 13/20, heading 16/24, title-2 24/36, title 27/40, display 40/60 (`type_scale`).
+
+**Door-light ruler (menguang chi, Lu Ban ruler).** It is 1.44 chi long, in eight bands: cai (wealth), bing (illness), li (parting), yi (duty), guan (office), jie (loss), hai (harm), ben (root). Openings were sized so that each dimension, modulo the ruler, ends in cai, yi, guan or ben. Here the ruler is 144 fen = 576 px, one band 72 px (`band`). It applies to openings of 72 px and more (windows, panels, cards, hero, boot lockup). Example: the boot lockup width of 576 px is exactly one ruler.
+
+## 2. Five-phase palette (wuxing), derived from the base
+
+Generating (sheng): wood -> fire -> earth -> metal -> water -> wood. Overcoming (ke): wood -> earth -> water -> fire -> metal -> wood (`colour.py`).
+
+Classification (OKLCH): chroma below 0.035 is metal when L > 0.55 (white) and water when darker (black). Hues 130-215 are wood, 215-330 are water (azurite blue up to violet), 55-130 are earth, everything else is fire. The base violet `#7C5CFF` is *zi*, the intermediate colour of the north (black over cinnabar), so it counts as water.
+
+Consequences for the base:
+- metal (white grounds) is its mother: sheng, any area;
+- wood (jade) is its child: sheng, any area, and it is the companion colour;
+- water (blue, ink) is kin: same element, any area;
+- fire (cinnabar, rose) and earth (gold) are ke: accents only, at most `ACCENT_SHARE` = 6/42 = 1/7 of a frame.
+
+Derivation (`derive`, `brand_palette`). Every colour is `from_oklch(ladder(L0, k), C0 * c / 21, hue)`:
+- `L0`, `C0`, `h0` are the base's own OKLCH values;
+- `ladder` is the value ruler: 21 fen from the base to white and 21 fen from the base to black;
+- chroma is counted in 21sts of the base chroma;
+- hue is either the base hue or an element anchor, the OKLCH hue of the traditional pigment (cinnabar `#FF461F`, gamboge `#FFB61E`, malachite `#16A951`, azurite `#1685A9`; anchor values come from the zhongguose table and should be checked against a pigment reference).
+
+Results:
+- accent: the first shade that holds 4.5:1 under white, `#7452F5` (k = -1). This answers QA D-06: today `#7C5CFF` gives 4.35 and `#8B6CFF` 3.69.
+- neutrals sit on the base hue with chroma 1-2/21.
+
+## 3. Light
+
+- One source, upper left and steep. `LIGHT` points toward it, `SHADOW` = dx:dy = 1:2. The eye and the light enter through the same gate.
+- Gloss sits on the lit rim only. Lit gradients run along 1:2. Elevations use offsets (1,2), (2,4), (3,6).
+- A plane in front is never darker than the plane behind it.
+- A recess is not drawn lit from below: the scorer reads every plane as raised.
+
+## 4-7. Flow (feng shui) and density (Korean), as computable scores
+
+The scorer is `score.py`. An SVG is rendered with rsvg-convert and measured as pixels; a layout tree (JSON boxes) adds exact lengths. Each rule scores 0-100; the total is the mean of eight.
+
+Measures used below:
+- **salience**: OKLab distance to a blurred local ground, plus 0.5 x chroma;
+- **masses**: connected components of the top 15% of salience, heaviest first;
+- **ground**: a quadratic fit of the ground colour. For an icon it is fitted on the card ring 0.6-1.6 fen inside the silhouette.
+
+1. **qi** (`r_qi`) = 0.25 entry + 0.25 landing + 0.2 turn + 0.15 (100 - 34 stagnant) + 0.15 (100 - 25 dead ends).
+   - entry = 100 clip(0.5 + (tl - (tr + bl)/2) / 0.06), and 0 if tl < 8%. tl, tr, bl are the salience shares of the quadrants.
+   - landing = 100 clip((m1/m2 - 1) / 0.4): one primary mass, heavier by 7:5.
+   - turn = 100 if the path from entry to landing (greedy nearest mass) bends at least 25 degrees once, else 50. This is the spirit screen: qi meanders.
+   - stagnant = a corner zone with more than 1.5/9 of the weight that the path never visits.
+   - dead end = a reversal of more than 135 degrees.
+2. **sha** (`r_sha`) = 100 - 15 arrows - 10 cuts - min(30, 300 aimed).
+   - arrows: straight edges longer than 1/3 of the frame that run into its border.
+   - cuts: straight edges longer than 1/2 of the frame, with weight on both sides within 3 fen (a dividing line through content).
+   - aimed: sharp corners (minimum eigenvalue of the structure tensor, at a quarter-fen scale), each weighted by closeness to the landing (1 - d/0.5), per fen squared.
+3. **forms** (`r_forms`) = 0.4 mountain + 0.3 support + 0.3 water.
+   - mountain: the lower half carries 45-65% of the weight, -4 per point outside that range.
+   - support: share of masses that are not heavy over light (a mass above another, columns overlapping, more than 2x heavier).
+   - water: share of path steps no longer than 1/3 of the diagonal.
+4. **zones** (`r_zones`, the nine-square luoshu grid) = 100 - 8 empty - 12 overloaded - 150 mean|w - neighbours| - 20 (if the centre holds less than 1/9).
+   - empty: w < 0.2/9. Icon card corners are exempt.
+   - overloaded: w > 3/9.
+5. **palette** (`r_palette`): k-means regions (k = 8). For each adjacent pair, weighted by boundary length: same or sheng scores 1. ke scores 1 if the smaller region is at most 1/7 of the frame, falling linearly to 0 at 3/7.
+6. **light** (`r_light`) = 0.45 shading + 0.3 shadow side + 0.25 order.
+   - shading = the mean of the ground field slope and the slope inside objects, each 50 + 50 cos against `LIGHT`.
+   - shadow side: just outside each plane, the side away from the light is darker.
+   - order: a plane inside another plane's box is not darker than it by more than 0.02 L.
+7. **proportion** (`r_proportion`).
+   - Icons: canvas 24 fen, art box 21 fen. Score = 35 fill (1 - |L - 21|/4) + 25 ratio + 40 module (sides of planes on named or whole fen).
+   - Marks: ink band and gap heights stand in named-fen ratios, within 4%.
+   - Screens: 70 module + 30 door bands.
+   - Layout trees (`tree_scores`): exact lengths, insets and radii; openings on the ruler; sibling gaps on at most two values (rhythm); lines that touch the frame.
+8. **density** (`r_density`, Korean layered) = mean of four parts:
+   - gravity: within 0.25 of (0.5, 0.47) for icons and marks, (0.5, 0.45) otherwise.
+   - planes: ground, second and first plane shares (OKLab distance to ground < 0.04, 0.04-0.18, > 0.18) against zucai : cai : zhi = 21 : 15 : 6 out of 42.
+   - rhythm: 1 - CV of the gaps between salience bands.
+   - breathing: ground share between 1/3 and 3/5.
+
+Token-level rules (`score_tokens.py`):
+- proportion: px values on the module, and type size = 2/3 of the line.
+- palette: contrast floors, neutrals on the base hue within 6 degrees, large surfaces same or sheng with the accent.
+- light: a declared direction, with elevations at 1:2.
+- density: distinct planes and gentle spacing steps.
+
+Flow needs a layout, so tokens are not scored on it.
+
+## 8. Icons
+
+- **First redraw** (`brand/icons`, `tools/brand/icons_brand.py`): the shipped card, juzhe slopes, one light. The lead rejected it as a restyle.
+- **Three directions** (`brand/directions`, `tools/brand/directions.py`):
+  - wuxing: the silhouette is the phase shape;
+  - strata: jogakbo patches;
+  - gate: a battered wall with the meaning as an opening of light.
+  Each has construction sheets. The lead found them too extreme: "nem chineses fazem ícones dessa forma".
+- **Three types in the Chinese app grammar** (`brand/types`, `tools/brand/types.py`):
+  - A bold glyph;
+  - B traditional motif (ruyi gear, coin-sealed bag, scroll, seal, longevity peach, luopan Folio);
+  - C jianzhi paper-cut.
+  These wait for the lead's pick.
+
+**juzhe** (`geom.juzhe`, roof raise-and-fold): a slope from the ridge to the eave. The first purlin drops H/10 under the straight line, and each next one drops half as much under the line from the previous folded purlin to the eave.
+
+### 8.1 Type A2: bold glyph, the lead's pick (07:00Z), refined
+
+Generator: `types.py --a2` (functions `a2_*`), output `brand/types/A2-bold/` with `small/` variants for 16-32 px.
+
+- The card grows to the zucai art box: 21 of the 24 canvas fen. The shipped silhouette is scaled by 896/824 about the centre, so card fen and canvas fen form one grid and glyph sides land on whole fen.
+- One big white glyph (about 2/3 of the card) and one accent at the landing: gold keyhole, violet keyhole seal, gold label, jade cursor, cinnabar pulse, gold you-are-here.
+- A second leaf (folder back, the Folio's middle panel, the bag's back handle) is a light tint of the card hue (`leaf`), never grey.
+- Store: ochre card at k = 2 on the value ruler (3.46:1 under white, which passes the 16 px contrast check). The bag is portrait with two soft rope handles, because a padlock is one stiff shackle over a squat box. Its mouth sags in two juzhe slopes, so no ruled edge cuts the glyph.
+- Atlas: the Folio trail runs from the upper-left panel (entry) to a larger you-are-here (landing).
+- Keyholes are centred by their ink box (`keyhole_at`).
+
+**Shadow rules.** One light, upper left, 1:2.
+
+| rule | |
+|---|---|
+| S1 elevation | card 0.8, glyph 1, accent 1/2. Offset = elevation × (0.3, 0.6) fen; blur = elevation × 0.4 fen. |
+| S2 cast colour | the card's own hue, darker (shade -10, opacity 0.42); never grey or black. |
+| S3 form shadow | each glyph shades in a gradient along 1:2, from its colour to a light tint of the card hue; no hard split. |
+| S4 holes | the upper-left inner edge of a hole is shaded. |
+| S5 contact | a 0.25 fen occlusion line where a piece rests on another. It never runs across a glyph: a straight line through content is a sha cut. |
+| S6 margin | the card's shadow stays inside the 1.5 fen margin. |
+
+**Craft checks** (`craft.py`, every icon, every sheet):
+
+| check | passes when |
+|---|---|
+| overflow | nothing on the canvas edge (catches clipped shadows) |
+| holes | the card core is opaque |
+| refs | every `url(#id)` resolves; no empty clipPath or mask |
+| layers | no shadow drawn last, no orphan shadow |
+| 16 px contrast | at least 3:1 |
+| centring | ink inside a hole is centred within 0.15 fen. Shadows and `class="shade"` strokes are removed first; tested on a deliberately off-centre icon, 0.28 fen fails. |
+
+The current Store icon fails the 16 px contrast check (2.55:1).
+
+**Scorer fixes in this round** (they apply to current and new icons alike):
+- The back-and-front light check compares only planes of the same material (a, b within 0.04).
+- Those planes must be separated by an edge (a step above 0.05 L). Paint and an object's own shading are not light.
+
+**Fork/join** (`par.fanout`, lead 07:08Z):
+- the eight rules of one picture run on threads, since they share its arrays;
+- files, icons and checks run on processes, one per core (32 on the box).
+
+### 8.2 Type A2 for the full shipped set (plan)
+
+The same grammar everywhere: card in the app's phase colour (water violet/azurite/ink/lake, wood jade, earth ochre/gold, fire cinnabar used only as an accent), one white glyph on the 15-fen square, one accent at the landing, shadow rules S1-S6, and its own 16-32 px variant.
+
+Apps (`icons/apps`):
+
+| icon | card (phase) | glyph | accent (landing) |
+|---|---|---|---|
+| browser (Atlas) | water, lake blue | Folio map | gold you-are-here + trail |
+| calculator | water, ink | 2×2 keys (plus, minus, times, equals) | gold equals |
+| calendar | wood, jade | page with a ring bar | cinnabar day dot |
+| control-center | water, violet | two toggles | gold knob |
+| files | water, azurite | folder + leaf | gold label |
+| games | fire as accent on a water violet card | controller | cinnabar buttons |
+| installer | water, violet | door (the mark) with a down arrow | gold arrow tip |
+| kit-ai | water, violet | spark of four juzhe-curved rays | gold centre |
+| kit-codecs | water, ink | play triangle with rounded tips | jade |
+| kit-craft-suite | earth, ochre | brush | violet tip |
+| kit-creative | wood, jade | palette | four phase dots |
+| kit-dev | water, ink | braces | jade |
+| kit-gaming | water, violet | controller | gold |
+| launcher | water, violet | 3×3 grid of rounded squares (the luoshu nine) | gold centre square |
+| mail | water, azurite | envelope | gold seal |
+| mark | brand mark, unchanged | | |
+| music | fire as accent on a water violet card | note | gold note head |
+| notes | earth, ochre | page with lines (rhythm 10 : 6) | violet pin |
+| photos | water, lake | mountain with sun (shanshui) | gold sun |
+| plugin-maker | water, ink | puzzle piece | jade knob |
+| settings | water, violet | gear | gold keyhole |
+| software (Store) | earth, ochre | carrier bag | violet keyhole seal |
+| system-monitor | wood, jade | gauge arc | cinnabar needle |
+| terminal (Console) | water, ink | prompt `>` | jade cursor |
+| text-editor | water, azurite | page with a caret | gold caret |
+| trash | metal, light card with an ink glyph | bin | none (calm) |
+
+Places, devices and mimetypes:
+- **Folders:** the Files folder; the place glyph sits small on the front leaf in the card's own tint (documents: lines; download: arrow; music: note; pictures: mountain; publicshare: two figures; templates: dashed page; videos: play).
+- **Home:** a house with a juzhe roof. **Desktop:** a screen. **Network-workgroup:** three linked nodes.
+- **Devices:** a disk and a removable drive, metal card, ink glyph.
+- **Mimetypes:** the page with a folded corner, white on the type's phase colour: pdf in cinnabar (the only fire card, small use), audio violet, image lake, video ink, package ochre, document azurite, presentation earth, spreadsheet jade, executable ink, generic metal.
+
+Symbolic set (`icons/symbolic`, 326 icons): unchanged by Type A. It stays single-colour `currentColor`; only its stroke ends and corners take the 1-fen module in a later pass.
+
+Doctor (`webapps/doctor`): wood, jade card, heart, cinnabar pulse.
+
+### 8.3 Applying the calculus to the site and the UI (lead 07:22Z: balance, never extreme, always the flow)
+
+The icons show the measure: keep what the Western eye already reads, change the geometry where it improves. For the site:
+
+1. **Module.** Every length is a whole fen (4 px), and the important ones are named: spacing 4/8/12/16/24/40/60/84, radius 8/12/16/24, type 11/16, 13/20, 16/24, 24/36, 27/40, 40/60 (`tokens/tokens-brand.json`). A content column of 576 px is one door-light ruler. Hero and panel widths and heights land in the good bands (cai, yi, guan, ben).
+2. **Flow (qi).**
+   - Entry is the upper left: logo and first heading.
+   - Every page has one landing, the primary action, at least 7:5 heavier than the next mass.
+   - The path from entry to landing turns at least once: a Z or S reading, never one straight shot.
+   - No dense corner without an exit, and no dead end.
+3. **Sha.** No full-bleed straight rule that runs into the frame edge or cuts through content: separators are inset and end before the edge. No sharp corner aimed at the primary action: corners are radius 8 or more.
+4. **Forms.** Anchors (header, hero visual, footer) are mountain forms: weight low, a base. Flowing content (lists, cards, timelines) is water: continuous steps, each step at most 1/3 of the diagonal. Nothing heavy sits over something light without support.
+5. **Zones.** Weight is balanced over the nine-square grid. The centre holds content, no zone is empty or overloaded, and neighbours differ gently.
+6. **Palette.** Violet (water) may neighbour white, jade and blue at any size. Gold and cinnabar are accents, at most 1/7 of a screen. The light accent is `#7452F5` (4.5:1 under white).
+7. **Light.**
+   - One source, upper left; shadows at 1:2, coloured by the surface they fall on, never grey.
+   - Elevation 1/2/3 = (1,2)/(2,4)/(3,6) px.
+   - A front plane is never darker than the plane of the same material behind it.
+8. **Density.** Ground, second plane and first plane in shares near 21 : 15 : 6. Ground (breathing space) is 1/3 to 3/5 of the screen: full, not bloated.
+9. **Craft.** Nothing clipped at an edge, nothing off-centre in its container (0.15 fen), no near-miss gaps (under 0.6 fen without touching), 16 px or 3:1 minimum where icons appear.
+
+**Balance.** These rules are gates, not a style to exaggerate. Where a rule and the lead's eye disagree, the eye decides, and the score only guards against regressions. Measure a page with `tools/brand/score.py PNG --kind screen [--tree layout.json]`: a DOM box tree gives exact lengths, and Playwright screenshots work.
+
+## 9. Marks
+
+The zucai stack (`tools/brand/marks_brand.py`, `brand/marks`):
+- the WolOS letters are the cai (15 fen);
+- under them sits the zhi: a 2 fen gap and 4 fen of ウォルOS;
+- the katakana is tracked with equal ink gaps to 2/3 of the letters' width;
+- the door mark is 21 fen tall, 6 fen from the letters.
+
+Variants:
+- boot: 576 px wide (one ruler) on the optical centre (0.45 H);
+- release lockup: "WolOS 0.13 Qíjiā" at a zhi-high cap, the 齐家 seal in cinnabar (a ke accent, under 1/7), and "Put the house in order" 6 fen below.
+
+The lead approved the mark and the release banner on 2026-11-04 at 06:49Z.
+
+## 10. Wallpapers
+
+`tools/brand/wallpapers_brand.py`: shanshui in three planes. The light at the upper left is the entry. The river turns twice and lands in a pool at a lit door in the lower-right third, and a mountain anchors the lower left. The lead put these on hold until an icon is approved. He also said wallpapers may follow qi more freely, because that reads as architecture.
+
+## Tooling
+
+`tools/brand` uses numpy, scipy and Pillow (allowed by the CTO for `tools/brand` only on 2026-11-04). The measuring and board tools (`score.py`, `craft.py`, `board*.py`, `measure.py`, `read_icon.py`) are not part of `build.py` or CI. The generators `types.py` and `fullset.py` draw the Type A2 icons that `tools/icons/build.py` installs (through `tools/icons/a2.py`), so they are stdlib only and byte-reproducible: `build.py --check` fails when an installed icon is not their output. Rendering is rsvg-convert, the renderer GTK loads SVG with.
+
+## Noted decision for the lead: card radii drift
+
+The shipped icon card is 100..924 of 1024 with corner radii 236/150 (28.6% / 18.2%). `tokens/colors.json` `radius.icon` says "32.7% 11.5%". The brand work follows the shipped silhouette and scales it to 21 fen. Which one is the identity is the lead's call.
+
+## Honest limits
+
+- The scorer was written alongside the art, so it measures fit to these rules, not beauty. The side-by-side sheets are the proof.
+- Palette scores 100 on almost every icon, current or new, so on icons that rule does not discriminate.
+- On flat brand marks the light rule is close to neutral.
+- The gate direction's bright plinth reads as light from below.
+- The wallpaper studies do not beat the current ones (day 75.8 -> 75.5, night 79.4 -> 76.4).

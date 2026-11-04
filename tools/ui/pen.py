@@ -5,7 +5,7 @@ Icons are authored once on the 24-fen master (centre 12, art box 21 fen = 1.5..2
 drawn at N = 24 or 16 px by a Pen.  The pen turns every stroke into a filled outline (GTK 4.20 draws
 `stroke` symbolics as blobs), reusing the contour machinery of tools/icons.py (imported, not edited).
 
-Grammar (derived from the A2 geometry, tools/east/types.py a2_*):
+Grammar (derived from the A2 geometry, tools/brand/types.py a2_*):
   G1 stroke   2 fen at 24 px (A2 detail 1.4 fen x 21/15, the symbolic glyph is 1.4x the A2 glyph),
               1.5 px at 16 px; round caps and joins (A2: every end is th/2).
   G2 module   outer sizes on named fen (21, 15, 10, 6, 4, 3, 2), gaps one stroke wide (G1) or 3 fen.
@@ -23,12 +23,12 @@ import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-EAST = os.path.normpath(os.path.join(HERE, "..", "east"))
-sys.path.insert(0, EAST)
+BRAND = os.path.normpath(os.path.join(HERE, "..", "brand"))
+sys.path.insert(0, BRAND)
 _spec = importlib.util.spec_from_file_location("wol_old_icons", os.path.join(HERE, "..", "icons.py"))
 OLD = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(OLD)
-import geom  # noqa: E402  (east geometry: juzhe)
+import geom  # noqa: E402  (brand geometry: juzhe)
 
 
 class Pen:

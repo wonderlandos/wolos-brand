@@ -6,7 +6,7 @@
 
 Both versions draw the same 13 default pins with the A2 icons, so the board isolates the geometry, light and
 motion rules from the icon art.  CUR is read from the shell sources (cited per field), NEW is the proposal.
-Fen = 4 px (tools/east/calculus.py).
+Fen = 4 px (tools/brand/calculus.py).
 """
 import io
 import json
@@ -19,12 +19,12 @@ import numpy as np
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(HERE, "..", "east"))
+sys.path.insert(0, os.path.join(HERE, "..", "brand"))
 import calculus as K  # noqa: E402
 
 D = os.path.normpath(os.path.join(HERE, "..", ".."))
-A2 = os.path.join(D, "east", "types", "A2-bold")
-FS = os.path.join(D, "east", "fullset")
+A2 = os.path.join(D, "brand", "types", "A2-bold")
+FS = os.path.join(D, "brand", "fullset")
 
 PINS = [("Files", f"{A2}/wolos-files.svg"), ("Apps", f"{FS}/wolos-launcher.svg"), ("Browser", f"{A2}/wolos-atlas-folio.svg"), ("Mail", f"{FS}/wolos-mail.svg"),
         ("Music", f"{FS}/wolos-music.svg"), ("Photos", f"{FS}/wolos-photos.svg"), ("Calendar", f"{FS}/wolos-calendar.svg"), ("Notes", f"{FS}/wolos-notes.svg"),

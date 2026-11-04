@@ -83,4 +83,5 @@ def all_icons():
             Icon("drive-removable-media", "devices", "D1", P.drive_removable, tile=False)]
     out += [Icon(n, "devices", lv["devices"], f, tile=False) for n, f in PM.DEVICES]
     out += [Icon(n, "mimetypes", lv["mimetypes"], lambda cv, c=c, g=g: P.mime(cv, c, g), tile=False) for n, c, g in P.MIMES + PM.MIMES]
-    return out
+    import a2   # the Type A2 drawings (tools/brand) replace the entries a brand generator draws
+    return a2.upgrade(out)

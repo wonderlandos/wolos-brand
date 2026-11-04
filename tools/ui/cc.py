@@ -19,7 +19,7 @@ from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-sys.path.insert(0, os.path.join(HERE, "..", "east"))
+sys.path.insert(0, os.path.join(HERE, "..", "brand"))
 import dock as DK  # noqa: E402  (wallpaper crop, rounded masks)
 
 D = os.path.normpath(os.path.join(HERE, "..", ".."))

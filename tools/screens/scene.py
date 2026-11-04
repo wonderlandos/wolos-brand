@@ -30,7 +30,7 @@ TOK = {
                      glass="#23212d", control="#393647", success="#5be3b0", warning="#ff8a55", danger="#f2678f", on_danger="#181521",
                      shadow="0,0,0", tint="#8b6cff"),
     },
-    "new": {  # tokens/tokens-east.json
+    "new": {  # tokens/tokens-brand.json
         "light": dict(surface="#F1F1FA", sidebar="#EBEBF3", card="#FFFFFF", line="#D9D9E1", text="#151520",
                       dim="#565563", accent="#7452F5", accent_ink="#6D48EB", accent_text="#FFFFFF",
                       glass="#F1F1FA", control="#EBEBF3", success="#00863C", warning="#C06400", danger="#BB3F27",
@@ -240,7 +240,7 @@ class Scene:
         return self.image(x, y, size, size, svg_path=p, parent=parent, color=color, tree=tree, role="box")
 
     def icon(self, parent, x, y, size, name, tree=True, shadow=None):
-        for d in ("east/types/A2-bold", "east/fullset"):
+        for d in ("brand/types/A2-bold", "brand/fullset"):
             for n in (f"wolos-{name}.svg", f"{name}.svg"):
                 p = os.path.join(ROOT, d, n)
                 if os.path.exists(p):

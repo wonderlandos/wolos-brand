@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-"""Full-colour icons of the WolOS theme: crafted objects on the soft card (apps) and pressed paper
-(places, devices, mimetypes), design/icons/LANGUAGE.md.
+"""Full-colour icons of the WolOS theme, design/icons/LANGUAGE.md: the Type A2 set (drawn by the brand
+generators tools/brand/types.py and fullset.py, bridged by a2.py), the Atlas Folio app icon and the
+crafted objects on the soft card (apps), and the pressed paper the A2 set does not cover (places,
+devices, mimetypes). This tool is the one writer of design/icons/{apps,places,devices,mimetypes}.
 
   python3 -I design/tools/icons.py            (the entry: symbolic set, then this)
   python3 -I design/tools/icons/build.py [--check] [--overlay DIR] [-v]
@@ -12,7 +14,9 @@ glyph, a lighter ramp on dark tiles, fewer details), design/icons/aliases.tsv, a
 rsvg-convert, the renderer GTK itself loads SVG with: 128 and 512 from the full drawing, 48 from the
 small one), design/icons/places-aliases.tsv. Nothing is written when a check fails
 (checks.py). --check runs the checks and the renders and also fails when a written SVG differs from
-what the generator draws now (CI lock: the drawings come from this tool, never by hand); it writes nothing."""
+what the generator draws now, or when a folder holds an SVG no generator draws (CI lock: the drawings
+come from this tool, never by hand or from another tool's output folder); it writes nothing.
+Guard for the lock itself: python3 -I design/tools/icons/test_generator.py."""
 import os
 import shutil
 import sys
@@ -191,6 +195,22 @@ def install_brand():
     return os.path.join(ICONS, "apps", "wolos-mark.svg")
 
 
+def unowned(icons):
+    """SVGs in the full-colour folders that no registry entry draws: an icon installed by hand, or
+    by a tool that is not this generator (the way the A2 set once replaced the generator's output)."""
+    out = []
+    names = {ctx: {file_name(i) for i in icons if i.ctx == ctx} for ctx in ("apps", "places", "devices", "mimetypes")}
+    for ctx, keep in names.items():
+        for sub in ("", "small") if ctx == "apps" else ("",):
+            d = os.path.join(ICONS, ctx, sub)
+            if not os.path.isdir(d):
+                continue
+            for fn in sorted(os.listdir(d)):
+                if fn.endswith(".svg") and fn not in keep and fn[:-4] not in KEEP:
+                    out.append(f"{os.path.relpath(os.path.join(d, fn), DESIGN)}: no generator draws this icon (tools/icons/families.py, tools/icons/a2.py)")
+    return out
+
+
 def drift(icons):
     """Written SVGs that differ from what the generator draws now, and drawings that are missing."""
     out = []
@@ -204,7 +224,7 @@ def drift(icons):
             out.append(f"{os.path.relpath(p, DESIGN)}: missing")
             continue
         if have != want:
-            out.append(f"{os.path.relpath(p, DESIGN)}: differs from the generator (run python3 design/tools/icons.py)")
+            out.append(f"{os.path.relpath(p, DESIGN)}: differs from the generator (run python3 design/tools/icons/build.py)")
     for p, want in alias_files().items():
         try:
             with open(p, encoding="utf-8", newline="") as f:
@@ -212,6 +232,7 @@ def drift(icons):
                     out.append(f"{os.path.relpath(p, DESIGN)}: differs from the generator's alias tables (build.py)")
         except OSError:
             out.append(f"{os.path.relpath(p, DESIGN)}: missing")
+    out += unowned(icons)
     for ic in icons:
         if ic.ctx == "apps":
             p = os.path.join(ICONS, "apps", "small", file_name(ic))

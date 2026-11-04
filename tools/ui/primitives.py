@@ -4,7 +4,7 @@
   python3 -I design/tools/ui/primitives.py [OUTDIR]       (default design/ui/primitives)
 
 Writes current-light/dark.svg, proposed-light/dark.svg and the layout trees (current|proposed.json,
-tools/east/score.py --tree).  One drawing function takes a parameter set, so the two specimens carry the
+tools/brand/score.py --tree).  One drawing function takes a parameter set, so the two specimens carry the
 same content and differ only in the numbers.  Sources of CUR: crates/shell/src/kit/kit.css (px).
 Proposal rules: lengths named or whole fen, radii 8/12/16/24, shadows (1,2)/(2,4)/(3,6) in the ink of
 the surface, never straight down and never black, density 21:15:6 by planes.
@@ -14,7 +14,7 @@ import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(HERE, "..", "east"))
+sys.path.insert(0, os.path.join(HERE, "..", "brand"))
 import calculus as K  # noqa: E402
 
 D = os.path.normpath(os.path.join(HERE, "..", ".."))

@@ -10,7 +10,7 @@ from PIL import Image, ImageDraw
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-sys.path.insert(0, os.path.join(HERE, "..", "east"))
+sys.path.insert(0, os.path.join(HERE, "..", "brand"))
 import board as B  # noqa: E402
 
 D = os.path.normpath(os.path.join(HERE, "..", ".."))

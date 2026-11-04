@@ -141,7 +141,7 @@ def check(icon, deep=True):
     errs, rows = [], {}
     for small in (False, True):
         errs += static(icon, icon.svg(small))
-    if deep:
+    if deep and not getattr(icon, "static_only", False):   # an A2 icon has no tile-only drawing (a2.py)
         with tempfile.TemporaryDirectory() as t:
             for small, size in ((False, 128), (True, 48)):
                 e, m = raster(icon, small, size, t)

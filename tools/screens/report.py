@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-"""Write the per-screen score table (screens/*/scores.json) into .claude/v012/brand-east/screens-report.md.
+"""Write the per-screen score table (screens/*/scores.json) into .claude/v012/brand/screens-report.md.
   python3 -I report.py"""
 import glob
 import json

@@ -1,11 +1,11 @@
 # ADR brand-ui: the interface on the Brand calculus
 
-Status: proposal (design branch `wave3/brand-east`; nothing installed reads it). Date: 2026-11-04. Author: DESIGN-ui.
+Status: proposal (design branch `wave3/brand`; nothing installed reads it). Date: 2026-11-04. Author: DESIGN-ui.
 Lead direction: improve, do not redo; balance, never extreme; every number derived from the calculus.
 
-The calculus, the scorer and the A2 icons are in `docs/adr/brand-east.md` and `docs/adr/brand-east-rules-pack.md` (existing paths). This ADR applies them to the shell: the symbolic icons, the kit primitives, the Dock and the Control Center. Everything here is measured from `crates/shell` (kit.css, widgets.rs, ui/dock.rs, ui/control_center/mod.rs, tests/golden) and proposed next to it; the shell worker implements from the tables in sections 2 to 4.
+The calculus, the scorer and the A2 icons are in `docs/adr/brand-calculus.md` and `docs/adr/brand-rules-pack.md` (existing paths). This ADR applies them to the shell: the symbolic icons, the kit primitives, the Dock and the Control Center. Everything here is measured from `crates/shell` (kit.css, widgets.rs, ui/dock.rs, ui/control_center/mod.rs, tests/golden) and proposed next to it; the shell worker implements from the tables in sections 2 to 4.
 
-Code: `tools/ui/` (`pen.py` stroke grammar, `glyphs.py` the icons, `symbolic.py` generator, `check.py` craft and score, `primitives.py`, `dock.py`, `cc.py`, `boards.py`, `sheet.py`). Output: `ui/symbolic/{16,24}/`, `ui/primitives/`, `ui/dock/`, `ui/control-center/`, `ui/scores.json`. Boards sent to the lead: `.claude/v012/brand-east/renders/ui-*.png`. Units: 1 fen = 4 px; named lengths 1 2 3 4 6 10 15 21 30 42 60 84 144 fen = 4 8 12 16 24 40 60 84 120 168 240 336 576 px.
+Code: `tools/ui/` (`pen.py` stroke grammar, `glyphs.py` the icons, `symbolic.py` generator, `check.py` craft and score, `primitives.py`, `dock.py`, `cc.py`, `boards.py`, `sheet.py`). Output: `ui/symbolic/{16,24}/`, `ui/primitives/`, `ui/dock/`, `ui/control-center/`, `ui/scores.json`. Boards sent to the lead: `.claude/v012/brand/renders/ui-*.png`. Units: 1 fen = 4 px; named lengths 1 2 3 4 6 10 15 21 30 42 60 84 144 fen = 4 8 12 16 24 40 60 84 120 168 240 336 576 px.
 
 ## 1. Symbolic icons: one stroke grammar from the A2 geometry
 
@@ -34,7 +34,7 @@ Craft check at 16 px (`tools/ui/check.py`, pass or fail per icon, current set me
 
 Known failures, not hidden: `battery-full`, `battery-full-charged`, `camera-photo`, `edit-delete`, `input-keyboard`, `keyboard-brightness`, `wolos-control-center` (gaps of 0.5 to 0.8 px at 16 px), `battery-caution-charging`, `battery-low-charging` (the bolt's thin tips), `wolos-restore` (arrow head 0.1 alpha on the edge ring).
 
-Score (`tools/east/score.py`, kind icon, the 24 px glyph at 15 fen on a white 21-fen tile, current drawn the same way; mean over 131): current 79.94, proposed 79.97; wins 65/131. Per rule current to proposed: qi 85.8 to 85.9, sha 86.4 to 88.3, forms 98.5 to 97.5, zones 86.5 to 86.4, palette 100 to 100, light 48.7 to 47.6, proportion 78.1 to 78.6, density 55.6 to 55.3. Honest reading: a monochrome line icon on a tile barely moves the eight rules, so the score only says the new set does not regress; the gains are the craft checks above and the shared grammar, not the number.
+Score (`tools/brand/score.py`, kind icon, the 24 px glyph at 15 fen on a white 21-fen tile, current drawn the same way; mean over 131): current 79.94, proposed 79.97; wins 65/131. Per rule current to proposed: qi 85.8 to 85.9, sha 86.4 to 88.3, forms 98.5 to 97.5, zones 86.5 to 86.4, palette 100 to 100, light 48.7 to 47.6, proportion 78.1 to 78.6, density 55.6 to 55.3. Honest reading: a monochrome line icon on a tile barely moves the eight rules, so the score only says the new set does not regress; the gains are the craft checks above and the shared grammar, not the number.
 
 ## 2. Primitives (kit.css)
 

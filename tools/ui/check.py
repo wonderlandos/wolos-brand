@@ -10,7 +10,7 @@ craft16 (pass/fail per icon, on the 16 px file, rendered at 16 px and at 8x):
   centre   the ink box is centred on the cell within 1 px
   crisp    (reported, not a gate) share of edge pixels that are neither empty nor full: lower is crisper
 tile score: the glyph (24 px file) in ink on a white 21-fen tile, 15 fen across (the A2 proportion),
-scored with tools/east/score.py (kind icon), current icon drawn the same way.
+scored with tools/brand/score.py (kind icon), current icon drawn the same way.
 """
 import io
 import json
@@ -26,7 +26,7 @@ from scipy import ndimage
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-sys.path.insert(0, os.path.join(HERE, "..", "east"))
+sys.path.insert(0, os.path.join(HERE, "..", "brand"))
 D = os.path.normpath(os.path.join(HERE, "..", ".."))
 OUT = os.path.join(D, "ui", "symbolic")
 CUR = os.path.join(D, "icons", "symbolic")

@@ -1,17 +1,17 @@
 # Brand screens: the layout of the installer, Setup, the Kit, the Store, Settings, the lock screen and the login window
 
-Status: proposal for the shell worker (branch `wave3/brand-east`; nothing installed reads it). Date: 2026-11-04.
+Status: proposal for the shell worker (branch `wave3/brand`; nothing installed reads it). Date: 2026-11-04.
 Lead order 08:28Z: rewrite the layout of every screen on the calculus, improve and do not redo, balance and no extremes.
 
-Read first: `brand-east.md` (the calculus), `brand-east-rules-pack.md` (formulas, layout-tree format). The sibling `brand-ui.md` (DESIGN-ui) owns the symbolic icons, the Dock and the Control Center; this file owns the Kit tokens and the six screens below. Where a Kit value touches the Dock or the Control Center, the Kit value here wins and `brand-ui.md` quotes it.
+Read first: `brand-calculus.md` (the calculus), `brand-rules-pack.md` (formulas, layout-tree format). The sibling `brand-ui.md` (DESIGN-ui) owns the symbolic icons, the Dock and the Control Center; this file owns the Kit tokens and the six screens below. Where a Kit value touches the Dock or the Control Center, the Kit value here wins and `brand-ui.md` quotes it.
 
 ## 0. How each screen was measured and scored
 
 1. **Measure.** The shell source (`crates/shell/src`: `kit/kit.css`, `kit/assistant.rs`, `kit/widgets.rs`, `ui/installer.rs`, `ui/setup.rs`, `ui/lock.rs`, `login.rs`, `ui/store.rs`, `ui/settings/mod.rs`) gives the CSS values; the golden PNGs (`crates/shell/tests/golden/*.png`: installer and Setup 1280 x 800, lock, login, Settings and Store 900 x 600) give the real pixels.
 2. **Draw both with one function.** `tools/screens/scene.py` draws an SVG mock and writes the layout tree (rules-pack format) from the same calls. The current screen is drawn from measured numbers, the proposal from named lengths, so a score compares like with like. The backdrop is the shell's own lock backdrop (cut from `lock-light/dark.png`, `tools/screens/backdrop.py`).
-3. **Score.** `tools/east/score.py --kind screen --tree TREE.json` (eight rules, total = mean). Every board prints the scores of the current mock and the proposal. The golden PNG scored with the same tree is printed on the board as a reference.
+3. **Score.** `tools/brand/score.py --kind screen --tree TREE.json` (eight rules, total = mean). Every board prints the scores of the current mock and the proposal. The golden PNG scored with the same tree is printed on the board as a reference.
 4. **Calibration.** Over the 14 screens with a golden (28 light and dark pairs) the mock of the current screen differs from the real golden, scored with the same tree, by +0.1 on average and 2.0 in absolute value (worst +8.3 and -5.7). The scorer's own noise (k-means regions of the wallpaper) is about +-3 on a one-pixel change. A difference under 3 points is not a signal; compare mock against mock, and read the per-rule table, not the total.
-5. **Boards.** `screens/NAME/board.png` (current left, proposal right, light above dark, scores at the right). Rebuild: `python3 -I tools/screens/build.py NAME`; send: `python3 .claude/v012/brand-east/send_screens.py NAME`.
+5. **Boards.** `screens/NAME/board.png` (current left, proposal right, light above dark, scores at the right). Rebuild: `python3 -I tools/screens/build.py NAME`; send: `python3 .claude/v012/brand/send_screens.py NAME`.
 
 Rules used on every page (rules-pack A-B): 1 fen = 4 px; named lengths 4 8 12 16 24 40 60 84 120 168 240 336 576; door-light ruler 576 (bands of 72; good: cai 0-72, yi 216-288, guan 288-360, ben 504-576); type lines on the fen (11/16 13/20 16/24 24/36 27/40 40/60); one light upper left, shadows at dx:dy = 1:2; planes 21 : 15 : 6; accent (ke) at most 1/7 of a frame; entry at the upper left, landing (the primary action) at the lower right, at least 7:5 heavier than the next mass, with one turn between.
 
@@ -22,7 +22,7 @@ The Kit is `kit.css` plus `kit/widgets.rs` constants plus the theme scale (`shar
 
 ### 1.1 Global (change in `:root`, `SCALE`, `widgets.rs`)
 
-**Colour tokens** (the 13-token contract, values from `tokens/tokens-east.json`; the accent is derived from the base `#7C5CFF`, k = -1 on the value ruler, 4.9:1 under white):
+**Colour tokens** (the 13-token contract, values from `tokens/tokens-brand.json`; the accent is derived from the base `#7C5CFF`, k = -1 on the value ruler, 4.9:1 under white):
 
 | token | light now | light new | dark now | dark new |
 |---|---|---|---|---|

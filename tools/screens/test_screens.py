@@ -8,7 +8,7 @@ import unittest
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 D = os.path.normpath(os.path.join(HERE, "..", ".."))
-sys.path.insert(0, os.path.join(HERE, "..", "east"))
+sys.path.insert(0, os.path.join(HERE, "..", "brand"))
 import calculus as K  # noqa: E402
 
 SCORES = {os.path.basename(os.path.dirname(f)): json.load(open(f)) for f in glob.glob(os.path.join(D, "screens", "*", "scores.json"))}
