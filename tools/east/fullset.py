@@ -385,6 +385,11 @@ def sym(doc, X, F, kind, cx, cy, col, small=False):
                 flat(doc, rrect(X(cx - span / 2 + c * (cell + gap)), X(cy - span / 2 + r * (cell + gap)), cell * F, cell * F, 0.3 * F), col)
     elif kind == "gear":
         flat(doc, T.gear_path(X(cx), X(cy), 3.2 * F, 2.5 * F) + circle(X(cx), X(cy), 1.1 * F), col, "evenodd")
+    elif kind == "nodes":
+        pts = [(cx - 2.6, cy + 1.8), (cx, cy - 2.2), (cx + 2.6, cy + 1.8)]
+        flat(doc, T.ribbon([(X(a), X(b)) for a, b in pts + [pts[0]]], th * 0.8), col)
+        for (a, b) in pts:
+            flat(doc, circle(X(a), X(b), 1.25 * F), col)
     elif kind == "dot":
         flat(doc, circle(X(cx), X(cy), 2.2 * F), col)
 
@@ -432,12 +437,16 @@ def object_icon(kind):
             g(doc, circle(X(10.5), X(9.2), 2.0 * F), GOLD, small, "accent")
         elif kind == "network":
             doc, X, F = bare("network workgroup, A2")
-            nodes = [(10.5, 4.0), (3.6, 16.0), (17.4, 16.0)]
-            links = T.ribbon([(X(nodes[0][0]), X(nodes[0][1])), (X(nodes[1][0]), X(nodes[1][1])), (X(nodes[2][0]), X(nodes[2][1])), (X(nodes[0][0]), X(nodes[0][1]))], 1.0 * F)
-            g(doc, links, LAKE, small)
-            for i, (x, y) in enumerate(nodes):
-                g(doc, circle(X(x), X(y), 3.4 * F), GOLD if i == 0 else LAKE, small, "accent" if i == 0 else "glyph")
-
+            # three computers (upper left = the entry, upper right, bottom centre) joined through a
+            # gold hub, the landing; screens are 8 x 6 fen, links are soft ribbons
+            hub = (10.5, 10.8)
+            scr = [(0.0, 1.0), (13.0, 1.0), (6.5, 14.0)]
+            for (x, y) in scr:
+                g(doc, T.ribbon([(X(hub[0]), X(hub[1])), (X(x + 4), X(y + 3))], 1.2 * F), shade(LAKE, 4), small)
+            for (x, y) in scr:
+                g(doc, rrect(X(x), X(y), 8 * F, 6 * F, 1.2 * F), LAKE, small)
+                flat(doc, rrect(X(x + 1.0), X(y + 1.0), 6 * F, 3.6 * F, 0.6 * F), WHITE if small else T.leaf(LAKE))
+            g(doc, circle(X(hub[0]), X(hub[1]), 3.0 * F), GOLD, small, "accent")
         elif kind == "harddisk":
             doc, X, F = bare("drive harddisk, A2")
             g(doc, rrect(X(0), X(5.5), 21 * F, 10 * F, 2.0 * F), VIOLET, small)
@@ -454,15 +463,19 @@ def object_icon(kind):
 
 
 def mime_icon(colour, symbol):
+    """A page with its folded corner; the type's colour is a chip at the upper left (the entry),
+    the symbol sits large in the page's lower middle (the landing). No full-width band: a straight
+    edge across the page is a sha cut."""
     def fn(small=False):
         doc, X, F = bare(f"mimetype {symbol}, A2")
         pg = page(X, F, 3.0, 0.0, 15.0, 21.0, fold=4.0)
         g(doc, pg, WHITE, small)
         fold = f"M{f(X(14.0))} {f(X(0))}V{f(X(3.2))}Q{f(X(14.0))} {f(X(4.0))} {f(X(14.8))} {f(X(4.0))}H{f(X(18.0))}Z"
         flat(doc, fold, T.leaf(colour))
-        band = rrect(X(3.0), X(16.0), 15 * F, 5 * F, 0, 0, 1.0 * F, 1.0 * F)
-        flat(doc, band, colour)
-        sym(doc, X, F, symbol, 10.5, 9.2, colour, small)
+        g(doc, rrect(X(5.0), X(2.4), (6.0 if not small else 7.0) * F, (2.4 if not small else 3.0) * F, 1.2 * F), colour, small, "accent")
+        doc.body.append(f'<g transform="translate({f(X(10.5))} {f(X(12.8))}) scale(1.35) translate({f(-X(10.5))} {f(-X(12.8))})">')
+        sym(doc, X, F, symbol, 10.5, 12.8, colour, small)
+        doc.body.append("</g>")
         return doc.svg()
     return fn
 
@@ -470,13 +483,13 @@ def mime_icon(colour, symbol):
 BATCHES[4] = [("folder", folder_icon(None)), ("folder-documents", folder_icon("lines")), ("folder-download", folder_icon("arrow")),
               ("folder-music", folder_icon("note")), ("folder-pictures", folder_icon("mountain")), ("folder-publicshare", folder_icon("people")),
               ("folder-templates", folder_icon("dashed")), ("folder-videos", folder_icon("play")), ("user-home", folder_icon("house")),
-              ("user-desktop", object_icon("desktop")), ("network-workgroup", object_icon("network")),
+              ("user-desktop", object_icon("desktop")), ("network-workgroup", folder_icon("nodes", LAKE)),
               ("user-trash", bin_icon(False)), ("user-trash-full", bin_icon(True))]
 BATCHES[5] = [("drive-harddisk", object_icon("harddisk")), ("drive-removable-media", object_icon("removable")),
               ("application-pdf", mime_icon(RED, "lines")), ("application-x-executable", mime_icon(INK, "gear")),
               ("application-x-generic", mime_icon(VIOLET, "dot")), ("audio-x-generic", mime_icon(VIOLET, "note")),
               ("image-x-generic", mime_icon(LAKE, "mountain")), ("package-x-generic", mime_icon(OCHRE, "box")),
-              ("text-x-generic", mime_icon(AZURITE, "lines")), ("video-x-generic", mime_icon(INK, "play")),
+              ("text-x-generic", mime_icon(INK, "lines")), ("video-x-generic", mime_icon(INK, "play")),
               ("x-office-document", mime_icon(AZURITE, "lines")), ("x-office-presentation", mime_icon(OCHRE, "slides")),
               ("x-office-spreadsheet", mime_icon(JADE_CARD, "grid"))]
 
