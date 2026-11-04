@@ -89,7 +89,9 @@ def _theme_job(job):
             P, why = palette(mode)
             P["_name"] = mode
             doc = Doc(W, H, f"WolOS east wallpaper: {fam} flow, theme {tid}, {mode}")
-            if fam == "pouso":
+            if fam == "siggate":
+                walls_sig3d.form_3d_gate(doc, fr, P)
+            elif fam == "pouso":
                 walls_pouso.form_pouso(doc, fr, P)
             elif fam == "dunes":
                 walls_flow.form_dunes(doc, fr, P)
@@ -98,7 +100,7 @@ def _theme_job(job):
             else:
                 walls_flow.form_family(doc, fr, P, fam)
             svg = doc.svg().replace('<svg xmlns="http://www.w3.org/2000/svg"', '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"', 1)
-            path = os.path.join(out, f"{fam if fam == 'pouso' else 'flow'}-{tid}-{mode}-{s}.svg")
+            path = os.path.join(out, f"{ {'pouso': 'pouso', 'siggate': 'gate'}.get(fam, 'flow') }-{tid}-{mode}-{s}.svg")
             with open(path, "w") as fh:
                 fh.write(svg)
             done.append(path)
@@ -119,7 +121,7 @@ def main(argv):
     import argparse
     if argv and argv[0] == "themes":
         fam = argv[1] if len(argv) > 1 else None          # e.g. "pouso": one form, every theme dye
-        themes_run(os.path.join(HERE, "..", "..", "east", "wallpapers", "themes" + ("-" + fam if fam else "")), list(SIZES), fam)
+        themes_run(os.path.join(HERE, "..", "..", "east", "wallpapers", "themes" + ("-" + fam if fam and fam != "siggate" else "")), list(SIZES), fam)
         return
     if argv and argv[0] == "score":
         files = argv[1:]

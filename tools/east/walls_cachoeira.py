@@ -44,7 +44,7 @@ DAY = dict(
     plat=(14, 3, "base"), plat_edge=(9, 3, "base"), shadow=(5, 5, "base"),
     ballast=(9, 3, "base"), ballast_d=(4, 3, "base"), sleeper=(0, 4, "fire"), rail=(-6, 3, "base"), rail_hi=(19, 4, "earth"),
     grass=(9, 7, "wood"), grass_d=(4, 7, "wood"),
-    tile=(5, 10, "fire"), tile_lit=(10, 10, "fire"), tile_shd=(-1, 8, "fire"), hw=(16, 4, "earth"), hw_shd=(8, 4, "base"),
+    tile=(5, 7, "fire"), tile_lit=(10, 7, "fire"), tile_shd=(-1, 6, "fire"), hw=(16, 4, "earth"), hw_shd=(8, 4, "base"),
     gold=(14, 15, "earth"), lamp=(14, 15, "earth"), star=(20, 2, "base"))
 NIGHT = dict(
     sky_top=(-18, 7, "base"), sky_mid=(-15, 6, "base"), sky_hor=(-10, 6, "water"), glow=(-6, 5, "base"), sun=(19, 3, "water"),
@@ -87,16 +87,16 @@ class Painter:
         self.R = ROLES.get(name, DAY)
         W, H = self.W, self.H
         self.fl = 0.80 * W                       # focal length: 64 degrees across
-        self.cy = (0.60 if W / H > 1.7 else 0.62) * H    # the horizon
-        self.hc = 5.0                            # eye 5 m up, on the far bank of the Paraiba
-        self.hw = -1.6                           # the river's level under the yard
+        self.cy = (0.40 if W / H > 1.7 else 0.42) * H    # the horizon
+        self.hc = 22.0                           # the mirante above the town: eye 22 m over the square
+        self.hw = -3.0                           # the Paraiba's level in the valley behind
         self.mirror = False
-        vx = 0.115                               # the wing's vanishing point, under the light
+        vx = -0.30                               # the facade's vanishing point, off the frame to the left
         rx = (vx - 0.5) * W / self.fl
         n = math.hypot(rx, 1)
         self.dR = (-rx / n, -1 / n)              # along the facade, to the right (toward us)
-        zb = 74.0 if W / H > 1.7 else 70.0
-        self.O = ((0.585 - 0.5) * W / self.fl * zb, zb)  # the block's left corner
+        zb = 82.0 if W / H > 1.7 else 80.0
+        self.O = ((0.505 - 0.5) * W / self.fl * zb, zb)  # the block's left corner
         a, b = self.dR
         self.nT = (b, -a) if (b * -self.O[0] + -a * -self.O[1]) > 0 else (-b, a)   # off the facade toward us
         self.wc = abs(self.O[0] * self.nT[0] + self.O[1] * self.nT[1])          # our distance from the facade line
@@ -193,6 +193,18 @@ class Painter:
             w, h = 1.0, 1.2
             body = (f'<rect width="{w}" height="{h}" fill="{C("plat")}"/><rect x="0.03" y="0.63" width="0.45" height="0.54" fill="{C("plat", 0.8)}"/>'
                     f'<path d="M0 0H1M0 0.6H1M0 0V0.6M0.5 0.6V1.2" stroke="{C("plat_edge")}" stroke-width="0.025" fill="none"/>')
+        elif kind == "cobble":    # granite setts of the street, 20 x 12 cm, joints in sand
+            w, h = 0.4, 0.24
+            body = (f'<rect width="{w}" height="{h}" fill="{C("ballast_d")}"/>'
+                    f'<rect x="0.01" y="0.01" width="0.18" height="0.1" rx="0.02" fill="{C("ballast")}"/><rect x="0.21" y="0.01" width="0.18" height="0.1" rx="0.02" fill="{C("ballast", -1)}"/>'
+                    f'<rect x="-0.09" y="0.13" width="0.18" height="0.1" rx="0.02" fill="{C("ballast", 0.5)}"/><rect x="0.11" y="0.13" width="0.18" height="0.1" rx="0.02" fill="{C("ballast", -0.5)}"/><rect x="0.31" y="0.13" width="0.18" height="0.1" rx="0.02" fill="{C("ballast")}"/>')
+        elif kind == "wave":      # pedra portuguesa: dark waves on light stone, 4 m wavelength
+            w, h = 2.4, 1.2
+            pts_a = " ".join(f"{f(2.4 * i / 16)} {f(0.3 + 0.22 * math.sin(2 * math.pi * i / 16))}" for i in range(17))
+            pts_b = " ".join(f"{f(2.4 * i / 16)} {f(0.55 + 0.22 * math.sin(2 * math.pi * i / 16))}" for i in range(16, -1, -1))
+            body = (f'<rect width="{w}" height="{h}" fill="{C("plat", 2)}"/>'
+                    f'<path d="M{pts_a} L{pts_b}Z" fill="{C("plat", -5)}"/>'
+                    f'<path d="M0 0.9H2.4" stroke="{C("plat", 0.5)}" stroke-width="0.015"/>')
         elif kind == "sheet":     # corrugated sheet of the canopy, 7.6 cm pitch
             w, h = 0.152, 1.0
             body = f'<rect width="{w}" height="{h}" fill="{C("canopy")}"/><rect x="0.0" width="0.05" height="{h}" fill="{C("canopy_hi")}"/><rect x="0.09" width="0.03" height="{h}" fill="{C("canopy", -2)}"/>'
@@ -207,7 +219,7 @@ class Painter:
         along the surface, its y down it (facade: along u and down h; ground: along u and toward us;
         end: along -w and down h)."""
         if self.mirror:   # the river does not show mortar joints: a flat tone of the tile
-            return self.C({"brick": "brick", "ashlar": "pl_shd", "stone": "plat_edge", "tiles": "tile", "paving": "plat", "sheet": "canopy"}[kind])
+            return self.C({"brick": "brick", "ashlar": "pl_shd", "stone": "plat_edge", "tiles": "tile", "paving": "plat", "sheet": "canopy", "cobble": "ballast", "wave": "plat"}[kind])
         base = self.tile(kind)
         p0 = self.F(u, h, w)
         if plane == "facade":
@@ -363,7 +375,7 @@ class Painter:
     def ridges(self):
         W, H, d, cy = self.W, self.H, self.doc, self.cy
         # (role, seed, base y over the horizon, amplitude, fog) far to near; higher on the right (anchor)
-        layers = [("r0", 3, 0.000, 0.27, 0.46), ("r1", 8, 0.003, 0.21, 0.34), ("r2", 15, 0.006, 0.15, 0.22), ("r3", 23, 0.009, 0.10, 0.12), ("r3", 31, 0.011, 0.05, 0.04)]
+        layers = [("r0", 3, 0.000, 0.125, 0.46), ("r1", 8, 0.002, 0.10, 0.36), ("r2", 15, 0.004, 0.075, 0.26), ("r3", 23, 0.006, 0.05, 0.16), ("r3", 31, 0.008, 0.028, 0.08)]
         for li, (role, seed, b, amp, fg) in enumerate(layers):
             env = (lambda t, li=li: (0.35 + 0.65 * min(1, max(0, (t - 0.08) / 0.8)) ** 1.3) * (1 - 0.25 * math.exp(-((t - 0.25) / 0.12) ** 2)))
             pts = self.profile(seed, -0.02 * W, 1.02 * W, cy - b * H, amp * H, 0.8 + 0.2 * li, peaks=env)
@@ -465,7 +477,7 @@ class Painter:
         """Centre of the middle track in the ground plane: straight along the platform, then one
         turn of 300 m radius away from the viewer, then straight into the valley to the bridge."""
         pts = []
-        u, w = 46.0, 12.6
+        u, w = 46.0, -25.0
         X, Z = self.world(u, w)
         th = math.atan2(-self.dR[0], -self.dR[1])   # heading toward the left (away along the facade)
         s, ds = 0.0, 2.0
@@ -675,9 +687,10 @@ class Painter:
         Zm = self.Zu((u0 + u1) / 2)
         fog = self.fogZ(Zm)
         C = lambda r, dk=0.0: self.C(r, fog, dk)
-        # the end wall facing the light (left end), then the long wall
-        if not right:
-            pass
+        # the roof behind the parapet (seen from the mirante), then the street wall
+        self.roof(u0, u1, CORN + 0.3, -0.4, -12.0, 3.2, fog)
+        if right:   # the end wall turned toward us, in shade
+            self.add(f'<path d="{P2([self.F(u1, 0, 0), self.F(u1, 0, -12), self.F(u1, PAR, -12), self.F(u1, PAR, 0)])}" fill="{C("pl_shd", 1)}"/>')
         wall = self.quad(u0, u1, 0.0, PAR)
         self.add(f'<path d="{wall}" fill="{lin(d, [(0, C("pl_lit"), 1), (0.5, C("pl"), 1), (1, C("pl", -1.5), 1)], self.F(u0, 4), self.F(u1, 4))}"/>')
         self.add(self.grain(wall, Zm, C("pl_shd"), 0.2))
@@ -742,7 +755,7 @@ class Painter:
                 continue
             self.add(f'<path d="{pins[j]}" fill="{self.pat("brick", uu, PIN)}" opacity="{f(1 - fog)}"/>'
                      f'<path d="{self.quad(uu + 0.12, uu + 0.3, CORN, PIN, 0.2)}" fill="{C("shadow")}" opacity="0.35"/>')
-        self.canopy(u0 + 0.3, u1 - 0.3, fog)
+        pass
 
     def canopy(self, u0, u1, fog):
         """The platform canopy: iron scroll brackets on the pilasters, a sloping roof of corrugated
@@ -816,8 +829,7 @@ class Painter:
         fog = self.fogZ(Zm)
         C = lambda r, dk=0.0: self.C(r, fog, dk)
         H1 = 10.2
-        end = P2([self.F(u0, 0, 0.0), self.F(u0, 0, -9.0), self.F(u0, H1, -9.0), self.F(u0, H1, 0.0)])
-        self.add(f'<path d="{end}" fill="{C("pl_lit", 1)}"/>')
+        self.roof(u0, u1, H1, 0.0, -9.0, 2.6, fog)
         self.add(f'<path d="{self.quad(u0, u1, 0.0, H1)}" fill="{C("pl")}"/>')
         ops = []
         for uc in (u0 + 2.0, u0 + 6.0):
@@ -890,6 +902,69 @@ class Painter:
         return (f'<path d="{dd}" fill="{self.pat("brick", uc, hc, w)}"/>'
                 f'<path d="{dd}" fill="none" stroke="{self.C("pl_lit", fog, 1)}" stroke-width="{f(max(0.8, 0.06 * self.k(uc, w)))}" opacity="0.7"/>')
 
+    def roof(self, u0, u1, h0, wf, wb, rise, fog, hip=True):
+        """A hipped tile roof over [u0, u1] x [wb, wf] from eave height h0, rising `rise` to the
+        ridge: the slope turned to us in tiles laid in its own plane (courses along the eave), the
+        hip end turned to us darker, the ridge capped, the eave casting its shadow line."""
+        C = lambda r, dk=0.0: self.C(r, fog, dk)
+        wm = (wf + wb) / 2
+        dep = (wf - wb) / 2
+        r0, r1 = (u0 + dep, h0 + rise, wm), (u1 - dep if hip else u1, h0 + rise, wm)
+        e = [(u0, h0, wf), (u1, h0, wf), (u1, h0, wb), (u0, h0, wb)]
+        P = lambda q: self.F(q[1 - 1 + 0], q[1], q[2]) if False else self.F(q[0], q[1], q[2])
+        back = P2([P(e[3]), P(e[2]), P(r1), P(r0)])
+        self.add(f'<path d="{back}" fill="{C("tile_shd")}"/>')
+        right = P2([P(e[1]), P(e[2]), P(r1)])
+        self.add(f'<path d="{right}" fill="{C("tile_shd", 1)}"/>')
+        front = P2([P(e[0]), P(e[1]), P(r1), P(r0)])
+        self.add(f'<path d="{front}" fill="{lin(self.doc, [(0, C("tile_lit"), 1), (1, C("tile"), 1)], P(e[0]), P(e[1]))}"/>')
+        k = self.k((u0 + u1) / 2, wf)
+        if k * 0.35 > 2.5:
+            m = (u0 + u1) / 2
+            o = self.F(m, h0 + rise, wm)
+            sl = math.hypot(dep, rise)
+            down = self.F(m, h0 + rise - rise / sl, wm + dep / sl)
+            fill = self._pat_pts("tiles", o, self.F(m + 1, h0 + rise, wm), down)
+            self.add(f'<path d="{front}" fill="{fill}" opacity="{f(0.9 * (1 - fog))}"/>')
+        left = P2([P(e[0]), P(e[3]), P(r0)])
+        self.add(f'<path d="{left}" fill="{C("tile_lit", 1)}"/>')
+        self.add(f'<path d="{PL([P(e[0]), P(r0), P(r1), P(e[1])])}" fill="none" stroke="{C("tile_lit", 3)}" stroke-width="{f(max(0.8, 0.12 * k))}" stroke-linejoin="round"/>'
+                 f'<path d="{PL([P(e[0]), P(e[1])])}" fill="none" stroke="{C("shadow")}" stroke-width="{f(max(0.8, 0.2 * k))}" opacity="0.6"/>')
+
+    def block_volume(self):
+        """The block's roofs and its right flank (two-point depth): hipped roofs over the side parts,
+        the pavilion's gable roof running back, the right side wall turned to us in shade."""
+        Zm = self.Zu(12.0)
+        fog = self.fogZ(Zm)
+        C = lambda r, dk=0.0: self.C(r, fog, dk)
+        DEPTH = 13.0
+        self.roof(0.2, 10.5, 14.4, -0.2, -DEPTH, 3.0, fog)
+        self.roof(19.5, 23.3, 14.2, -0.2, -DEPTH, 2.4, fog)
+        # the pavilion's gable roof: ridge from the gable back to the rear gable
+        um, hp, hc = 15.0, 19.4, 15.0
+        a, b = (10.6, hc, 0.6), (19.4, hc, 0.6)
+        ra, rb = (um, hp, 0.6), (um, hp, -DEPTH)
+        aa, bb = (10.6, hc, -DEPTH), (19.4, hc, -DEPTH)
+        L = P2([self.F(*a), self.F(*ra), self.F(*rb), self.F(*aa)])
+        R = P2([self.F(*b), self.F(*ra), self.F(*rb), self.F(*bb)])
+        self.add(f'<path d="{L}" fill="{C("tile_lit")}"/><path d="{R}" fill="{C("tile_shd")}"/>')
+        k = self.k(um)
+        if not self.mirror:
+            o = self.F(um, hp, 0.6)
+            sl = math.hypot(4.4, 4.4)
+            self.add(f'<path d="{R}" fill="{self._pat_pts("tiles", o, self.F(um, hp, -0.4), self.F(um + 4.4 / sl, hp - 4.4 / sl, 0.6))}" opacity="0.85"/>')
+        self.add(f'<path d="{PL([self.F(*ra), self.F(*rb)])}" stroke="{C("tile_lit", 3)}" stroke-width="{f(0.18 * k)}"/>')
+        # right flank of the block above the right wing
+        side = P2([self.F(23.5, 7.6, 0.0), self.F(23.5, 7.6, -DEPTH), self.F(23.5, 14.2, -DEPTH), self.F(23.5, 14.2, 0.0)])
+        self.add(f'<path d="{side}" fill="{C("pl_shd", 1.5)}"/>')
+        sw = []
+        for wv in (-3.2, -6.5, -9.8):
+            pts = [(23.5, 9.9, wv + 0.55), (23.5, 12.3, wv + 0.55)] + [(23.5, 12.3 + 0.55 * math.sin(math.pi * j / 10), wv + 0.55 * math.cos(math.pi * j / 10)) for j in range(1, 10)] + [(23.5, 12.3, wv - 0.55), (23.5, 9.9, wv - 0.55)]
+            sw.append(P2([self.F(*q) for q in pts]))
+        lit = self.night
+        self.add(f'<path d="{"".join(sw)}" fill="{self.C("lamp") if lit else C("hole")}" opacity="0.85"/>')
+        self.add(f'<path d="{PL([self.F(23.5, 14.2, 0.0), self.F(23.5, 14.2, -DEPTH)])}" stroke="{C("trim")}" stroke-width="{f(0.5 * k)}"/>')
+
     def block(self):
         d = self.doc
         Zm = self.Zu(12.0)
@@ -899,14 +974,7 @@ class Painter:
         sections = [(0.0, 10.5, 14.4, 0.0, [1.9, 5.25, 8.6], 0.62), (10.5, 19.5, 15.0, 0.6, [12.0, 14.0, 16.0, 18.0], 0.5), (19.5, 23.5, 14.2, 0.0, [21.5], 0.62)]
         DEPTH = 13.0
         # left return wall of the block, above the wing, facing the light
-        side = P2([self.F(0.0, 7.6, 0.0), self.F(0.0, 7.6, -DEPTH), self.F(0.0, 14.4, -DEPTH), self.F(0.0, 14.4, 0.0)])
-        self.add(f'<path d="{side}" fill="{C("pl_lit", 1.5)}"/>')
-        sidewin = []
-        for wv in (-3.0, -7.0, -11.0):
-            for h0, hs in ((9.9, 12.3),):
-                pts = [(0.0, h0, wv - 0.55), (0.0, hs, wv - 0.55)] + [(0.0, hs + 0.55 * math.sin(math.pi * j / 10), wv - 0.55 * math.cos(math.pi * j / 10)) for j in range(1, 10)] + [(0.0, hs, wv + 0.55), (0.0, h0, wv + 0.55)]
-                sidewin.append(P2([self.F(a, b, c) for a, b, c in pts]))
-        self.add(f'<path d="{"".join(sidewin)}" fill="{C("hole")}" opacity="0.85"/>')
+        self.block_volume()
         allwall = []
         for (u0, u1, hc, wf, axes, half) in sections:
             fw = wf
@@ -1438,44 +1506,231 @@ class Painter:
                    f'<path d="{PL([e0, r0, r1, e1])}" fill="none" stroke="{C("tile_lit", 2)}" stroke-width="{f(max(0.6, 0.1 * k))}" stroke-linejoin="round"/>')
         return "".join(out)
 
+    # ================================================================ behind the station: the line
+    def back_line(self):
+        """The yard behind the station (seen around and over it): platforms, three tracks curving
+        away into the valley at the left and out of the frame at the right, telegraph poles, the
+        water tower, a semaphore mast and the island shelter on columns past the building's end."""
+        d = self.doc
+        plan = self.track_plan()
+        far = [p for p in plan if p[1] < 3000]
+        # the yard's ground and the platform behind
+        self.add(f'<path d="{self.ground_strip(far, -9.0, 9.0)}" fill="{lin(d, [(0, self.C("grass", 0.3), 1), (1, self.C("grass", 0.8), 1)], (0, 0.75 * self.H), (0, self.cy))}"/>')
+        for wc in (-4.4, 0.0, 4.4):
+            self.add(f'<path d="{self.ground_strip(far, wc - 2.0, wc + 2.0)}" fill="{lin(d, [(0, self.C("ballast", 0.2), 1), (1, self.C("ballast", 0.8), 1)], (0, 0.75 * self.H), (0, self.cy))}"/>')
+            for side in (-0.8, 0.8):
+                pts = [self.proj(X, 0.17, Z) for X, Z in self.off(far, wc + side)]
+                self.add(f'<path d="{PL(pts)}" fill="none" stroke="{self.C("rail_hi", 0.3)}" stroke-width="{f(max(1.0, 0.0009 * self.H))}" opacity="0.85"/>')
+        sl = []
+        for wc in (-4.4, 0.0, 4.4):
+            pts = self.off(far, wc)
+            for i in range(0, len(far) - 1):
+                X, Z, th = far[i]
+                if Z > 400:
+                    break
+                nx, nz = -math.cos(th), math.sin(th)
+                cx, cz = pts[i]
+                sl.append(PL([self.proj(cx + nx * 1.4, 0.05, cz + nz * 1.4), self.proj(cx - nx * 1.4, 0.05, cz - nz * 1.4)]))
+        self.add(f'<path d="{"".join(sl)}" fill="none" stroke="{self.C("sleeper", 0.3)}" stroke-width="{f(max(0.8, 0.0012 * self.H))}" opacity="0.6"/>')
+        self.poles()
+        self.water_tower(40.0, -30.0)
+        self.semaphore(-96.0, -18.0)
+        self.shelter(34.0, 62.0)
+
+    def water_tower(self, u, w):
+        """A railway water tank on a riveted steel trestle (the steam era's caixa d'agua)."""
+        fog = self.fogZ(self.Zu(u, w))
+        C = lambda r, dk=0.0: self.C(r, fog, dk)
+        k = self.k(u, w)
+        out = []
+        legs = [(-2.2, -2.2), (2.2, -2.2), (2.2, 2.2), (-2.2, 2.2)]
+        for a, b in legs:
+            out.append(PL([self.F(u + a, 0, w + b), self.F(u + a * 0.8, 9.0, w + b * 0.8)]))
+        for hh in (3.0, 6.0):
+            for (a, b), (c, e) in zip(legs, legs[1:] + legs[:1]):
+                out.append(PL([self.F(u + a * (1 - hh / 45), hh, w + b * (1 - hh / 45)), self.F(u + c * (1 - hh / 45), hh, w + e * (1 - hh / 45))]))
+            out.append(PL([self.F(u - 2.2, hh - 3, w + 2.2), self.F(u + 2.0, hh, w + 2.0)]))
+        self.add(f'<path d="{"".join(out)}" fill="none" stroke="{C("iron")}" stroke-width="{f(max(0.8, 0.12 * k))}"/>')
+        # the tank: a cylinder, lit on the left, riveted bands, a conical lid
+        n = 18
+        top = [self.F(u + 2.6 * math.cos(2 * math.pi * i / n), 13.0, w + 2.6 * math.sin(2 * math.pi * i / n)) for i in range(n)]
+        bot = [self.F(u + 2.6 * math.cos(2 * math.pi * i / n), 9.0, w + 2.6 * math.sin(2 * math.pi * i / n)) for i in range(n)]
+        xs = [p[0] for p in top]
+        i0, i1 = xs.index(min(xs)), xs.index(max(xs))
+        body = P2([top[i0], top[i1], bot[i1], bot[i0]])
+        self.add(f'<path d="{body}" fill="{lin(self.doc, [(0, C("canopy_hi", 2), 1), (0.4, C("canopy"), 1), (1, C("iron", 3), 1)], top[i0], top[i1])}"/>')
+        bands = "".join(PL([self.F(u - 2.6, hh, w), self.F(u, hh, w + 2.6), self.F(u + 2.6, hh, w)]) for hh in (10.0, 11.0, 12.0))
+        self.add(f'<path d="{bands}" fill="none" stroke="{C("iron")}" stroke-width="{f(max(0.6, 0.06 * k))}" opacity="0.6"/>')
+        apex = self.F(u, 14.6, w)
+        self.add(f'<path d="{P2([top[i0], apex, top[i1]])}" fill="{C("canopy", -1)}"/><path d="{P2([top[i0], apex, (apex[0], top[i0][1])])}" fill="{C("canopy_hi", 2)}"/>')
+
+    def semaphore(self, u, w):
+        """A semaphore signal: a lattice mast, the arm at danger-off, a lamp."""
+        fog = self.fogZ(self.Zu(u, w))
+        C = lambda r, dk=0.0: self.C(r, fog, dk)
+        k = self.k(u, w)
+        b, t = self.F(u, 0, w), self.F(u, 9.0, w)
+        a0, a1 = self.F(u, 8.0, w), self.F(u + 1.6, 8.6, w)
+        self.add(f'<path d="{PL([b, t])}" stroke="{C("iron")}" stroke-width="{f(max(1, 0.18 * k))}"/>'
+                 f'<path d="{PL([a0, a1])}" stroke="{self.C("cinnabar") if "cinnabar" in self.R else C("brick")}" stroke-width="{f(max(1, 0.25 * k))}"/>')
+        lx, ly = self.F(u, 7.6, w)
+        self.add(f'<circle cx="{g1(lx)}" cy="{g1(ly)}" r="{g1(max(1.2, 0.18 * k))}" fill="{self.C("lamp") if self.night else C("iron")}"/>')
+
+    def shelter(self, u0, u1):
+        """The island shelter past the building's end: cast-iron columns in two rows with spandrel
+        brackets, a ridged roof of corrugated sheet; the depth between columns reads in perspective."""
+        plan = self.track_plan()
+        ws = (-9.5, -13.5)
+        cols = []
+        u = u0
+        while u <= u1:
+            cols.append(u)
+            u += 4.5
+        for wv in ws:
+            fog = self.fogZ(self.Zu(u0, wv))
+            C = lambda r, dk=0.0: self.C(r, fog, dk)
+            out = []
+            for uu in cols:
+                k = self.k(uu, wv)
+                out.append(f'<path d="{PL([self.F(uu, 0.9, wv), self.F(uu, 4.2, wv)])}" stroke="{C("iron")}" stroke-width="{f(max(0.8, 0.16 * k))}"/>')
+                out.append(f'<path d="M{g1(self.F(uu - 0.9, 4.2, wv)[0])} {g1(self.F(uu - 0.9, 4.2, wv)[1])}Q{g1(self.F(uu, 3.6, wv)[0])} {g1(self.F(uu, 3.6, wv)[1])} {g1(self.F(uu + 0.9, 4.2, wv)[0])} {g1(self.F(uu + 0.9, 4.2, wv)[1])}" fill="none" stroke="{C("iron")}" stroke-width="{f(max(0.6, 0.08 * k))}"/>')
+            self.add("".join(out))
+        fog = self.fogZ(self.Zu(u0, -11.5))
+        C = lambda r, dk=0.0: self.C(r, fog, dk)
+        A = P2([self.F(u0 - 1, 4.3, -8.0), self.F(u1 + 1, 4.3, -8.0), self.F(u1 + 1, 5.3, -11.5), self.F(u0 - 1, 5.3, -11.5)])
+        B = P2([self.F(u0 - 1, 5.3, -11.5), self.F(u1 + 1, 5.3, -11.5), self.F(u1 + 1, 4.3, -15.0), self.F(u0 - 1, 4.3, -15.0)])
+        self.add(f'<path d="{B}" fill="{C("canopy", -2)}"/><path d="{A}" fill="{C("canopy_hi")}"/>')
+        o = self.F(u0, 4.3, -8.0)
+        self.add(f'<path d="{A}" fill="{self._pat_pts("sheet", o, self.F(u0 + 1, 4.3, -8.0), self.F(u0, 4.45, -8.5))}" opacity="0.7"/>')
+
+    # ================================================================ in front: the street and the square
+    def street(self):
+        """Sidewalk slabs along the facade, the street in granite setts, the square in pedra
+        portuguesa waves, kerbs; the station's cast shadow lies on the sidewalk."""
+        d = self.doc
+        U0, U1 = -120.0, 70.0
+        def band(w0, w1, kind, um=0.0):
+            q = P2([self.F(U0, 0, w0), self.F(U1, 0, w0), self.F(U1, 0, w1), self.F(U0, 0, w1)])
+            self.add(f'<path d="{q}" fill="{self.C(dict(paving="plat", cobble="ballast", wave="plat")[kind])}"/>')
+            for a, b in ((-120, -60), (-60, -20), (-20, 10), (10, 40), (40, 70)):
+                q2 = P2([self.F(a, 0, w0), self.F(b, 0, w0), self.F(b, 0, w1), self.F(a, 0, w1)])
+                m = (a + b) / 2
+                self.add(f'<path d="{q2}" fill="{self._pat_pts(kind, self.F(m, 0, w0), self.F(m + 1, 0, w0), self.F(m, 0, w0 + 1))}" opacity="0.9"/>')
+            return q
+        band(0.0, 3.2, "paving")
+        band(3.2, 11.0, "cobble")
+        band(11.0, 27.0, "wave")
+        # beyond the square, toward us: the town's street and yards
+        q = P2([self.F(-140, 0, 27.0), self.F(70, 0, 27.0), self.F(70, 0, 80.0), self.F(-140, 0, 80.0)])
+        self.add(f'<path d="{q}" fill="{self.C("grass_d")}"/>')
+        self.add(f'<path d="{PL([self.F(-140, 0.15, 27.0), self.F(70, 0.15, 27.0)])}" stroke="{self.C("plat", 3)}" stroke-width="{f(max(1, 0.0016 * self.H))}"/>')
+        for w_ in (3.2, 11.0):
+            self.add(f'<path d="{PL([self.F(U0, 0.15, w_), self.F(U1, 0.15, w_)])}" stroke="{self.C("plat", 3)}" stroke-width="{f(max(1, 0.0016 * self.H))}"/>')
+        # cast shadow of the wing and the block on the sidewalk (light from the upper left)
+        sh = P2([self.F(-78, 0, 0), self.F(23.5, 0, 0), self.F(30, 0, 2.6), self.F(-70, 0, 2.6)])
+        self.add(f'<path d="{sh}" fill="{self.C("shadow")}" opacity="0.35"/>')
+        # the haze of the valley seen past the square's far side
+        self.add(f'<rect width="{self.W}" height="{self.H}" fill="{lin(d, [(0, self.C("fog"), 0), (1, self.C("fog"), 0)], (0, 0), (0, 1))}"/>')
+
+    def lamp_post(self, u, w, h=4.6):
+        """A cast-iron street lamp: plinth, fluted shaft, collar, scroll arm, lantern with a roof;
+        at night its glow and the pool of light on the paving with the post's coloured shadow."""
+        k = self.k(u, w)
+        fog = self.fogZ(self.Zu(u, w))
+        C = lambda r, dk=0.0: self.C(r, fog, dk)
+        b = self.F(u, 0, w)
+        t = self.F(u, h, w)
+        sw = max(1.2, 0.16 * k)
+        out = []
+        if self.night:
+            pool = [self.F(u + 2.6 * math.cos(a), 0, w + 2.6 * math.sin(a)) for a in (2 * math.pi * i / 16 for i in range(16))]
+            cx, cy = b
+            r = max(math.dist(b, p) for p in pool)
+            out.append(f'<path d="{P2(pool)}" fill="{rad(self.doc, [(0, self.C("lamp"), 0.45), (1, self.C("lamp"), 0)], (cx, cy), r)}"/>')
+            out.append(f'<path d="{PL([b, self.F(u + 2.2, 0, w + 1.2)])}" stroke="{self.C("shadow")}" stroke-width="{f(sw * 1.5)}" opacity="0.5" stroke-linecap="round"/>')
+        out.append(f'<path d="{self.quad(u - 0.25, u + 0.25, 0, 0.6, w)}" fill="{C("iron")}"/>')
+        out.append(f'<path d="{PL([b, t])}" stroke="{C("iron")}" stroke-width="{f(sw)}"/>'
+                   f'<path d="{PL([self.F(u - 0.04, 0.6, w), self.F(u - 0.04, h, w)])}" stroke="{C("canopy_hi")}" stroke-width="{f(sw * 0.3)}" opacity="0.6"/>')
+        c1 = self.F(u, h - 0.5, w)
+        out.append(f'<path d="M{g1(c1[0])} {g1(c1[1])}q{g1(0.5 * k)} {g1(-0.5 * k)} {g1(0.2 * k)} {g1(-0.8 * k)}" fill="none" stroke="{C("iron")}" stroke-width="{f(sw * 0.5)}"/>')
+        lx, ly = self.F(u, h + 0.35, w)
+        lw, lh = 0.32 * k, 0.55 * k
+        lantern = f'M{g1(lx - lw)} {g1(ly - lh * 0.4)}L{g1(lx + lw)} {g1(ly - lh * 0.4)}L{g1(lx + lw * 0.7)} {g1(ly + lh * 0.5)}L{g1(lx - lw * 0.7)} {g1(ly + lh * 0.5)}Z'
+        out.append(f'<path d="{lantern}" fill="{self.C("lamp") if self.night else C("glass")}"/>'
+                   f'<path d="M{g1(lx - lw * 1.2)} {g1(ly - lh * 0.4)}L{g1(lx)} {g1(ly - lh * 0.95)}L{g1(lx + lw * 1.2)} {g1(ly - lh * 0.4)}Z" fill="{C("iron")}"/>'
+                   f'<path d="M{g1(lx)} {g1(ly - lh * 0.4)}V{g1(ly + lh * 0.5)}" stroke="{C("iron")}" stroke-width="{f(sw * 0.3)}"/>')
+        if self.night:
+            out.append(f'<circle cx="{g1(lx)}" cy="{g1(ly)}" r="{g1(3.0 * k)}" fill="{rad(self.doc, [(0, self.C("lamp"), 0.5), (0.25, self.C("lamp"), 0.18), (1, self.C("lamp"), 0)], (lx, ly), 3.0 * k)}"/>')
+        return "".join(out)
+
+    def square_items(self):
+        """Trees, lamps and benches on the square, sorted far to near."""
+        rnd = random.Random(71)
+        items = []
+        for u in (-62, -44, -26, -8, 10, 28):
+            items.append((self.Zu(u, 3.0), "lamp", u, 2.6))
+        for u, w in ((-74, 18), (-52, 22), (-34, 16), (-12, 23), (30, 20), (-92, 24)):
+            items.append((self.Zu(u, w), "tree", u, w))
+        for u in (-44, -22, 0, 18):
+            items.append((self.Zu(u, 13.0), "lamp", u, 13.0))
+        out = []
+        for Z, kind, u, w in sorted(items, key=lambda t: -t[0]):
+            if kind == "lamp":
+                out.append(self.lamp_post(u, w))
+            else:
+                k = self.k(u, w)
+                X, Zw = self.world(u, w)
+                fog = self.fogZ(Zw)
+                x, y = self.F(u, 0, w)
+                yt = self.F(u, 5.0, w)[1]
+                # coloured shadow of the crown on the stone, toward the lower right
+                sx, sy = self.F(u + 3.0, 0, w + 2.0)
+                out.append(f'<ellipse cx="{g1(sx)}" cy="{g1(sy)}" rx="{g1(3.6 * k)}" ry="{g1(1.2 * k)}" fill="{self.C("shadow")}" opacity="0.35"/>')
+                out.append(self.trunk(x, y, yt, max(1, 0.25 * k), fog))
+                out.append(f'<g filter="{self.leaf_filter(1.0)}">{self.crown(x, yt - 1.2 * k, 3.6 * k, int(u * 7 + w), fog)}</g>')
+        self.add("".join(out))
+
+    def town_front(self):
+        """The town under the mirante, closest to us: blocks of houses with tile roofs, in rows along
+        the streets (parallel to the station), back yards with a tree here and there."""
+        rnd = random.Random(19)
+        items = []
+        for row, w in enumerate((21.0, 30.0, 39.0, 48.0)):
+            u = -150 + rnd.uniform(0, 6)
+            while u < 40:
+                wd = rnd.uniform(7, 11)
+                Z = self.Zu(u + wd / 2, w)
+                x = self.F(u, 0, w)[0]
+                if Z > 34 and -400 < x < self.W + 200:
+                    items.append((Z, "h", u, w, wd))
+                if rnd.random() < 0.25:
+                    items.append((self.Zu(u + wd + 1.5, w + 6), "t", u + wd + 1.5, w + 6, 0))
+                u += wd + rnd.uniform(0.3, 2.5)
+        out = []
+        for Z, kind, u, w, wd in sorted(items, key=lambda t: -t[0]):
+            if kind == "h":
+                out.append(self.house(u, w + 7.0, 0.0, wd, rnd.uniform(7, 9), rnd.uniform(3.4, 4.8), rnd.randrange(999)))
+            else:
+                k = self.k(u, w)
+                x, y = self.F(u, 0, w)
+                yt = self.F(u, 4.5, w)[1]
+                out.append(self.trunk(x, y, yt, max(1, 0.25 * k), 0.0) + self.crown(x, yt - k, 3.2 * k, int(u * 3 + w), 0.0))
+        self.add("".join(out))
+
+    # ================================================================ composition
     def back(self):
-        """Everything behind the yard that the river mirrors: trees behind the station, the station."""
-        self.grove_uw(-170, -80, -40, 10, 34, 41, (7, 13))
-        self.hill_town()
-        self.grove_uw(-80, 30, -50, -18, 26, 42, (8, 13))
-        self.wing(-70.0, 0.0)
+        self.grove_uw(-260, -100, -120, -40, 30, 41, (8, 14))
+        self.back_line()
+        self.grove_uw(-80, 40, -70, -30, 22, 42, (9, 15))
         self.end_pavilion(-78.0, -70.0)
+        self.wing(-70.0, 0.0)
         self.block()
-        self.wing(23.5, 36.5, right=True)
+        self.wing(23.5, 33.0, right=True)
 
     def paint(self):
-        import os
-        prof = os.environ.get("CACH_PROF")
-        steps = [self.sky, self.ridges, self.valley, self.back, self.river_front, lambda: self.reflect(self.back), self.water_surface,
-                 self.embankment, self.ground_front, self.yard, self.platform, self.tracks, self.poles, self.bamboo, self.reeds]
-        if prof:
-            for st in steps:
-                n0 = sum(len(b) for b in self.doc.body) + sum(len(b) for b in self.doc.defs)
-                st()
-                n1 = sum(len(b) for b in self.doc.body) + sum(len(b) for b in self.doc.defs)
-                print(getattr(st, "__name__", "reflect"), n1 - n0)
-            return
-        self.sky()
-        self.ridges()
-        self.valley()
-        self.back()
-        self.river_front()
-        self.reflect(self.back)
-        self.water_surface()
-        self.embankment()
-        self.ground_front()
-        self.yard()
-        self.platform()
-        self.tracks()
-        self.poles()
-        self.near_bank()
-        self.bamboo()
-        self.reeds()
+        steps = [self.sky, self.ridges, self.valley, self.river, self.back, self.street, self.square_items, self.town_front]
+        for st in steps:
+            st()
         lx, ly = self.light
         self.add(f'<rect width="{self.W}" height="{self.H}" fill="{rad(self.doc, [(0, self.C("glow"), 0.18), (0.4, self.C("glow"), 0.05), (1, self.C("glow"), 0)], (lx, ly), 0.9 * self.W)}"/>')
 

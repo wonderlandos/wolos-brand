@@ -112,17 +112,18 @@ class Scene:
         if night:
             self.k_hi, self.k_lo, self.fade_to = -2.0, -15.0, (-8.0, 3.5)
         else:
-            self.k_hi, self.k_lo, self.fade_to = 17.5, 4.0, (17.0, 3.0)
+            self.k_hi, self.k_lo, self.fade_to = 18.0, 1.5, (17.0, 3.0)
 
     def colour(self, k, c, back):
-        key = (round(k * 4) / 4, round(c * 2) / 2, back)
+        key = (round(k * 6) / 6, round(c * 2) / 2, back)
         if key not in self._col:
             self._col[key] = K.derive(key[0], key[1], self.hw if back else self.hb, self.base)
         return self._col[key]
 
-    def add(self, strips, tone=(0.0, 1.0), fade=0.0, chroma=5.5, shadow=True, emit=None, thick=6):
+    def add(self, strips, tone=(0.0, 1.0), fade=0.0, chroma=5.5, shadow=True, emit=None, thick=6, fibres=True):
         """tone: (low, high) share of the value range this ribbon uses; fade: 0..1 toward the background."""
         W, H = self.fr.w, self.fr.h
+        n0, zmin, mine = len(self.quads), 9.0, []
         for si, (a0, a1, b1, b0) in enumerate(strips):
             ctr = tuple((a0[k] + a1[k] + b1[k] + b0[k]) / 4 for k in range(3))
             t = tuple(((a1[k] + b1[k]) - (a0[k] + b0[k])) / 2 for k in range(3))
@@ -132,7 +133,7 @@ class Scene:
             if back:
                 n = (-n[0], -n[1], -n[2])
             diff = max(0.0, dot(n, LIGHT))
-            shade = 0.12 + 0.88 * diff
+            shade = 0.06 + 0.94 * diff + 0.10 * max(0.0, -n[1])
             rim = (1 - abs(n[2])) ** 3
             lo, hi = tone
             v = lo + (hi - lo) * shade
@@ -160,11 +161,21 @@ class Scene:
                 fib += f"M{f(p0_[0])} {f(p0_[1])}L{f(p1_[0])} {f(p1_[1])}"
             fc = self.colour(k + 1.6, c, back)
             svg = (f'<path d="{dth}" fill="{dk}" stroke="{dk}" stroke-width="1"/>'
-                   f'<path d="{d}" fill="{col}" stroke="{col}" stroke-width="1.2" stroke-linejoin="round"/>'
-                   f'<path d="{fib}" fill="none" stroke="{fc}" stroke-width="{f(self.fr.s * 1.6)}" opacity="0.5"/>')
+                   f'<path d="{d}" fill="{col}" stroke="{col}" stroke-width="1.2" stroke-linejoin="round"/>')
+            if fibres:
+                svg += f'<path d="{fib}" fill="none" stroke="{fc}" stroke-width="{f(self.fr.s * 1.6)}" opacity="0.5"/>'
             self.quads.append((ctr[2], svg))
             if shadow:
                 self.shadow.append(d)
+                mine.append(d)
+            zmin = min(zmin, ctr[2])
+        if shadow:
+            self.occlude(mine, zmin, 0.20 if not self.night else 0.30)
+
+    def occlude(self, mine, zmin, op):
+        if mine:
+            sh = self.P["shade"]
+            self.quads.append((zmin - 0.002, f'<path d="{"".join(mine)}" transform="translate({f(self.fr.l(26))} {f(self.fr.l(54))})" fill="{sh}" opacity="{f(op)}" filter="{blurf(self.doc, self.fr.l(34))}"/>'))
 
     def render(self, shadow_op=0.20, glow=False):
         W, H = self.fr.w, self.fr.h
