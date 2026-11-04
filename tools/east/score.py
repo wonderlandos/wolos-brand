@@ -236,7 +236,8 @@ def r_light(p):
         n += r["area"]
     shadow = 100 * agree / n if n else 70.0
     # back never brighter than front: a plane (>= 2 % of the frame) lying inside another plane's
-    # box must not be darker than it by more than 0.02 in OKLab L
+    # box, of the same material (a, b within 0.04: lightness is light, not paint), must not be
+    # darker than it by more than 0.02 in OKLab L
     planes = [r for r in p.regions if r["area"] >= 0.02]
     pairs = okp = 0
     for fr in planes:
@@ -245,7 +246,13 @@ def r_light(p):
                 continue
             fx0, fy0, fx1, fy1 = fr["bbox"]
             bx0, by0, bx1, by1 = bk["bbox"]
-            if fx0 >= bx0 and fy0 >= by0 and fx1 <= bx1 and fy1 <= by1:
+            same_material = math.hypot(fr["lab"][1] - bk["lab"][1], fr["lab"][2] - bk["lab"][2]) < 0.04
+            if fx0 >= bx0 and fy0 >= by0 and fx1 <= bx1 and fy1 <= by1 and same_material:
+                # a plane has an edge; one object's own shading does not (k-means bands of a gradient)
+                rim = ndimage.binary_dilation(fr["mask"], iterations=2) & bk["mask"]
+                inner = fr["mask"] & ndimage.binary_dilation(bk["mask"], iterations=2)
+                if rim.sum() < 4 or inner.sum() < 4 or abs(p.lab[..., 0][inner].mean() - p.lab[..., 0][rim].mean()) < 0.05:
+                    continue
                 pairs += 1
                 okp += fr["lab"][0] >= bk["lab"][0] - 0.02
                 break
@@ -588,12 +595,12 @@ def score_pixels(path, kind, size=None):
     p = Px(arr, kind)
     if not path.endswith(".svg") and kind not in ("icon", "mark"):
         p._frame_w = p.w
-    out = {}
-    for name, fn in (("qi", r_qi), ("sha", r_sha), ("forms", r_forms), ("zones", r_zones),
-                     ("palette", r_palette), ("light", r_light), ("proportion", r_proportion), ("density", r_density)):
-        v, why = fn(p)
-        out[name] = {"score": round(float(v), 1), "why": why}
-    return out
+    from par import fanout
+    rules = (("qi", r_qi), ("sha", r_sha), ("forms", r_forms), ("zones", r_zones),
+             ("palette", r_palette), ("light", r_light), ("proportion", r_proportion), ("density", r_density))
+    p.sal.setflags(write=False)
+    res = fanout(lambda nf: nf[1](p), rules, threads=True)     # fork: the eight rules; join: in order
+    return {name: {"score": round(float(v), 1), "why": why} for (name, _), (v, why) in zip(rules, res)}
 
 
 # ---------------------------------------------------------------- layout tree

@@ -18,6 +18,21 @@ CURRENT = {"Settings": os.path.join(D, "icons/apps/wolos-settings.svg"), "Store"
            "Files": os.path.join(D, "icons/apps/wolos-files.svg"), "Console": os.path.join(D, "icons/apps/wolos-terminal.svg"),
            "Doctor": B.EXTERNAL["Doctor"], "Atlas Folio": B.EXTERNAL["Atlas Folio"]}
 TYPES_TEXT = {
+    "A2-bold": ("Type A refined: bold glyph with the shadow rules",
+                "The lead's pick (07:00Z), refined. The card grows to the zucai art box, 21 of the 24 canvas fen, with the "
+                "same silhouette, so card and glyph share one fen grid. Shadow rules, one light from the upper left at 1:2: "
+                "S1 elevation (card 0.8, glyph 1, accent 1/2) sets the offset and blur; S2 cast shadows are the card's own "
+                "hue, never grey; S3 each glyph shades in a soft gradient toward a light tint of the card hue, with no hard "
+                "split; S4 holes are shaded on their upper-left inner edge; S5 a contact line where one piece rests on "
+                "another; S6 the card's shadow stays inside the 1.5 fen margin. Store gets a deeper ochre card (3:1 under "
+                "white at 16 px), a wide rope handle (not a shackle) and a juzhe-sagging mouth (no ruled edge cutting the "
+                "glyph); its landing is a violet keyhole seal. Atlas gets the Folio trail from the upper-left panel to a "
+                "larger you-are-here mark. Each icon has its own 16-32 px variant.",
+                "Self-critique: still the most familiar grammar, so the WolOS signature rests on the keyhole, the phase "
+                "colours and the shadow discipline. The gear and the folder are close to common shapes. Two scorer fixes "
+                "were made in this round and apply to current and new alike: the back-and-front light rule now compares "
+                "only planes of the same material that are separated by an edge (paint and an object's own shading are "
+                "not light)."),
     "A-bold": ("Type A, Bold glyph",
                "The grammar the lead pointed to (Alipay, WeChat, Meituan, 12306): a flat saturated card in the app's phase colour "
                "(derived from the base violet), one big white glyph (about 2/3 of the card) with thick rounded strokes, and a "
@@ -78,6 +93,26 @@ TEXT = {
 }
 
 
+SCORES = {}
+
+
+def _score_pair(args):
+    dname, name, art = args
+    return (dname, name), (B.scored(art, "icon"), B.scored(CURRENT[name], "icon"))
+
+
+def prescore(dnames):
+    """Score every icon of every sheet in parallel before drawing."""
+    from concurrent.futures import ProcessPoolExecutor
+    jobs = []
+    for dname in dnames:
+        base_dir = "types" if dname in TYPES_TEXT else "directions"
+        for name in ["Settings", "Store", "Files", "Console", "Doctor", "Atlas Folio"]:
+            jobs.append((dname, name, os.path.join(D, "east", base_dir, dname, f"wolos-{name.lower().replace(' ', '-')}.svg")))
+    with ProcessPoolExecutor() as ex:
+        SCORES.update(dict(ex.map(_score_pair, jobs)))
+
+
 def sheet(dname, out):
     title, why, crit = (TYPES_TEXT | TEXT)[dname]
     names = ["Settings", "Store", "Files", "Console", "Doctor", "Atlas Folio"]
@@ -108,12 +143,12 @@ def sheet(dname, out):
         c = B.raster(cons, 270, 270)
         im.paste(c, (40, y0), c)
         x = 380
+        small_art = os.path.join(os.path.dirname(art), "small", os.path.basename(art))
         for sz in (128, 64, 32, 16):
-            ic = B.raster(art, sz, sz)
+            ic = B.raster(small_art if sz <= 32 and os.path.exists(small_art) else art, sz, sz)
             im.paste(ic, (x, y0 + 140 - sz), ic)
             x += sz + 16
-        s = B.scored(art, "icon")
-        base = B.scored(CURRENT[name], "icon")
+        s, base = SCORES[(dname, name)]
         table[name] = {"east": s, "current": base}
         dr.text((380, y0 + 170), name, font=B.font(20, True), fill=B.INK)
         xs = 760
@@ -126,6 +161,11 @@ def sheet(dname, out):
         dr.text((xs, y0 + 64), f"total {s['total']:.1f}   current icon {base['total']:.1f}   "
                 f"{'beats current' if ok else 'BELOW current: stays in the folder'}", font=B.font(16, True),
                 fill=B.GOOD if ok else B.BAD)
+        import craft
+        cr = craft.check(art)
+        bad = [k for k, (ok, _) in cr.items() if not ok]
+        dr.text((xs, y0 + 150), "craft: " + ("all pass (overflow, holes, refs, layers, 16px contrast)" if not bad else "FAIL " + ", ".join(bad)),
+                font=B.font(13, True), fill=B.GOOD if not bad else B.BAD)
         why_line = "; ".join(f"{k}: {v['why']}" for k, v in s.items() if k in ("qi", "light") and isinstance(v, dict))
         for j, line in enumerate(textwrap.wrap(why_line, 95)[:3]):
             dr.text((xs, y0 + 96 + j * 18), line, font=B.font(12), fill=B.DIM)
@@ -138,6 +178,7 @@ def sheet(dname, out):
 def main(argv):
     out = argv[0]
     res = {}
+    prescore(argv[1:] or list(TEXT))
     for d in (argv[1:] or list(TEXT)):
         p, t = sheet(d, out)
         res[d] = t

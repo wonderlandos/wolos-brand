@@ -367,5 +367,229 @@ def main(argv):
     print("wrote", os.path.normpath(out))
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" and "--a2" not in sys.argv:
     main(sys.argv[1:])
+
+
+# ===================================================== A2: bold glyph, refined (lead pick 07:00Z)
+# The card grows to the zucai art box: 21 of the 24 canvas fen (the shipped silhouette, scaled by
+# 896/824 about the centre), so card fen and canvas fen are one grid and every glyph side is a
+# whole fen. Each glyph is two-tone: white, and a light tint on its shadow side (the second plane).
+# Small variants (16-32 px) drop the tint and fine marks and thicken strokes.
+A2_FEN = S / 24.0
+TINT = 0.80          # opacity of white for the second-plane tone
+
+
+def a2_setup():
+    global FEN, X
+    FEN = A2_FEN
+    X = lambda x: 64 + x * A2_FEN  # noqa: E731
+
+
+# ---- shadow rules (docs/adr/brand-east.md section 3) ----
+# S1 elevation: card 2, glyph 1, accent 1/2; a shadow's offset is elev x (0.3, 0.6) fen (1:2,
+#    away from the upper-left light) and its blur elev x 0.4 fen.
+# S2 cast shadows are the card's own hue, darker (shade -10); never grey or black.
+# S3 form shadow: a glyph shades in a soft gradient (1:2) from white to a light tint of the card
+#    hue on the side away from the light; no hard split.
+# S4 holes (keyhole, hub): the upper-left inner edge is in shadow (the rim occludes the light),
+#    the lower-right inner edge catches it.
+# S5 contact: where a piece rests on another, a 0.25 fen occlusion line on the lower piece.
+ELEV = {"card": 0.8, "glyph": 1.0, "accent": 0.5}
+# S6 the card's shadow lives inside the 1.5 fen margin: offset 0.6 x 0.8 = 0.48 fen down,
+#    blur 0.32 fen (3 sigma ~ 1 fen): 0.48 + 0.96 < 1.5. craft.py fails any ink on the canvas edge.
+
+
+def _blur(doc, elev):
+    i = doc.id("b")
+    doc.defs.append(f'<filter id="{i}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="{f(A2_FEN * 0.4 * elev)}"/></filter>')
+    return i
+
+
+def cast(doc, d, card_colour, elev, rule="nonzero", transform=""):
+    """S1 + S2: the soft cast shadow of d at an elevation."""
+    dx, dy = 0.3 * elev * A2_FEN, 0.6 * elev * A2_FEN
+    doc.add(f'<path class="shade" d="{d}" fill-rule="{rule}" transform="translate({f(dx)} {f(dy)}) {transform}" '
+            f'fill="{shade(card_colour, -10)}" opacity="0.42" filter="url(#{_blur(doc, elev)})"/>')
+
+
+def form(doc, colour, card_colour, depth=1.0):
+    """S3: the form gradient of a glyph: its colour at the lit corner, a light tint of the card hue
+    (or a deeper own tone for coloured accents) at the far one."""
+    i = doc.id("f")
+    if colour.upper() == WHITE:
+        L, Cc, h = oklch(card_colour)
+        far = from_oklch(0.93 - 0.03 * depth, min(Cc, 0.2) * 0.22 * depth, h)
+    else:
+        far = shade(colour, -3 * depth)
+    doc.defs.append(f'<linearGradient id="{i}" x1="0.25" y1="0" x2="0.75" y2="1"><stop offset="0.25" stop-color="{colour}"/>'
+                    f'<stop offset="1" stop-color="{far}"/></linearGradient>')
+    return f"url(#{i})"
+
+
+def a2_card(doc, colour):
+    s = 21 * A2_FEN / 824
+    d = IE.card_path()
+    tr = f"translate(512 512) scale({f(s)}) translate(-512 -512)"
+    cast(doc, d, colour, ELEV["card"], transform=tr)
+    doc.add(f'<path d="{d}" transform="{tr}" fill="{doc.lit(colour, 2)}"/>')
+    # the lit rim of the card (gloss on the upper-left edge only)
+    cid = doc.id("c")
+    doc.defs.append(f'<clipPath id="{cid}"><path d="{d}" transform="{tr}"/></clipPath>')
+    doc.add(f'<path d="{d}" transform="{tr}" fill="none" stroke="{doc.rim(0.45)}" stroke-width="{f(A2_FEN * 0.5)}" clip-path="url(#{cid})"/>')
+    doc.card_colour = colour
+
+
+def g2(doc, d, colour=WHITE, under=None, rule="nonzero", lift=None, elev="glyph", small=False):
+    c = doc.card_colour
+    e = ELEV[elev] * (0.7 if small else 1.0)
+    cast(doc, d, c, e, rule)
+    doc.add(f'<path d="{d}" fill-rule="{rule}" fill="{colour if small else form(doc, colour, c)}"/>')
+
+
+def hole_shadow(doc, d, glyph_colour=WHITE):
+    """S4: inside a hole of a glyph, the upper-left inner edge is shaded."""
+    cid = doc.id("h")
+    doc.defs.append(f'<clipPath id="{cid}"><path d="{d}"/></clipPath>')
+    doc.add(f'<path class="shade" d="{d}" transform="translate({f(0.18 * A2_FEN)} {f(0.36 * A2_FEN)})" fill="none" '
+            f'stroke="{shade(doc.card_colour, -12)}" stroke-width="{f(0.5 * A2_FEN)}" opacity="0.55" clip-path="url(#{cid})"/>')
+
+
+def contact(doc, d):
+    """S5: a thin occlusion line just under the edge of a piece that rests on another."""
+    doc.add(f'<path class="shade" d="{d}" transform="translate({f(0.08 * A2_FEN)} {f(0.16 * A2_FEN)})" fill="none" stroke="{shade(doc.card_colour, -8)}" '
+            f'stroke-width="{f(0.25 * A2_FEN)}" opacity="0.35"/>')
+
+
+def tint(doc, d, clip_d, rule="nonzero"):
+    """Kept for the first A2 pass; the form gradient (S3) replaces it."""
+    return
+
+
+def leaf(card_colour):
+    """A second leaf: a light tint of the card's own hue (never a grey)."""
+    L, Cc, h = oklch(card_colour)
+    return from_oklch(0.88, min(Cc, 0.2) * 0.3, h)
+
+
+def keyhole_at(cx, cy, w):
+    """The keyhole centred by its ink box: arch top to stem foot is 3.5 x the radius."""
+    r = w / 2
+    return keyhole(cx, cy - 1.75 * r, w)
+
+
+def a2_settings(small=False):
+    a2_setup(); doc = Doc(S, S, "settings, bold A2"); c = CARD["settings"]; a2_card(doc, c)
+    gp = gear_path(X(10.5), X(10.5), 7.5 * FEN, 6.0 * FEN, tip=0.46 if small else 0.42)
+    hole = circle(X(10.5), X(10.5), (3.2 if small else 3.0) * FEN)
+    g2(doc, gp + hole, under=c, rule="evenodd", small=small)
+    if not small:
+        hole_shadow(doc, hole)
+    if not small:   # the turned ring: the lower-right half of the rim in the second tone
+        ring = circle(X(10.5), X(10.5), 6.0 * FEN) + circle(X(10.5), X(10.5), 4.5 * FEN)
+        tint(doc, f"M{f(X(21))} {f(X(0))}L{f(X(21))} {f(X(21))}L{f(X(0))} {f(X(21))}Z", ring, "evenodd")
+    g2(doc, keyhole_at(X(10.5), X(10.5), (2.0 if small else 1.5) * FEN), GOLD, elev="accent", small=small)
+    return doc.svg()
+
+
+def bag_mouth(x0, x1, top, bot, sag=0.6, r=1.2):
+    """Bag whose mouth sags in two juzhe slopes from the corners to the middle (no ruled edge)."""
+    rr = r * FEN
+    xm = (x0 + x1) / 2
+    left = juzhe(X(xm), X(top + sag), X(x0 + 0.4), X(top), purlins=3, first=0.15)[::-1]
+    right = juzhe(X(xm), X(top + sag), X(x1 - 0.4), X(top), purlins=3, first=0.15)
+    mouth = left + right[1:]
+    return (f"M{f(mouth[0][0])} {f(mouth[0][1])}" + smooth(mouth) +
+            f"L{f(X(x1))} {f(X(bot) - rr)}Q{f(X(x1))} {f(X(bot))} {f(X(x1) - rr)} {f(X(bot))}"
+            f"H{f(X(x0) + rr)}Q{f(X(x0))} {f(X(bot))} {f(X(x0))} {f(X(bot) - rr)}Z")
+
+
+# earth for A2 Store: the first step on the value ruler that holds 3:1 under the white glyph (k = 2, ochre)
+STORE_A2 = from_oklch(K.ladder(L0, 2), C0 * 16 / 21, HUE["earth"])
+
+
+def a2_store(small=False):
+    a2_setup(); doc = Doc(S, S, "store, bold A2"); c = STORE_A2; a2_card(doc, c)
+    # a carrier bag, portrait, under two rope handles on its axis. The ropes are the card's own deep
+    # tone, so their feet stay visible where they cross the white mouth and end at eyelets: a handle
+    # must be seen to hold the bag (lead 07:13Z: "a alça parece desconectada").
+    rope_back, rope = shade(c, -10), shade(c, -5)   # the back rope is in the bag's shadow: darker than the front one
+    g2(doc, handle(10.5, 8.4, 6.4, 4.4, 1.0 if not small else 1.3), rope_back, small=small)
+    b = bag_mouth(4.0, 17.0, 7.0, 19.0, sag=0.5)
+    g2(doc, b, under=c, small=small)
+    g2(doc, handle(10.5, 9.0, 6.4, 3.9, 0.95 if not small else 1.3), rope, elev="accent", small=small)
+    for x in (7.3, 13.7):
+        doc.add(f'<path d="{circle(X(x), X(9.0), 0.62 * FEN)}" fill="{rope}"/>')
+        if not small:
+            doc.add(f'<path d="{circle(X(x), X(9.0), 0.28 * FEN)}" fill="{leaf(c)}"/>')
+    seal = circle(X(10.5), X(14.0), (2.6 if not small else 3.0) * FEN)
+    g2(doc, seal + keyhole_at(X(10.5), X(14.0), 1.3 * FEN), CARD["settings"], elev="accent", small=small, rule="evenodd")
+    return doc.svg()
+
+
+def a2_files(small=False):
+    a2_setup(); doc = Doc(S, S, "files, bold A2"); c = CARD["files"]; a2_card(doc, c)
+    back = folder(3.0, 4.5, 15.0, 12.0, tab_w=6.0)
+    g2(doc, back, leaf(c), under=c, small=small)
+    front = rrect(X(3.0), X(8.0), 15 * FEN, 8.5 * FEN, 1.2 * FEN)
+    g2(doc, front, small=small)
+    if not small:
+        contact(doc, f"M{f(X(4.2))} {f(X(8.0))}H{f(X(16.8))}")
+    if not small:
+        tint(doc, f"M{f(X(3))} {f(X(13.5))}H{f(X(18))}V{f(X(17))}H{f(X(3))}Z", front)
+    g2(doc, rrect(X(4.5), X(9.5), 6.0 * FEN, (3.0 if small else 2.5) * FEN, 1.0 * FEN), GOLD, elev="accent", small=small)
+    return doc.svg()
+
+
+def a2_console(small=False):
+    a2_setup(); doc = Doc(S, S, "console, bold A2"); c = CARD["console"]; a2_card(doc, c)
+    if not small:   # the screen as the second plane
+        doc.add(f'<path d="{rrect(X(3.0), X(4.5), 15 * FEN, 12 * FEN, 1.6 * FEN)}" fill="#FFFFFF" opacity="0.08"/>')
+    g2(doc, chevron(5.0, 10.5, 3.5 if small else 3.0, 2.2 if small else 1.8), under=c, small=small)
+    g2(doc, rrect(X(10.5), X(12.5), 6.0 * FEN, (2.6 if small else 2.0) * FEN, 1.0 * FEN), JADE, elev="accent", small=small)
+    return doc.svg()
+
+
+def a2_doctor(small=False):
+    a2_setup(); doc = Doc(S, S, "doctor, bold A2"); c = CARD["doctor"]; a2_card(doc, c)
+    h = heart(X(10.5), X(4.0), 15 * FEN, 14.0 * FEN)
+    g2(doc, h, under=c, small=small)
+    if not small:   # the right lobe and the point turn away from the light
+        tint(doc, f"M{f(X(10.5))} {f(X(5.5))}L{f(X(19))} {f(X(3))}V{f(X(19))}H{f(X(10.5))}Z", h)
+    g2(doc, pulse(10.5, 4.6, 16.4, 1.6 if small else 1.3), RED, elev="accent", small=small)
+    return doc.svg()
+
+
+def a2_atlas(small=False):
+    a2_setup(); doc = Doc(S, S, "atlas folio, bold A2"); c = CARD["atlas"]; a2_card(doc, c)
+    ps = map3(3.0, 3.5, 15.0, 13.0, 1.5)
+    for i, p in enumerate(ps):
+        g2(doc, p, WHITE if i != 1 else leaf(c), small=small)
+    # the Folio trail: from the upper-left panel (entry), one turn, to the you-are-here (landing)
+    trail = [(5.0, 7.0), (6.6, 9.4), (8.6, 10.6), (10.6, 10.4)] if not small else [(5.4, 8.0), (8.4, 10.6)]
+    for k, (x, y) in enumerate(trail):
+        doc.add(f'<path d="{circle(X(x), X(y), (0.55 + 0.08 * k if not small else 0.9) * FEN)}" fill="{GOLD}"/>')
+    g2(doc, circle(X(13.5), X(10.5), 3.0 * FEN), GOLD, elev="accent", small=small)
+    doc.add(f'<path d="{circle(X(13.5), X(10.5), 1.1 * FEN)}" fill="#FFFFFF"/>')
+    return doc.svg()
+
+
+A2 = [("Settings", a2_settings), ("Store", a2_store), ("Files", a2_files), ("Console", a2_console), ("Doctor", a2_doctor), ("Atlas Folio", a2_atlas)]
+
+
+def _a2_job(job):
+    out, i, small = job
+    name, fn = A2[i]
+    d = os.path.join(out, "A2-bold", "small" if small else "")
+    os.makedirs(d, exist_ok=True)
+    open(os.path.join(d, f"wolos-{name.lower().replace(' ', '-')}.svg"), "w").write(fn(small))
+    return name
+
+
+def main_a2(out):
+    from par import fanout
+    fanout(_a2_job, [(out, i, small) for i in range(len(A2)) for small in (False, True)])   # fork/join: 12 icons
+
+
+if __name__ == "__main__" and "--a2" in sys.argv:
+    main_a2(os.path.join(HERE, "..", "..", "east", "types"))

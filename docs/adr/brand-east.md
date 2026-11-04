@@ -118,6 +118,94 @@ Flow needs a layout, so tokens are not scored on it.
 
 **juzhe** (`geom.juzhe`, roof raise-and-fold): a slope from the ridge to the eave. The first purlin drops H/10 under the straight line, and each next one drops half as much under the line from the previous folded purlin to the eave.
 
+### 8.1 Type A2: bold glyph, the lead's pick (07:00Z), refined
+
+Generator: `types.py --a2` (functions `a2_*`), output `east/types/A2-bold/` with `small/` variants for 16-32 px.
+
+- The card grows to the zucai art box: 21 of the 24 canvas fen. The shipped silhouette is scaled by 896/824 about the centre, so card fen and canvas fen form one grid and glyph sides land on whole fen.
+- One big white glyph (about 2/3 of the card) and one accent at the landing: gold keyhole, violet keyhole seal, gold label, jade cursor, cinnabar pulse, gold you-are-here.
+- A second leaf (folder back, the Folio's middle panel, the bag's back handle) is a light tint of the card hue (`leaf`), never grey.
+- Store: ochre card at k = 2 on the value ruler (3.46:1 under white, which passes the 16 px contrast check). The bag is portrait with two soft rope handles, because a padlock is one stiff shackle over a squat box. Its mouth sags in two juzhe slopes, so no ruled edge cuts the glyph.
+- Atlas: the Folio trail runs from the upper-left panel (entry) to a larger you-are-here (landing).
+- Keyholes are centred by their ink box (`keyhole_at`).
+
+**Shadow rules.** One light, upper left, 1:2.
+
+| rule | |
+|---|---|
+| S1 elevation | card 0.8, glyph 1, accent 1/2. Offset = elevation × (0.3, 0.6) fen; blur = elevation × 0.4 fen. |
+| S2 cast colour | the card's own hue, darker (shade -10, opacity 0.42); never grey or black. |
+| S3 form shadow | each glyph shades in a gradient along 1:2, from its colour to a light tint of the card hue; no hard split. |
+| S4 holes | the upper-left inner edge of a hole is shaded. |
+| S5 contact | a 0.25 fen occlusion line where a piece rests on another. It never runs across a glyph: a straight line through content is a sha cut. |
+| S6 margin | the card's shadow stays inside the 1.5 fen margin. |
+
+**Craft checks** (`craft.py`, every icon, every sheet):
+
+| check | passes when |
+|---|---|
+| overflow | nothing on the canvas edge (catches clipped shadows) |
+| holes | the card core is opaque |
+| refs | every `url(#id)` resolves; no empty clipPath or mask |
+| layers | no shadow drawn last, no orphan shadow |
+| 16 px contrast | at least 3:1 |
+| centring | ink inside a hole is centred within 0.15 fen. Shadows and `class="shade"` strokes are removed first; tested on a deliberately off-centre icon, 0.28 fen fails. |
+
+The current Store icon fails the 16 px contrast check (2.55:1).
+
+**Scorer fixes in this round** (they apply to current and new icons alike):
+- The back-and-front light check compares only planes of the same material (a, b within 0.04).
+- Those planes must be separated by an edge (a step above 0.05 L). Paint and an object's own shading are not light.
+
+**Fork/join** (`par.fanout`, lead 07:08Z):
+- the eight rules of one picture run on threads, since they share its arrays;
+- files, icons and checks run on processes, one per core (32 on the box).
+
+### 8.2 Type A2 for the full shipped set (plan)
+
+The same grammar everywhere: card in the app's phase colour (water violet/azurite/ink/lake, wood jade, earth ochre/gold, fire cinnabar used only as an accent), one white glyph on the 15-fen square, one accent at the landing, shadow rules S1-S6, and its own 16-32 px variant.
+
+Apps (`icons/apps`):
+
+| icon | card (phase) | glyph | accent (landing) |
+|---|---|---|---|
+| browser (Atlas) | water, lake blue | Folio map | gold you-are-here + trail |
+| calculator | water, ink | 2×2 keys (plus, minus, times, equals) | gold equals |
+| calendar | wood, jade | page with a ring bar | cinnabar day dot |
+| control-center | water, violet | two toggles | gold knob |
+| files | water, azurite | folder + leaf | gold label |
+| games | fire as accent on a water violet card | controller | cinnabar buttons |
+| installer | water, violet | door (the mark) with a down arrow | gold arrow tip |
+| kit-ai | water, violet | spark of four juzhe-curved rays | gold centre |
+| kit-codecs | water, ink | play triangle with rounded tips | jade |
+| kit-craft-suite | earth, ochre | brush | violet tip |
+| kit-creative | wood, jade | palette | four phase dots |
+| kit-dev | water, ink | braces | jade |
+| kit-gaming | water, violet | controller | gold |
+| launcher | water, violet | 3×3 grid of rounded squares (the luoshu nine) | gold centre square |
+| mail | water, azurite | envelope | gold seal |
+| mark | brand mark, unchanged | | |
+| music | fire as accent on a water violet card | note | gold note head |
+| notes | earth, ochre | page with lines (rhythm 10 : 6) | violet pin |
+| photos | water, lake | mountain with sun (shanshui) | gold sun |
+| plugin-maker | water, ink | puzzle piece | jade knob |
+| settings | water, violet | gear | gold keyhole |
+| software (Store) | earth, ochre | carrier bag | violet keyhole seal |
+| system-monitor | wood, jade | gauge arc | cinnabar needle |
+| terminal (Console) | water, ink | prompt `>` | jade cursor |
+| text-editor | water, azurite | page with a caret | gold caret |
+| trash | metal, light card with an ink glyph | bin | none (calm) |
+
+Places, devices and mimetypes:
+- **Folders:** the Files folder; the place glyph sits small on the front leaf in the card's own tint (documents: lines; download: arrow; music: note; pictures: mountain; publicshare: two figures; templates: dashed page; videos: play).
+- **Home:** a house with a juzhe roof. **Desktop:** a screen. **Network-workgroup:** three linked nodes.
+- **Devices:** a disk and a removable drive, metal card, ink glyph.
+- **Mimetypes:** the page with a folded corner, white on the type's phase colour: pdf in cinnabar (the only fire card, small use), audio violet, image lake, video ink, package ochre, document azurite, presentation earth, spreadsheet jade, executable ink, generic metal.
+
+Symbolic set (`icons/symbolic`, 326 icons): unchanged by Type A. It stays single-colour `currentColor`; only its stroke ends and corners take the 1-fen module in a later pass.
+
+Doctor (`webapps/doctor`): wood, jade card, heart, cinnabar pulse.
+
 ## 9. Marks
 
 The zucai stack (`tools/east/marks_east.py`, `east/marks`):
@@ -135,6 +223,14 @@ The lead approved the mark and the release banner on 2026-11-04 at 06:49Z.
 ## 10. Wallpapers
 
 `tools/east/wallpapers_east.py`: shanshui in three planes. The light at the upper left is the entry. The river turns twice and lands in a pool at a lit door in the lower-right third, and a mountain anchors the lower left. The lead put these on hold until an icon is approved. He also said wallpapers may follow qi more freely, because that reads as architecture.
+
+## Tooling
+
+`tools/east` uses numpy, scipy and Pillow (allowed by the CTO for `tools/east` only on 2026-11-04). They are measuring and board tools, not part of `build.py` or CI. Rendering is rsvg-convert, the renderer GTK loads SVG with.
+
+## Noted decision for the lead: card radii drift
+
+The shipped icon card is 100..924 of 1024 with corner radii 236/150 (28.6% / 18.2%). `tokens/colors.json` `radius.icon` says "32.7% 11.5%". The east work follows the shipped silhouette and scales it to 21 fen. Which one is the identity is the lead's call.
 
 ## Honest limits
 
