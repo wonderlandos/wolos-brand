@@ -1,5 +1,7 @@
 # Atlas: three logo directions
 
+Chosen: **B, Folio** (the lead, 2026-11-03). The recommendation below is kept as it was written.
+
 ![contact sheet](contact-sheet.png)
 
 `contact-sheet.png`: the three directions across, on the light ground `#F3F1F8` (top) and the dark ground `#191720` (bottom). The 512 drawing is shown at half size; the 128 and 48 drawings at their size. Each size is its own drawing: 128 drops the fine details, 48 keeps the silhouette, the light/dark split and the gold pop (icons/LANGUAGE.md section 8).

@@ -215,3 +215,95 @@ def disk_usage(cv):
     o += f'<circle cx="{cx}" cy="{cy}" r="18" fill="#5A3A00"/>'
     o += f'<path d="M{cx - 196} {cy - 120}A232 232 0 0 1 {cx - 40} {cy - 228}" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="10" stroke-linecap="round"/>'
     cv.add(o)
+
+
+# ---------------------------------------------------------------- ATLAS (the browser: a folded paper map, you are here)
+# Direction B "Folio" of brand/atlas (directions/README.md), redrawn as an object: a map folded in
+# three (a Z-fold, the near creases tall, the far one short), matte paper, the middle panel turned
+# away from the light. The pop is the gold "you are here" mark, lit from inside; at full size a
+# short gold route leads to it. The small drawing keeps the fold, the light/dark split and the mark.
+ATLAS_X = (200, 408, 616, 824)          # the four edges of the three panels, left to right
+ATLAS_TOP = (282, 210, 282, 210)        # near edges (408, 824) stand taller than the far ones
+ATLAS_BOT = (746, 830, 746, 830)
+
+
+def _atlas_panel(i):
+    """Corners of panel i (0..2): top-left, top-right, bottom-right, bottom-left."""
+    x0, x1 = ATLAS_X[i], ATLAS_X[i + 1]
+    return ((x0, ATLAS_TOP[i]), (x1, ATLAS_TOP[i + 1]), (x1, ATLAS_BOT[i + 1]), (x0, ATLAS_BOT[i]))
+
+
+def _atlas_at(i, u, v):
+    """The point (u across, v down, both 0..1) on panel i: bilinear, so printing follows the fold."""
+    (ax, ay), (bx, by), (cx_, cy_), (dx, dy) = _atlas_panel(i)
+    tx, ty = ax + (bx - ax) * u, ay + (by - ay) * u
+    bx_, by_ = dx + (cx_ - dx) * u, dy + (cy_ - dy) * u
+    return (tx + (bx_ - tx) * v, ty + (by_ - ty) * v)
+
+
+def atlas(cv):
+    container(cv, "#3C8DDF", "#123F75", glow="#D6EAFF", edge="#04203F", glow_op=.30)
+    sh = "#04203F"
+    small = cv.small
+    panels = [_atlas_panel(i) for i in range(3)]
+    sheet = poly([(ATLAS_X[k], ATLAS_TOP[k]) for k in range(4)] + [(ATLAS_X[k], ATLAS_BOT[k]) for k in (3, 2, 1, 0)])
+    # the whole sheet casts one shadow in the card's own darkest tone, and shows its thickness below
+    o = shadows(cv, sheet, sh, (32, 24, .6), (10, 8, .46))
+    o += f'<path d="{sheet}" fill="#8E7350" transform="translate(0 9)"/>'
+    # paper: the two panels that face the light, the middle one turned away (the gem's 95/58 split)
+    lit = cv.lin([(0, "#FFFBF2"), (.6, "#F6EBD6"), (1, "#E4CFAD")])
+    shade = cv.lin([(0, "#D6C3A2"), (1, "#AE9369")])
+    for i, p in enumerate(panels):
+        d = poly(p)
+        o += f'<path d="{d}" fill="{shade if i == 1 else lit}"/>'
+    # printing: the sea in the web blue (both drawings); a river, two roads and the blocks of a town
+    # (full drawing only: under 25 units they do not survive 48 px)
+    for i in range(3):
+        clip = cv.clip(poly(panels[i]))
+        coast = [_atlas_at(i, u, .62 + .05 * math.sin(u * 5.0 + i * 2.4)) for u in (0, .2, .4, .6, .8, 1)]
+        sea = smooth(coast, closed=False) + "".join(f"L{x:.1f} {y:.1f}" for x, y in (_atlas_at(i, 1, 1), _atlas_at(i, 0, 1))) + "Z"
+        pr = f'<path d="{sea}" fill="#7DB4E6" opacity="{.36 if i == 1 else .46}"/>'
+        if not small:
+            pr += f'<path d="{smooth(coast, closed=False)}" fill="none" stroke="#5E9BD6" stroke-opacity=".55" stroke-width="5"/>'
+            for k, (v0, op) in enumerate(((.12, .5), (.30, .42))):
+                road = [_atlas_at(i, u, v0 + .05 * math.sin(u * 3.1 + k + i * 2.1)) for u in (0, .25, .5, .75, 1)]
+                pr += f'<path d="{smooth(road, closed=False)}" fill="none" stroke="#9A7A52" stroke-opacity="{op}" stroke-width="8" stroke-linecap="round"/>'
+            river = [_atlas_at(i, u, .44 + .07 * math.sin(u * 4.2 + i * 1.7)) for u in (0, .25, .5, .75, 1)]
+            pr += f'<path d="{smooth(river, closed=False)}" fill="none" stroke="#5E9BD6" stroke-opacity=".7" stroke-width="11" stroke-linecap="round"/>'
+            if i != 1:
+                for u, v in ((.22, .2), (.42, .24), (.62, .19)):
+                    a, b = _atlas_at(i, u, v), _atlas_at(i, u + .14, v + .05)
+                    pr += f'<path d="{poly([a, (b[0], a[1] + (b[1] - a[1]) * .3), b, (a[0], b[1])])}" fill="#B89A72" opacity=".38"/>'
+        o += f'<g clip-path="{clip}">{pr}</g>'
+    # light on the folds: the near creases catch the light, the far one sits in occlusion
+    for i in range(3):
+        d = poly(panels[i])
+        if i == 1:      # turned away: deepest at the valley (x 616), a little lighter by the ridge
+            g = cv.lin([(0, "#000", .04), (.75, "#000", .10), (1, "#000", .22)], 0, 0, 1, 0)
+        else:           # facing the light: occlusion at the valley side (left of panel 2), bright at the ridge
+            g = cv.lin([(0, "#000", .16 if i == 2 else .05), (.3, "#000", 0), (1, "#fff", .18)], 0, 0, 1, 0)
+        o += f'<path d="{d}" fill="{g}"/>'
+        o += f'<path d="{d}" fill="{cv.lin([(.5, "#3A2400", 0), (1, "#3A2400", .16)])}"/>'
+        o += rimlight(cv, d, 5, .85)
+    for k in (1, 3):    # a lit line on each near crease and on the right edge
+        x = ATLAS_X[k]
+        o += f'<path d="M{x - 3} {ATLAS_TOP[k] + 4}V{ATLAS_BOT[k] - 4}" stroke="#fff" stroke-opacity=".7" stroke-width="5"/>'
+    o += f'<path d="{sheet}" fill="none" stroke="{sh}" stroke-opacity=".35" stroke-width="3" stroke-linejoin="round"/>'
+    # the route (full drawing only): gold dots growing towards the mark
+    mx, my = _atlas_at(1, .5, .52)
+    if not small:
+        for k, (u, v) in enumerate(((.30, .86), (.52, .80), (.74, .75), (.94, .69))):
+            x, y = _atlas_at(0, u, v)
+            o += f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{9 + k * 3}" fill="#F0A81E" opacity="{.70 + k * .08:.2f}"/>'
+            o += f'<circle cx="{x:.1f}" cy="{y - 1.5:.1f}" r="{9 + k * 3}" fill="none" stroke="#5A3A00" stroke-opacity=".35" stroke-width="2"/>'
+    # you are here: a bloom, a dark ring that holds it off the paper, the gold, a pale core
+    r = 92 if small else 66
+    ring = 14 if small else 9
+    o += f'<circle cx="{mx:.1f}" cy="{my:.1f}" r="{r + 30}" fill="#FFC94A" opacity=".55" filter="{cv.blur(18)}"/>'
+    o += shadow(cv, circ(mx, my, r + ring), 10, 8, sh, .5)
+    o += f'<circle cx="{mx:.1f}" cy="{my:.1f}" r="{r + ring}" fill="{cv.lin([(0, "#2A4E7E"), (1, "#0B2648")])}"/>'
+    o += f'<circle cx="{mx:.1f}" cy="{my:.1f}" r="{r}" fill="{cv.rad([(0, "#FFF6C8"), (.45, "#FFC94A"), (1, "#F0A81E")], .4, .34, .8)}"/>'
+    o += f'<circle cx="{mx:.1f}" cy="{my:.1f}" r="{r * .36:.1f}" fill="#FFFBE8"/>'
+    if not small:
+        o += ellipse_spec(cv, mx - r * .42, my - r * .5, r * .26, r * .12, -32, .75)
+    cv.add(o)

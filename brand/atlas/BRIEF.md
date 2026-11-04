@@ -2,7 +2,7 @@
 
 Atlas is the browser of WolOS. It is part of the system, the way the file manager and Settings are: it follows the theme, the icon language, the motion table and the keyboard rules of the HIG, and it is the way the person reaches everything that is not on the PC. This brief says what Atlas is called, how it should feel, what it must never look like, and the bars its identity is held to. The files it points at are generated and checked (section 8).
 
-Status: three logo directions, a chrome language and a motion note for the lead to choose from. Nothing here is shipped; no icon was added to the theme.
+Status: the lead chose direction B, Folio (2026-11-03). The theme icon `wolos-atlas` and the symbolic `atlas-symbolic` are drawn from it through `tools/icons/` (section 8); the mocks wear the Folio badge. Nothing here is shipped yet: the overlay PNGs are staged under `brand/atlas/overlay/` for the product repository.
 
 ## 1. The name
 
@@ -81,18 +81,25 @@ These are targets for Atlas, measured where it is marked (numbers are from the g
 | `brand/atlas/chrome/tokens.md` | the WolOS tokens mapped onto the browser chrome |
 | `brand/atlas/chrome/atlas-newtab.{svg,png}`, `atlas-firstrun.{svg,png}` | the two mock frames (light and dark) |
 | `brand/atlas/chrome/motion.md` | the motion note |
+| `icons/apps/wolos-atlas.svg`, `icons/apps/small/wolos-atlas.svg` | the theme icon: Folio as a crafted object (a folded paper map, the gold mark lit from inside), `tools/icons/crafted_c.py` `atlas` |
+| `icons/symbolic/atlas-symbolic.svg` (and `wolos-atlas-symbolic.svg`, the same drawing) | the 16 px glyph: the fold outline, the mark as a dot, `tools/icons.py` |
+| `icons/aliases.tsv` row `atlas` | the browser's desktop file ids that resolve to `wolos-atlas`: today's id and `org.wolos.atlas` |
+| `brand/atlas/overlay/usr/share/icons/WolOS/{48x48,128x128,512x512}/apps/wolos-atlas.png` | staged overlay PNGs; they belong in the product repository at `desktop/overlay/usr/share/icons/WolOS/` (`tools/icons/overlay.py`) |
+| `brand/atlas/icon/contact-sheet.png` | the theme icon at 512, 128, 48 and 16 px on both grounds (`tools/brand/atlas_icon_sheet.py`) |
 
 ```
 python3 -I design/tools/brand/atlas.py design            # badges and sheet (rsvg-convert for the PNG)
 python3 -I design/tools/brand/atlas_chrome.py design     # the two frames
 python3 -I design/tools/brand/atlas.py design --check    # files on disk are what the generators write
 python3 -I design/tools/brand/atlas_check.py design      # static and raster bars, theme tokens in step
+python3 -I design/tools/icons.py                          # the theme icon, its small drawing, the symbolic, aliases.tsv
+python3 -I design/tools/brand/atlas_icon_sheet.py design   # brand/atlas/icon/contact-sheet.png
 ```
 
-The mocks wear direction C because it is the recommendation; `KEY` in `atlas_chrome.py` changes that.
+The mocks wear direction B, the lead's choice (`KEY` in `atlas_chrome.py`); the new tab row in their sidebar shows `atlas-symbolic`.
 
 ## 9. Open questions for the lead
 
-1. Which direction (A, B, C), or a mix: for instance the card of A with the glyph of C.
+1. Which direction (A, B, C), or a mix. Answered 2026-11-03: B, Folio.
 2. Tabs as a sidebar (the mocks) or a strip on top. The HIG favours the sidebar; a strip is specified as the fallback for narrow windows in `chrome/tokens.md` section 3.
 3. Whether Atlas gets its own accent (it does not in the mocks: it uses the system accent so a theme change reaches it).
