@@ -2,7 +2,7 @@
 Name=WolOS
 Comment=WolOS icons from the repo (dev and golden renders), design/tools/icons.py
 Inherits=Adwaita,hicolor
-Directories=apps,places,devices,mimetypes,symbolic
+Directories=apps,places,devices,mimetypes,symbolic,symbolic24
 
 [apps]
 Size=128
@@ -35,6 +35,13 @@ Type=Scalable
 [symbolic]
 Size=16
 MinSize=16
+MaxSize=19
+Context=Status
+Type=Scalable
+
+[symbolic24]
+Size=24
+MinSize=20
 MaxSize=512
 Context=Status
 Type=Scalable

@@ -3,10 +3,11 @@
 set -eu
 src=$(cd "$(dirname "$0")" && pwd)
 dst=${1:-/usr/local/share/icons/WolOS}
-mkdir -p "$dst/scalable/apps" "$dst/scalable/places" "$dst/symbolic/status" "$dst/symbolic/actions"
+mkdir -p "$dst/scalable/apps" "$dst/scalable/places" "$dst/symbolic/status" "$dst/symbolic/actions" "$dst/symbolic24/status"
 cp "$src/index.theme" "$dst/"
 cp "$src"/apps/*.svg "$dst/scalable/apps/"
 cp "$src"/symbolic/*.svg "$dst/symbolic/status/"
+cp "$src"/symbolic24/*.svg "$dst/symbolic24/status/"
 grep -v '^#' "$src/aliases.tsv" | while IFS="$(printf '\t')" read -r base names; do
   for n in $names; do
     case $n in user-trash*) d=places ;; *) d=apps ;; esac

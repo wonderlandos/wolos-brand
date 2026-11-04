@@ -23,8 +23,8 @@ import re
 import sys
 
 D = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-ACCENT = "#7C5CFF"   # looking-glass violet
-ACCENT_D = "#8B6CFF"  # the shipped dark accent (colors.json before tokens.py)
+ACCENT = "#7452F5"   # looking-glass violet, derived from #7C5CFF (4.9:1 under white)
+ACCENT_D = "#7452F5"  # the fill is the same in both modes; text uses a derived ink
 
 ICON = {
     "grid": 64,
@@ -49,22 +49,12 @@ ICON = {
 TOKENS = {
     "accent": {"light": ACCENT, "dark": ACCENT_D},
     # oklch(L C 295): bg .962/.009, surface-2 .932/.012, menubar .970/.007, text .205/.024, text-2 .515/.026
-    "light": {"bg": "#F3F1F8", "surface": "#FFFFFF", "surface-2": "#E9E7F0", "menubar": "rgba(245,244,249,0.72)",
-              "dock": "rgba(255,255,255,0.55)", "border": "rgba(34,27,54,0.12)", "text": "#181521", "text-2": "#686575",
-              "shadow": "rgba(24,21,33,0.18)",
-              # rose, tangerine, marigold, mint, lake (icon family, deep enough for the light ground)
-              "red": "#CF3A68", "orange": "#D9541E", "yellow": "#E0A21F", "green": "#1C9A6E", "blue": "#1D64B0",
-              "accent": ACCENT, "accent-fg": "#FFFFFF", "selection": "rgba(124,92,255,0.22)"},
+    "light": {"bg": "#F1F1FA", "surface": "#FFFFFF", "surface-2": "#EBEBF3", "sidebar": "rgba(235,235,243,0.92)", "menubar": "rgba(241,241,250,0.72)", "dock": "rgba(255,255,255,0.55)", "border": "rgba(21,21,32,0.12)", "text": "#151520", "text-2": "#565563", "shadow": "rgba(21,21,32,0.18)", "red": "#BB3F27", "orange": "#C06400", "yellow": "#C58A00", "green": "#00863C", "blue": "#007292", "accent": ACCENT, "accent-fg": "#FFFFFF", "selection": "rgba(116,82,245,0.22)"},
     # oklch(L C 295): bg .212/.017, surface .282/.020, surface-2 .342/.022, dock .270/.019,
     # text .972/.009, text-2 .735/.022; border is lilac paper #EDE8FF
-    "dark": {"bg": "#191720", "surface": "#2A2832", "surface-2": "#393643", "menubar": "rgba(25,23,32,0.62)",
-             "dock": "rgba(39,37,47,0.50)", "border": "rgba(237,232,255,0.12)", "text": "#F6F5FB", "text-2": "#AAA7B6",
-             "shadow": "rgba(8,6,14,0.45)",
-             # the same five, lifted for the dark ground
-             "red": "#F2678F", "orange": "#FF8A55", "yellow": "#FFC94A", "green": "#5BE3B0", "blue": "#6AAEF2",
-             "accent": ACCENT_D, "accent-fg": "#FFFFFF", "selection": "rgba(155,133,255,0.30)"},
+    "dark": {"bg": "#15151D", "surface": "#292932", "surface-2": "#383741", "sidebar": "rgba(32,32,42,0.92)", "menubar": "rgba(21,21,29,0.62)", "dock": "rgba(41,41,50,0.5)", "border": "rgba(248,248,252,0.12)", "text": "#F8F8FC", "text-2": "#B4B4BB", "shadow": "rgba(2,2,6,0.45)", "red": "#EE7E66", "orange": "#F2944C", "yellow": "#FFD189", "green": "#6BC681", "blue": "#35BEEE", "accent": ACCENT_D, "accent-fg": "#FFFFFF", "selection": "rgba(145,129,255,0.3)"},
     "icon": ICON,
-    "radius": {"sm": "6px", "md": "10px", "lg": "14px", "window": "12px", "dock": "18px", "icon": "32.7% 11.5%"},
+    "radius": {"sm": "8px", "md": "12px", "lg": "16px", "window": "12px", "dock": "24px", "icon": "32.7% 11.5%"},
     "blur": {"menubar": "20px", "dock": "24px", "popover": "30px", "hyprland_size": 8, "hyprland_passes": 3},
     "font": {"ui": "Inter", "ui-fallback": ["Inter", "Cantarell", "Noto Sans", "DejaVu Sans", "sans-serif"],
              "mono": "JetBrains Mono", "mono-fallback": ["JetBrains Mono", "Fira Code", "DejaVu Sans Mono", "monospace"],
