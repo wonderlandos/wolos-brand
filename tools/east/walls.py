@@ -119,6 +119,15 @@ def themes_run(out, sizes, fam_fixed=None):
 
 def main(argv):
     import argparse
+    if argv and argv[0] == "gate":                      # the four shipped files: the signature in the default dye
+        out = os.path.join(HERE, "..", "..", "east", "wallpapers")
+        for mode in ("day", "night"):
+            for size in SIZES:
+                path = os.path.join(out, f"wolos-gate-{mode}-{size}.svg")
+                with open(path, "w") as fh:
+                    fh.write(build("siggate", mode, size))
+                print(path)
+        return
     if argv and argv[0] == "themes":
         fam = argv[1] if len(argv) > 1 else None          # e.g. "pouso": one form, every theme dye
         themes_run(os.path.join(HERE, "..", "..", "east", "wallpapers", "themes" + ("-" + fam if fam and fam != "siggate" else "")), list(SIZES), fam)
