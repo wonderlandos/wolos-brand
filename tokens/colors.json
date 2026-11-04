@@ -1,43 +1,46 @@
 {
   "accent": {
-    "light": "#7C5CFF",
-    "dark": "#8B6CFF"
+    "light": "#6D48EB",
+    "dark": "#9181FF",
+    "fill": "#7452F5"
   },
   "light": {
-    "bg": "#F3F1F8",
+    "bg": "#F1F1FA",
     "surface": "#FFFFFF",
-    "surface-2": "#E9E7F0",
+    "surface-2": "#EBEBF3",
     "menubar": "rgba(245,244,249,0.72)",
     "dock": "rgba(255,255,255,0.55)",
     "border": "rgba(34,27,54,0.12)",
-    "text": "#181521",
-    "text-2": "#686575",
+    "text": "#151520",
+    "text-2": "#565563",
     "shadow": "rgba(24,21,33,0.18)",
     "red": "#CF3A68",
     "orange": "#D9541E",
     "yellow": "#E0A21F",
     "green": "#1C9A6E",
     "blue": "#1D64B0",
-    "accent": "#7C5CFF",
+    "accent": "#6D48EB",
+    "accent-fill": "#7452F5",
     "accent-fg": "#FFFFFF",
     "selection": "rgba(124,92,255,0.22)"
   },
   "dark": {
-    "bg": "#191720",
-    "surface": "#2A2832",
-    "surface-2": "#393643",
+    "bg": "#15151D",
+    "surface": "#292932",
+    "surface-2": "#383741",
     "menubar": "rgba(25,23,32,0.62)",
     "dock": "rgba(39,37,47,0.50)",
     "border": "rgba(237,232,255,0.12)",
-    "text": "#F6F5FB",
-    "text-2": "#AAA7B6",
+    "text": "#F8F8FC",
+    "text-2": "#B4B4BB",
     "shadow": "rgba(8,6,14,0.45)",
     "red": "#F2678F",
     "orange": "#FF8A55",
     "yellow": "#FFC94A",
     "green": "#5BE3B0",
     "blue": "#6AAEF2",
-    "accent": "#8B6CFF",
+    "accent": "#9181FF",
+    "accent-fill": "#7452F5",
     "accent-fg": "#FFFFFF",
     "selection": "rgba(155,133,255,0.30)"
   },
@@ -98,12 +101,24 @@
       }
     }
   },
+  "elevation": {
+    "light": [
+      "1px 2px 4px color-mix(in oklab, #151520 12%, transparent)",
+      "2px 4px 12px color-mix(in oklab, #151520 16%, transparent)",
+      "3px 6px 24px color-mix(in oklab, #151520 22%, transparent)"
+    ],
+    "dark": [
+      "1px 2px 4px color-mix(in oklab, #08080E 40%, transparent)",
+      "2px 4px 12px color-mix(in oklab, #08080E 48%, transparent)",
+      "3px 6px 24px color-mix(in oklab, #08080E 56%, transparent)"
+    ]
+  },
   "radius": {
-    "sm": "6px",
-    "md": "10px",
-    "lg": "14px",
+    "sm": "8px",
+    "md": "12px",
+    "lg": "16px",
     "window": "12px",
-    "dock": "18px",
+    "dock": "24px",
     "icon": "32.7% 11.5%"
   },
   "blur": {
