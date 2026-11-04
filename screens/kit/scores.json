@@ -1,0 +1,234 @@
+{
+ "screen": "kit",
+ "title": "Kit: widgets e tokens globais (kit.css)",
+ "light": {
+  "cur": {
+   "qi": 96.2,
+   "sha": 97.9,
+   "forms": 88.8,
+   "zones": 75.6,
+   "palette": 100.0,
+   "light": 81.5,
+   "proportion": 35.2,
+   "density": 51.2,
+   "total": 78.3
+  },
+  "new": {
+   "qi": 96.2,
+   "sha": 97.9,
+   "forms": 89.2,
+   "zones": 75.7,
+   "palette": 100.0,
+   "light": 72.6,
+   "proportion": 46.8,
+   "density": 56.6,
+   "total": 79.4
+  },
+  "tree_cur": {
+   "proportion": 53.8,
+   "rhythm": 95.0,
+   "palette_adjacency": 100.0,
+   "edge_lines": 0,
+   "lengths": 160,
+   "module": 44.7,
+   "door_bands": 75.0
+  },
+  "tree_new": {
+   "proportion": 73.8,
+   "rhythm": 100.0,
+   "palette_adjacency": 100.0,
+   "edge_lines": 0,
+   "lengths": 160,
+   "module": 73.2,
+   "door_bands": 75.0
+  },
+  "why_new": {
+   "qi": {
+    "entry": 100,
+    "landing": 100,
+    "turns": [
+     18,
+     73,
+     10,
+     144
+    ],
+    "stagnant": 0,
+    "dead_ends": 1
+   },
+   "sha": {
+    "arrows": 0,
+    "cuts": 0,
+    "sharp_corners": 1137,
+    "aimed": 0.0071
+   },
+   "forms": {
+    "lower_half": 0.45,
+    "heavy_over_light": 2,
+    "jumps": 0
+   },
+   "zones": {
+    "zones": [
+     [
+      0.17,
+      0.1,
+      0.08
+     ],
+     [
+      0.14,
+      0.09,
+      0.14
+     ],
+     [
+      0.12,
+      0.07,
+      0.08
+     ]
+    ],
+    "empty": 0,
+    "overloaded": 0
+   },
+   "palette": {
+    "pairs": 8,
+    "over_budget": []
+   },
+   "light": {
+    "shading": "ground 70, objects 70",
+    "shadow_side": 53.7,
+    "back_not_brighter": "1/1"
+   },
+   "proportion": {
+    "module": 28,
+    "door_bands": 0,
+    "n": 22
+   },
+   "density": {
+    "gravity": [
+     0.45,
+     0.46
+    ],
+    "planes": [
+     0.81,
+     0.16,
+     0.03
+    ],
+    "rhythm": 0,
+    "breathing": 48
+   }
+  }
+ },
+ "dark": {
+  "cur": {
+   "qi": 100.0,
+   "sha": 98.0,
+   "forms": 84.6,
+   "zones": 76.7,
+   "palette": 100.0,
+   "light": 81.6,
+   "proportion": 44.4,
+   "density": 75.3,
+   "total": 82.6
+  },
+  "new": {
+   "qi": 96.2,
+   "sha": 97.8,
+   "forms": 76.8,
+   "zones": 77.0,
+   "palette": 100.0,
+   "light": 78.8,
+   "proportion": 46.0,
+   "density": 88.0,
+   "total": 82.6
+  },
+  "tree_cur": {
+   "proportion": 53.8,
+   "rhythm": 95.0,
+   "palette_adjacency": 100.0,
+   "edge_lines": 0,
+   "lengths": 160,
+   "module": 44.7,
+   "door_bands": 75.0
+  },
+  "tree_new": {
+   "proportion": 73.8,
+   "rhythm": 100.0,
+   "palette_adjacency": 100.0,
+   "edge_lines": 0,
+   "lengths": 160,
+   "module": 73.2,
+   "door_bands": 75.0
+  },
+  "why_new": {
+   "qi": {
+    "entry": 100,
+    "landing": 100,
+    "turns": [
+     118,
+     110,
+     21,
+     175
+    ],
+    "stagnant": 0,
+    "dead_ends": 1
+   },
+   "sha": {
+    "arrows": 0,
+    "cuts": 0,
+    "sharp_corners": 1173,
+    "aimed": 0.0072
+   },
+   "forms": {
+    "lower_half": 0.41,
+    "heavy_over_light": 1,
+    "jumps": 2
+   },
+   "zones": {
+    "zones": [
+     [
+      0.17,
+      0.12,
+      0.1
+     ],
+     [
+      0.14,
+      0.1,
+      0.12
+     ],
+     [
+      0.09,
+      0.07,
+      0.08
+     ]
+    ],
+    "empty": 0,
+    "overloaded": 0
+   },
+   "palette": {
+    "pairs": 3,
+    "over_budget": []
+   },
+   "light": {
+    "shading": "ground 70, objects 70",
+    "shadow_side": 74.2,
+    "back_not_brighter": "5/5"
+   },
+   "proportion": {
+    "module": 26,
+    "door_bands": 0,
+    "n": 20
+   },
+   "density": {
+    "gravity": [
+     0.47,
+     0.44
+    ],
+    "planes": [
+     0.61,
+     0.35,
+     0.04
+    ],
+    "rhythm": 75,
+    "breathing": 97
+   }
+  }
+ }
+}

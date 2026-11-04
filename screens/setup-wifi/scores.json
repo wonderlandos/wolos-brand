@@ -1,0 +1,255 @@
+{
+ "screen": "setup-wifi",
+ "title": "Setup: Wi-Fi",
+ "light": {
+  "cur": {
+   "qi": 96.2,
+   "sha": 79.0,
+   "forms": 85.7,
+   "zones": 96.3,
+   "palette": 100.0,
+   "light": 55.8,
+   "proportion": 31.7,
+   "density": 74.4,
+   "total": 77.4
+  },
+  "new": {
+   "qi": 96.2,
+   "sha": 78.9,
+   "forms": 92.5,
+   "zones": 94.6,
+   "palette": 100.0,
+   "light": 54.6,
+   "proportion": 62.5,
+   "density": 77.9,
+   "total": 82.2
+  },
+  "golden": {
+   "qi": 96.2,
+   "sha": 79.0,
+   "forms": 84.8,
+   "zones": 96.6,
+   "palette": 100.0,
+   "light": 64.4,
+   "proportion": 36.9,
+   "density": 81.4,
+   "total": 79.9
+  },
+  "tree_cur": {
+   "proportion": 30.4,
+   "rhythm": 75.0,
+   "palette_adjacency": 100.0,
+   "edge_lines": 0,
+   "lengths": 35,
+   "module": 43.4,
+   "door_bands": 0.0
+  },
+  "tree_new": {
+   "proportion": 84.7,
+   "rhythm": 100.0,
+   "palette_adjacency": 100.0,
+   "edge_lines": 0,
+   "lengths": 33,
+   "module": 78.2,
+   "door_bands": 100.0
+  },
+  "why_new": {
+   "qi": {
+    "entry": 100,
+    "landing": 100,
+    "turns": [
+     31,
+     17,
+     172
+    ],
+    "stagnant": 0,
+    "dead_ends": 1
+   },
+   "sha": {
+    "arrows": 0,
+    "cuts": 2,
+    "sharp_corners": 416,
+    "aimed": 0.0036
+   },
+   "forms": {
+    "lower_half": 0.46,
+    "heavy_over_light": 0,
+    "jumps": 1
+   },
+   "zones": {
+    "zones": [
+     [
+      0.17,
+      0.08,
+      0.1
+     ],
+     [
+      0.14,
+      0.11,
+      0.1
+     ],
+     [
+      0.06,
+      0.15,
+      0.09
+     ]
+    ],
+    "empty": 0,
+    "overloaded": 0
+   },
+   "palette": {
+    "pairs": 19,
+    "over_budget": []
+   },
+   "light": {
+    "shading": "ground 35, objects 70",
+    "shadow_side": 19.8,
+    "back_not_brighter": "1/1"
+   },
+   "proportion": {
+    "module": 47,
+    "door_bands": 25,
+    "n": 26
+   },
+   "density": {
+    "gravity": [
+     0.47,
+     0.47
+    ],
+    "planes": [
+     0.73,
+     0.26,
+     0.01
+    ],
+    "rhythm": 75,
+    "breathing": 68
+   }
+  }
+ },
+ "dark": {
+  "cur": {
+   "qi": 100.0,
+   "sha": 79.4,
+   "forms": 88.0,
+   "zones": 77.0,
+   "palette": 100.0,
+   "light": 58.9,
+   "proportion": 35.7,
+   "density": 73.0,
+   "total": 76.5
+  },
+  "new": {
+   "qi": 100.0,
+   "sha": 79.3,
+   "forms": 77.0,
+   "zones": 76.1,
+   "palette": 100.0,
+   "light": 56.9,
+   "proportion": 69.8,
+   "density": 63.3,
+   "total": 77.8
+  },
+  "golden": {
+   "qi": 100.0,
+   "sha": 79.0,
+   "forms": 77.0,
+   "zones": 77.1,
+   "palette": 100.0,
+   "light": 56.1,
+   "proportion": 37.8,
+   "density": 75.4,
+   "total": 75.3
+  },
+  "tree_cur": {
+   "proportion": 30.4,
+   "rhythm": 75.0,
+   "palette_adjacency": 100.0,
+   "edge_lines": 0,
+   "lengths": 35,
+   "module": 43.4,
+   "door_bands": 0.0
+  },
+  "tree_new": {
+   "proportion": 84.7,
+   "rhythm": 100.0,
+   "palette_adjacency": 100.0,
+   "edge_lines": 0,
+   "lengths": 33,
+   "module": 78.2,
+   "door_bands": 100.0
+  },
+  "why_new": {
+   "qi": {
+    "entry": 100,
+    "landing": 100,
+    "turns": [
+     86,
+     29,
+     60,
+     105
+    ],
+    "stagnant": 0,
+    "dead_ends": 0
+   },
+   "sha": {
+    "arrows": 0,
+    "cuts": 2,
+    "sharp_corners": 420,
+    "aimed": 0.0025
+   },
+   "forms": {
+    "lower_half": 0.46,
+    "heavy_over_light": 1,
+    "jumps": 3
+   },
+   "zones": {
+    "zones": [
+     [
+      0.15,
+      0.09,
+      0.11
+     ],
+     [
+      0.16,
+      0.06,
+      0.11
+     ],
+     [
+      0.1,
+      0.1,
+      0.1
+     ]
+    ],
+    "empty": 0,
+    "overloaded": 0
+   },
+   "palette": {
+    "pairs": 12,
+    "over_budget": []
+   },
+   "light": {
+    "shading": "ground 45, objects 48",
+    "shadow_side": 37.3,
+    "back_not_brighter": "0/0"
+   },
+   "proportion": {
+    "module": 60,
+    "door_bands": 43,
+    "n": 20
+   },
+   "density": {
+    "gravity": [
+     0.47,
+     0.48
+    ],
+    "planes": [
+     0.28,
+     0.69,
+     0.03
+    ],
+    "rhythm": 0,
+    "breathing": 88
+   }
+  }
+ }
+}

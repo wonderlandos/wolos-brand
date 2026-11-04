@@ -1,0 +1,253 @@
+{
+ "screen": "lock",
+ "title": "Tela de bloqueio",
+ "light": {
+  "cur": {
+   "qi": 96.2,
+   "sha": 99.0,
+   "forms": 54.8,
+   "zones": 88.1,
+   "palette": 100.0,
+   "light": 63.6,
+   "proportion": 45.6,
+   "density": 75.9,
+   "total": 77.9
+  },
+  "new": {
+   "qi": 100.0,
+   "sha": 99.1,
+   "forms": 80.2,
+   "zones": 72.3,
+   "palette": 100.0,
+   "light": 72.6,
+   "proportion": 51.8,
+   "density": 67.5,
+   "total": 80.4
+  },
+  "golden": {
+   "qi": 96.2,
+   "sha": 99.0,
+   "forms": 54.1,
+   "zones": 88.0,
+   "palette": 100.0,
+   "light": 65.9,
+   "proportion": 45.0,
+   "density": 75.8,
+   "total": 78.0
+  },
+  "tree_cur": {
+   "proportion": 59.4,
+   "rhythm": 75.0,
+   "palette_adjacency": 100.0,
+   "edge_lines": 0,
+   "lengths": 11,
+   "module": 52.7,
+   "door_bands": 75.0
+  },
+  "tree_new": {
+   "proportion": 59.4,
+   "rhythm": 75.0,
+   "palette_adjacency": 100.0,
+   "edge_lines": 0,
+   "lengths": 11,
+   "module": 52.7,
+   "door_bands": 75.0
+  },
+  "why_new": {
+   "qi": {
+    "entry": 100,
+    "landing": 100,
+    "turns": [
+     55
+    ],
+    "stagnant": 0,
+    "dead_ends": 0
+   },
+   "sha": {
+    "arrows": 0,
+    "cuts": 0,
+    "sharp_corners": 241,
+    "aimed": 0.003
+   },
+   "forms": {
+    "lower_half": 0.42,
+    "heavy_over_light": 0,
+    "jumps": 1
+   },
+   "zones": {
+    "zones": [
+     [
+      0.28,
+      0.08,
+      0.08
+     ],
+     [
+      0.11,
+      0.07,
+      0.13
+     ],
+     [
+      0.05,
+      0.06,
+      0.15
+     ]
+    ],
+    "empty": 0,
+    "overloaded": 0
+   },
+   "palette": {
+    "pairs": 14,
+    "over_budget": []
+   },
+   "light": {
+    "shading": "ground 57, objects 70",
+    "shadow_side": 63.1,
+    "back_not_brighter": "0/0"
+   },
+   "proportion": {
+    "module": 58,
+    "door_bands": 11,
+    "n": 26
+   },
+   "density": {
+    "gravity": [
+     0.47,
+     0.44
+    ],
+    "planes": [
+     0.78,
+     0.19,
+     0.03
+    ],
+    "rhythm": 75,
+    "breathing": 55
+   }
+  }
+ },
+ "dark": {
+  "cur": {
+   "qi": 100.0,
+   "sha": 99.0,
+   "forms": 79.8,
+   "zones": 93.9,
+   "palette": 100.0,
+   "light": 60.7,
+   "proportion": 49.5,
+   "density": 80.0,
+   "total": 82.9
+  },
+  "new": {
+   "qi": 100.0,
+   "sha": 99.0,
+   "forms": 82.0,
+   "zones": 76.6,
+   "palette": 100.0,
+   "light": 60.2,
+   "proportion": 49.4,
+   "density": 82.3,
+   "total": 81.2
+  },
+  "golden": {
+   "qi": 85.8,
+   "sha": 99.0,
+   "forms": 89.3,
+   "zones": 93.7,
+   "palette": 100.0,
+   "light": 68.8,
+   "proportion": 46.9,
+   "density": 83.4,
+   "total": 83.4
+  },
+  "tree_cur": {
+   "proportion": 59.4,
+   "rhythm": 75.0,
+   "palette_adjacency": 100.0,
+   "edge_lines": 0,
+   "lengths": 11,
+   "module": 52.7,
+   "door_bands": 75.0
+  },
+  "tree_new": {
+   "proportion": 59.4,
+   "rhythm": 75.0,
+   "palette_adjacency": 100.0,
+   "edge_lines": 0,
+   "lengths": 11,
+   "module": 52.7,
+   "door_bands": 75.0
+  },
+  "why_new": {
+   "qi": {
+    "entry": 100,
+    "landing": 100,
+    "turns": [
+     87,
+     8,
+     103,
+     115
+    ],
+    "stagnant": 0,
+    "dead_ends": 0
+   },
+   "sha": {
+    "arrows": 0,
+    "cuts": 0,
+    "sharp_corners": 234,
+    "aimed": 0.0032
+   },
+   "forms": {
+    "lower_half": 0.46,
+    "heavy_over_light": 0,
+    "jumps": 3
+   },
+   "zones": {
+    "zones": [
+     [
+      0.18,
+      0.09,
+      0.09
+     ],
+     [
+      0.13,
+      0.1,
+      0.11
+     ],
+     [
+      0.08,
+      0.09,
+      0.12
+     ]
+    ],
+    "empty": 0,
+    "overloaded": 0
+   },
+   "palette": {
+    "pairs": 12,
+    "over_budget": []
+   },
+   "light": {
+    "shading": "ground 42, objects 61",
+    "shadow_side": 40.1,
+    "back_not_brighter": "0/0"
+   },
+   "proportion": {
+    "module": 51,
+    "door_bands": 12,
+    "n": 20
+   },
+   "density": {
+    "gravity": [
+     0.48,
+     0.47
+    ],
+    "planes": [
+     0.5,
+     0.47,
+     0.03
+    ],
+    "rhythm": 75,
+    "breathing": 100
+   }
+  }
+ }
+}

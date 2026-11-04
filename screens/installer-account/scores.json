@@ -1,0 +1,254 @@
+{
+ "screen": "installer-account",
+ "title": "Instalador: criar conta",
+ "light": {
+  "cur": {
+   "qi": 96.2,
+   "sha": 77.1,
+   "forms": 72.7,
+   "zones": 96.8,
+   "palette": 100.0,
+   "light": 60.0,
+   "proportion": 41.4,
+   "density": 65.8,
+   "total": 76.2
+  },
+  "new": {
+   "qi": 96.2,
+   "sha": 77.2,
+   "forms": 76.9,
+   "zones": 95.5,
+   "palette": 100.0,
+   "light": 54.8,
+   "proportion": 57.2,
+   "density": 71.1,
+   "total": 78.6
+  },
+  "golden": {
+   "qi": 100.0,
+   "sha": 77.2,
+   "forms": 92.1,
+   "zones": 96.5,
+   "palette": 100.0,
+   "light": 64.9,
+   "proportion": 48.9,
+   "density": 75.6,
+   "total": 81.9
+  },
+  "tree_cur": {
+   "proportion": 51.1,
+   "rhythm": 50.0,
+   "palette_adjacency": 100.0,
+   "edge_lines": 0,
+   "lengths": 47,
+   "module": 30.2,
+   "door_bands": 100.0
+  },
+  "tree_new": {
+   "proportion": 84.0,
+   "rhythm": 83.3,
+   "palette_adjacency": 100.0,
+   "edge_lines": 0,
+   "lengths": 49,
+   "module": 77.1,
+   "door_bands": 100.0
+  },
+  "why_new": {
+   "qi": {
+    "entry": 100,
+    "landing": 100,
+    "turns": [
+     46,
+     156
+    ],
+    "stagnant": 0,
+    "dead_ends": 1
+   },
+   "sha": {
+    "arrows": 0,
+    "cuts": 2,
+    "sharp_corners": 987,
+    "aimed": 0.0093
+   },
+   "forms": {
+    "lower_half": 0.43,
+    "heavy_over_light": 0,
+    "jumps": 2
+   },
+   "zones": {
+    "zones": [
+     [
+      0.15,
+      0.13,
+      0.09
+     ],
+     [
+      0.13,
+      0.12,
+      0.09
+     ],
+     [
+      0.06,
+      0.15,
+      0.08
+     ]
+    ],
+    "empty": 0,
+    "overloaded": 0
+   },
+   "palette": {
+    "pairs": 19,
+    "over_budget": []
+   },
+   "light": {
+    "shading": "ground 33, objects 70",
+    "shadow_side": 22.1,
+    "back_not_brighter": "0/0"
+   },
+   "proportion": {
+    "module": 39,
+    "door_bands": 11,
+    "n": 30
+   },
+   "density": {
+    "gravity": [
+     0.47,
+     0.46
+    ],
+    "planes": [
+     0.76,
+     0.22,
+     0.02
+    ],
+    "rhythm": 75,
+    "breathing": 59
+   }
+  }
+ },
+ "dark": {
+  "cur": {
+   "qi": 100.0,
+   "sha": 78.1,
+   "forms": 77.0,
+   "zones": 78.2,
+   "palette": 100.0,
+   "light": 60.1,
+   "proportion": 44.8,
+   "density": 62.2,
+   "total": 75.0
+  },
+  "new": {
+   "qi": 100.0,
+   "sha": 78.2,
+   "forms": 88.0,
+   "zones": 77.5,
+   "palette": 100.0,
+   "light": 58.4,
+   "proportion": 63.8,
+   "density": 68.8,
+   "total": 79.3
+  },
+  "golden": {
+   "qi": 92.5,
+   "sha": 77.0,
+   "forms": 76.0,
+   "zones": 98.4,
+   "palette": 100.0,
+   "light": 60.9,
+   "proportion": 42.2,
+   "density": 62.8,
+   "total": 76.2
+  },
+  "tree_cur": {
+   "proportion": 51.1,
+   "rhythm": 50.0,
+   "palette_adjacency": 100.0,
+   "edge_lines": 0,
+   "lengths": 47,
+   "module": 30.2,
+   "door_bands": 100.0
+  },
+  "tree_new": {
+   "proportion": 84.0,
+   "rhythm": 83.3,
+   "palette_adjacency": 100.0,
+   "edge_lines": 0,
+   "lengths": 49,
+   "module": 77.1,
+   "door_bands": 100.0
+  },
+  "why_new": {
+   "qi": {
+    "entry": 100,
+    "landing": 100,
+    "turns": [
+     37,
+     93,
+     59,
+     67
+    ],
+    "stagnant": 0,
+    "dead_ends": 0
+   },
+   "sha": {
+    "arrows": 0,
+    "cuts": 2,
+    "sharp_corners": 1003,
+    "aimed": 0.0061
+   },
+   "forms": {
+    "lower_half": 0.45,
+    "heavy_over_light": 0,
+    "jumps": 2
+   },
+   "zones": {
+    "zones": [
+     [
+      0.15,
+      0.11,
+      0.11
+     ],
+     [
+      0.15,
+      0.08,
+      0.11
+     ],
+     [
+      0.1,
+      0.1,
+      0.1
+     ]
+    ],
+    "empty": 0,
+    "overloaded": 0
+   },
+   "palette": {
+    "pairs": 16,
+    "over_budget": []
+   },
+   "light": {
+    "shading": "ground 47, objects 46",
+    "shadow_side": 41.5,
+    "back_not_brighter": "0/0"
+   },
+   "proportion": {
+    "module": 50,
+    "door_bands": 29,
+    "n": 28
+   },
+   "density": {
+    "gravity": [
+     0.47,
+     0.47
+    ],
+    "planes": [
+     0.22,
+     0.74,
+     0.04
+    ],
+    "rhythm": 75,
+    "breathing": 72
+   }
+  }
+ }
+}

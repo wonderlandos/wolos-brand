@@ -1,0 +1,1 @@
+{"frame": [1280, 800], "nodes": [{"id": 1, "role": "text", "rect": [72, 296, 520, 150], "parent": null}, {"id": 2, "role": "text", "rect": [72, 456, 520, 28], "parent": null}, {"id": 3, "role": "control", "rect": [72, 506, 100, 36], "parent": null, "fill": "#7c5cff", "radius": 18}]}

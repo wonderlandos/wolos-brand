@@ -1,0 +1,253 @@
+{
+ "screen": "login",
+ "title": "Janela de login",
+ "light": {
+  "cur": {
+   "qi": 97.0,
+   "sha": 99.0,
+   "forms": 95.0,
+   "zones": 91.8,
+   "palette": 87.5,
+   "light": 58.9,
+   "proportion": 51.8,
+   "density": 76.6,
+   "total": 82.2
+  },
+  "new": {
+   "qi": 100.0,
+   "sha": 99.1,
+   "forms": 85.0,
+   "zones": 93.3,
+   "palette": 87.5,
+   "light": 66.9,
+   "proportion": 60.5,
+   "density": 71.9,
+   "total": 83.0
+  },
+  "golden": {
+   "qi": 97.2,
+   "sha": 98.9,
+   "forms": 86.5,
+   "zones": 91.7,
+   "palette": 87.5,
+   "light": 54.3,
+   "proportion": 55.0,
+   "density": 65.2,
+   "total": 79.5
+  },
+  "tree_cur": {
+   "proportion": 69.2,
+   "rhythm": 50.0,
+   "palette_adjacency": 75.0,
+   "edge_lines": 0,
+   "lengths": 18,
+   "module": 66.7,
+   "door_bands": 75.0
+  },
+  "tree_new": {
+   "proportion": 76.2,
+   "rhythm": 100.0,
+   "palette_adjacency": 75.0,
+   "edge_lines": 0,
+   "lengths": 18,
+   "module": 76.7,
+   "door_bands": 75.0
+  },
+  "why_new": {
+   "qi": {
+    "entry": 100,
+    "landing": 100,
+    "turns": [
+     55
+    ],
+    "stagnant": 0,
+    "dead_ends": 0
+   },
+   "sha": {
+    "arrows": 0,
+    "cuts": 0,
+    "sharp_corners": 298,
+    "aimed": 0.0029
+   },
+   "forms": {
+    "lower_half": 0.51,
+    "heavy_over_light": 0,
+    "jumps": 1
+   },
+   "zones": {
+    "zones": [
+     [
+      0.23,
+      0.07,
+      0.06
+     ],
+     [
+      0.09,
+      0.13,
+      0.14
+     ],
+     [
+      0.06,
+      0.1,
+      0.12
+     ]
+    ],
+    "empty": 0,
+    "overloaded": 0
+   },
+   "palette": {
+    "pairs": 6,
+    "over_budget": []
+   },
+   "light": {
+    "shading": "ground 31, objects 76",
+    "shadow_side": 60.0,
+    "back_not_brighter": "0/0"
+   },
+   "proportion": {
+    "module": 64,
+    "door_bands": 0,
+    "n": 10
+   },
+   "density": {
+    "gravity": [
+     0.49,
+     0.47
+    ],
+    "planes": [
+     0.81,
+     0.15,
+     0.05
+    ],
+    "rhythm": 75,
+    "breathing": 48
+   }
+  }
+ },
+ "dark": {
+  "cur": {
+   "qi": 93.5,
+   "sha": 98.9,
+   "forms": 94.0,
+   "zones": 94.8,
+   "palette": 87.5,
+   "light": 75.0,
+   "proportion": 57.2,
+   "density": 68.2,
+   "total": 83.6
+  },
+  "new": {
+   "qi": 96.2,
+   "sha": 99.0,
+   "forms": 88.0,
+   "zones": 96.3,
+   "palette": 87.5,
+   "light": 49.2,
+   "proportion": 59.5,
+   "density": 83.8,
+   "total": 82.4
+  },
+  "golden": {
+   "qi": 97.4,
+   "sha": 98.9,
+   "forms": 100.0,
+   "zones": 94.7,
+   "palette": 87.5,
+   "light": 71.2,
+   "proportion": 55.7,
+   "density": 66.7,
+   "total": 84.0
+  },
+  "tree_cur": {
+   "proportion": 69.2,
+   "rhythm": 50.0,
+   "palette_adjacency": 75.0,
+   "edge_lines": 0,
+   "lengths": 18,
+   "module": 66.7,
+   "door_bands": 75.0
+  },
+  "tree_new": {
+   "proportion": 76.2,
+   "rhythm": 100.0,
+   "palette_adjacency": 75.0,
+   "edge_lines": 0,
+   "lengths": 18,
+   "module": 76.7,
+   "door_bands": 75.0
+  },
+  "why_new": {
+   "qi": {
+    "entry": 100,
+    "landing": 100,
+    "turns": [
+     29,
+     51,
+     0,
+     153
+    ],
+    "stagnant": 0,
+    "dead_ends": 1
+   },
+   "sha": {
+    "arrows": 0,
+    "cuts": 0,
+    "sharp_corners": 301,
+    "aimed": 0.0033
+   },
+   "forms": {
+    "lower_half": 0.5,
+    "heavy_over_light": 0,
+    "jumps": 2
+   },
+   "zones": {
+    "zones": [
+     [
+      0.16,
+      0.09,
+      0.08
+     ],
+     [
+      0.12,
+      0.14,
+      0.12
+     ],
+     [
+      0.09,
+      0.1,
+      0.11
+     ]
+    ],
+    "empty": 0,
+    "overloaded": 0
+   },
+   "palette": {
+    "pairs": 23,
+    "over_budget": []
+   },
+   "light": {
+    "shading": "ground 8, objects 38",
+    "shadow_side": 46.3,
+    "back_not_brighter": "0/0"
+   },
+   "proportion": {
+    "module": 58,
+    "door_bands": 8,
+    "n": 30
+   },
+   "density": {
+    "gravity": [
+     0.48,
+     0.49
+    ],
+    "planes": [
+     0.31,
+     0.36,
+     0.33
+    ],
+    "rhythm": 75,
+    "breathing": 94
+   }
+  }
+ }
+}
