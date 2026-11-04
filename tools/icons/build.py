@@ -40,7 +40,7 @@ BRAND_COPIES = {
 ALIASES = {
     "files": "org.gnome.Nautilus system-file-manager thunar org.xfce.thunar pcmanfm nemo",
     "terminal": "utilities-terminal org.gnome.Terminal foot kitty Alacritty org.wezfurlong.wezterm xfce4-terminal com.mitchellh.ghostty",
-    "browser": "helium firefox web-browser org.mozilla.firefox chromium librewolf epiphany",
+    "browser": "atlas firefox web-browser org.mozilla.firefox chromium librewolf epiphany",
     "settings": "preferences-system org.gnome.Settings gnome-control-center nwg-look org.wolos.settings",
     "software": "system-software-install org.gnome.Software octopkg org.wolos.store wolos-store org.wolos.flatpak-consent",
     "music": "multimedia-audio-player org.gnome.Music audacious rhythmbox elisa io.bassi.Amberol",
