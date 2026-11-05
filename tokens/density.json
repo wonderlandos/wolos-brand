@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "unit": "px",
+  "note": "Three densities, one window class. STANDARD is today's approved set (shared::theme::scaffold holds it). COMPACT and COMFORTABLE are the Design System proposal (ADR 0058 D1) and are not drawn by the product yet; the lead decides. Type, icon size, colour and radius never change with density.",
+  "default": "standard",
+  "class": {"compact": "density-compact", "standard": null, "comfortable": "density-comfortable"},
+  "status": {"compact": "proposal", "standard": "approved", "comfortable": "proposal"},
+  "metrics": {
+    "row": {"compact": 32, "standard": 40, "comfortable": 48},
+    "control": {"compact": 20, "standard": 24, "comfortable": 32},
+    "sidebar-pitch": {"compact": 24, "standard": 28, "comfortable": 32},
+    "menu-item": {"compact": 24, "standard": 28, "comfortable": 32},
+    "toolbar": {"compact": 32, "standard": 40, "comfortable": 48},
+    "inset": {"compact": 8, "standard": 12, "comfortable": 16},
+    "group-gap": {"compact": 12, "standard": 16, "comfortable": 24},
+    "target": {"compact": 20, "standard": 24, "comfortable": 32}
+  }
+}
