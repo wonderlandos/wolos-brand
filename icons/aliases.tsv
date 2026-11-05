@@ -23,4 +23,4 @@ documents	org.gnome.Papers org.gnome.Evince evince x-office-document-viewer
 videos	io.github.celluloid_player.Celluloid celluloid mpv multimedia-video-player
 archive	org.gnome.FileRoller file-roller utilities-file-archiver
 disk-usage	org.gnome.baobab baobab utilities-disk-usage
-atlas	helium org.wolos.atlas
+atlas	atlas helium org.wolos.atlas
