@@ -55,7 +55,7 @@ ALIASES = {
     "calculator": "accessories-calculator org.gnome.Calculator galculator qalculate-gtk",
     "games": "steam applications-games lutris",
     "text-editor": "accessories-text-editor org.gnome.TextEditor org.gnome.gedit mousepad code codium",
-    "system-monitor": "utilities-system-monitor org.gnome.SystemMonitor htop btop",
+    "system-monitor": "utilities-system-monitor org.gnome.SystemMonitor htop btop org.wolos.monitor gnome-system-monitor",
     "trash": "user-trash user-trash-full",
     "launcher": "system-search fuzzel",
     "installer": "org.wolos.installer org.wolos.setup",
