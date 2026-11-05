@@ -4053,7 +4053,7 @@
    },
    "category": "navigation",
    "geometry": {
-    "narrow": 640,
+    "narrow": 720,
     "radius": 8,
     "row": 24,
     "sidebar_width": 240
