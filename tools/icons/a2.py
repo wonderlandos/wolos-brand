@@ -13,7 +13,10 @@ Who draws what (build.py --check proves it byte for byte):
 
 The finish the installed set adds on top of a brand generator's output, in one place:
   1. svgk.qt_safe: every clipPath becomes the same shape in a luminance mask (QtSvg ignores clip-path);
-  2. RIM: the faint rim on the page chips of the mimetypes and on the trash card so they read on the
+  2. svgk.gtk_safe: every filtered element draws inside a group that opens with svgk.PAD (GTK 4 sizes a
+     filter's source from the filtered geometry; gtkcheck, README); librsvg draws it the same
+     (RMSE <= 0.002 at 48 and 128 px on all of them);
+  3. RIM: the faint rim on the page chips of the mimetypes and on the trash card so they read on the
      light desktop (full drawing only; the small drawings have none).
 The brand generators are pure: same code, same bytes (no read of the installed icons; the card is
 svgk.CARD). Stdlib only, like the rest of build.py."""
@@ -70,7 +73,7 @@ class A2Icon(Icon):
         out = self.fn(small)
         if self.rim and not small:
             out = rim(out)
-        return svgk.qt_safe(out)
+        return svgk.gtk_safe(svgk.qt_safe(out))
 
 
 def drawings():
