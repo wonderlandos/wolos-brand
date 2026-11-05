@@ -1,0 +1,51 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Window chrome: written by WOLKIT-1TO1 from the Kit app frame (kit::widgets::AppWindow) and the
+# libWolkit page that draws Kit app windows by default (crates/wolkit-render view.wolcss).
+schema = 1
+id = "window-chrome"
+name = "Window chrome"
+category = "containment"
+status = "beta"
+since = "0.12"
+summary = "The frame of every Kit window: the title row, the hairline under it and the page padding."
+hig = "hig.md section 1 (Window anatomy)"
+rules = []
+
+[implementations.gtk]
+api = "kit::widgets::AppWindow"
+css = ".app-window, .toolbar"
+file = "crates/shell/src/kit/widgets.rs"
+
+[implementations.view]
+node = "page"
+file = "crates/wolkit-render/src/view.rs"
+
+[anatomy]
+title_row = "the row the window is dragged by; the app's tools sit at its end"
+divider = "a 1 px line hairline under the title row, inset from both window edges"
+page = "the surface the content sits on, padded on the left, right and bottom"
+
+# Flat px numbers both renderers read: crates/wolkit-render view.wolcss is generated from them
+# (tests/spec_sheet.rs) and crates/shared/tests/components_design.rs holds kit.css to them.
+[geometry]
+title_row = 40
+divider = 1
+divider_inset = 12
+page_pad = 16
+page_gap = 12
+
+[states]
+active = "The window has the focus."
+
+[keyboard]
+"Super+Q" = "Closes the window (the system shortcut)."
+
+[a11y]
+gtk_role = "application"
+wolkit_role = "window"
+name = "The window title."
+
+[tests]
+states = ["active"]
+variants = ["light", "dark"]

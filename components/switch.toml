@@ -37,12 +37,12 @@ file = "crates/shared/src/view.rs"
 track = "control-off when off, accent when on; a pill"
 thumb = "white, elevation 1, a circle inset by the padding"
 
-# Outer size as drawn. GtkSwitch is two thumbs wide (the thumb travels its own width), so the
-# approved 36 x 24 with a 20 thumb (brand-screens.md 1.1) and 24 x 16 with a 12 thumb (brand-ui.md 2)
-# cannot be drawn by it; these are the nearest whole-fen sizes it can draw (decision D-3 of
-# .claude/v012/design-system/ARCHITECTURE.md).
+# Outer size as drawn: the approved 36 x 24 with a 20 thumb (brand-screens.md 1.1; GAP-TABLE M2, the
+# lead: one visual system, the approved numbers win). Kit windows draw through libWolkit by default
+# (crates/shell ui::app_wolkit), which draws exactly this. GtkSwitch is two thumbs wide, so the GTK
+# fallback draws 44; kit_components.rs freezes that in KNOWN.
 [sizes.regular]
-width = 44
+width = 36
 height = 24
 thumb = 20
 padding = 2

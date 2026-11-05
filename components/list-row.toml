@@ -1,0 +1,61 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# List row: written by WOLKIT-1TO1. The approved row is 40 px at the standard density (brand-ui.md
+# section 2, GAP-TABLE M1: the 52 px the Kit drew was the deviation, the approved number wins).
+schema = 1
+id = "list-row"
+name = "List row"
+category = "containment"
+status = "beta"
+since = "0.12"
+summary = "One line of a card list: a title, an optional value or control at its end, a hairline between rows."
+hig = "hig.md section 1 (Lists and rows)"
+rules = []
+
+[implementations.gtk]
+api = "kit::data::card_list"
+css = ".list-row"
+file = "crates/shell/src/kit/data.rs"
+
+[implementations.view]
+node = "list"
+file = "crates/wolkit-render/src/view.rs"
+
+[anatomy]
+card = "the list's card: card fill, card radius, small shadow"
+row = "title at the start, the control at the end, centred on the row"
+divider = "1 px line between rows"
+
+[geometry]
+card_radius = 12
+card_pad_y = 4
+card_pad_x = 12
+gap = 8
+
+[density.compact]
+row = 32
+pad_y = 4
+
+[density.standard]
+row = 40
+pad_y = 6
+
+[density.comfortable]
+row = 48
+pad_y = 8
+
+[states]
+plain = "A row at rest."
+
+[keyboard]
+Tab = "Moves to the row's control."
+
+[a11y]
+gtk_role = "list-item"
+wolkit_role = "row"
+name = "The row title."
+
+[tests]
+states = ["plain"]
+densities = ["standard"]
+variants = ["light", "dark"]

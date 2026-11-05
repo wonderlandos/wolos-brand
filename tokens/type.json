@@ -3,6 +3,7 @@
   "unit": "px",
   "note": "Roles of the Kit (crates/shell/src/kit/kit.css). size/line on the 4 px line. Families stay in colors.json (font). Type never changes with density.",
   "roles": {
+    "display": {"size": 35, "line": 52, "weight": 600, "tracking": -0.5},
     "caption": {"size": 11, "line": 16, "weight": 400, "tracking": 0},
     "eyebrow": {"size": 11, "line": 16, "weight": 600, "tracking": 0.4},
     "body": {"size": 13, "line": 20, "weight": 400, "tracking": 0},
