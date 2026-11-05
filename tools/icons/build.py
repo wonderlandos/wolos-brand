@@ -233,6 +233,16 @@ def drift(icons):
         except OSError:
             out.append(f"{os.path.relpath(p, DESIGN)}: missing")
     out += unowned(icons)
+    for dst, src in BRAND_COPIES.items():     # the brand mark and glyph installed from design/brand
+        p = os.path.join(ICONS, dst)
+        try:
+            with open(os.path.join(DESIGN, "brand", src), encoding="utf-8", newline="") as f:
+                want = f.read().replace("\r\n", "\n")
+            with open(p, encoding="utf-8", newline="") as f:
+                if f.read() != want:
+                    out.append(f"{os.path.relpath(p, DESIGN)}: differs from brand/{src} (build.py installs it)")
+        except OSError:
+            out.append(f"{os.path.relpath(p, DESIGN)}: missing")
     for ic in icons:
         if ic.ctx == "apps":
             p = os.path.join(ICONS, "apps", "small", file_name(ic))

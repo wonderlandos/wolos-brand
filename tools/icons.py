@@ -2,9 +2,17 @@
 """WolOS icon set v2: one geometry for every icon. Python 3 stdlib only.
 
   python3 design/tools/icons.py [--sheet OUT.png] [--overlay DIR] [--symbolic-only]
+  python3 -I design/tools/icons.py --check     change nothing; exit 1 when a symbolic icon, index.theme, dev.theme
+                                              or a full-colour icon is not what the generators draw now
 
---symbolic-only writes design/icons/symbolic and nothing else (the symbolic grammar:
+--symbolic-only writes design/icons/symbolic (+ symbolic24) and nothing else (the symbolic grammar:
 .claude/brand/icons-symbolic/GRAMMAR.md in the product checkout).
+
+Two drawers share icons/symbolic: the 131 UI glyphs (the Type A2 grammar, tools/ui/glyphs.py, drawn by
+tools/ui/symbolic.py at 16 and 24 px) and the rest of the 326 names (this file, the old 16 grid). This
+file never draws a glyph tools/ui draws: it installs the ui drawing at 16 into icons/symbolic and at 24
+into icons/symbolic24, so a plain run keeps the A2 set (it once rewrote all 131 back to the old
+drawings). --check proves every installed file is the generators' bytes.
 
 Writes
   design/icons/symbolic/<name>-symbolic.svg   16 grid, 1.5 px line, 2 px corner radius, currentColor
@@ -1252,7 +1260,7 @@ DEV_THEME = """[Icon Theme]
 Name=WolOS
 Comment=WolOS icons from the repo (dev and golden renders), design/tools/icons.py
 Inherits=Adwaita,hicolor
-Directories=apps,places,devices,mimetypes,symbolic
+Directories=apps,places,devices,mimetypes,symbolic,symbolic24
 
 [apps]
 Size=128
@@ -1285,6 +1293,13 @@ Type=Scalable
 [symbolic]
 Size=16
 MinSize=16
+MaxSize=19
+Context=Status
+Type=Scalable
+
+[symbolic24]
+Size=24
+MinSize=20
 MaxSize=512
 Context=Status
 Type=Scalable
@@ -1294,7 +1309,7 @@ INDEX_THEME = """[Icon Theme]
 Name=WolOS
 Comment=WolOS (Wonderland OS) icons: one geometry, design/tools/icons.py
 Inherits=Adwaita,hicolor
-Directories=48x48/apps,128x128/apps,512x512/apps,scalable/apps,scalable/places,scalable/devices,scalable/mimetypes,symbolic/status,symbolic/actions
+Directories=48x48/apps,128x128/apps,512x512/apps,scalable/apps,scalable/places,scalable/devices,scalable/mimetypes,symbolic/status,symbolic/actions,symbolic24/status
 
 [48x48/apps]
 Size=48
@@ -1342,17 +1357,99 @@ Type=Scalable
 [symbolic/status]
 Size=16
 MinSize=16
-MaxSize=512
+MaxSize=19
 Context=Status
 Type=Scalable
 
 [symbolic/actions]
 Size=16
 MinSize=16
-MaxSize=512
+MaxSize=19
 Context=Actions
 Type=Scalable
+
+[symbolic24/status]
+Size=24
+MinSize=20
+MaxSize=512
+Context=Status
+Type=Scalable
 """
+
+
+SYM24_DIR = os.path.join(DESIGN, "icons", "symbolic24")
+
+
+def ui_symbolic():
+    """tools/ui/symbolic.py (the UI glyph drawer), imported by path."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("wolos_ui_symbolic", os.path.join(HERE, "ui", "symbolic.py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def symbolic_files():
+    """-> ({path: text} of icons/symbolic and icons/symbolic24 as the generators draw them, the
+    brand files icons/symbolic keeps and build.py installs). The ui glyphs win over this file's."""
+    ui = ui_symbolic()
+    files = {os.path.join(SYM_DIR, n + ".svg"): symbolic_svg(n) for n in SYMBOLIC}
+    for n in sorted(ui.glyphs.ICONS):
+        files[os.path.join(SYM_DIR, n + "-symbolic.svg")] = ui.draw(n, 16)
+        files[os.path.join(SYM24_DIR, n + "-symbolic.svg")] = ui.draw(n, 24)
+    files[os.path.join(SYM24_DIR, "wolos-glyph-symbolic.svg")] = ui.glyph_svg(24)
+    keep = {os.path.join(SYM_DIR, n + ".svg") for n in KEEP_SYMBOLIC}
+    return files, keep
+
+
+def theme_files(overlay=None):
+    """{path: text} of the theme files: the repo's index.theme and dev.theme, and the overlay's index.theme."""
+    out = {os.path.join(DESIGN, "icons", "index.theme"): INDEX_THEME, os.path.join(DESIGN, "icons", "dev.theme"): DEV_THEME}
+    if overlay:
+        theme = os.path.join(overlay, "usr", "share", "icons", "WolOS")
+        if os.path.isdir(os.path.dirname(os.path.dirname(theme))):
+            out[os.path.join(theme, "index.theme")] = INDEX_THEME
+    return out
+
+
+def theme_errors(name, text):
+    """Index-theme consistency: every [section] is listed in Directories and every Directories entry
+    has a section (a mismatch, like 'symbolic24/' for [symbolic24/status], hides a folder from lookup)."""
+    secs, dirs = [], []
+    for line in text.splitlines():
+        line = line.strip()
+        if line.startswith("[") and line.endswith("]"):
+            secs.append(line[1:-1])
+        elif line.startswith("Directories="):
+            dirs = [d for d in line.split("=", 1)[1].split(",") if d]
+    secs = [x for x in secs if x != "Icon Theme"]
+    out = [f"{name}: [{x}] is not in Directories" for x in secs if x not in dirs]
+    out += [f"{name}: Directories lists {x} but there is no [{x}] section" for x in dirs if x not in secs]
+    out += [f"{name}: [{x}] twice" for x in sorted(set(secs)) if secs.count(x) > 1]
+    return out
+
+
+def check_all(overlay):
+    """Drift of everything this entry writes (symbolic, symbolic24, themes) and of the full-colour
+    set (build.py --check); returns the lines to print."""
+    out = []
+    files, keep = symbolic_files()
+    files.update(theme_files(overlay))
+    for p, text in sorted(files.items()):
+        if p.endswith(".theme"):
+            out += theme_errors(os.path.relpath(p, DESIGN), text)
+        try:
+            with open(p, encoding="utf-8", newline="") as f:
+                if f.read() != text:
+                    out.append(f"{os.path.relpath(p, DESIGN)}: differs from the generator (python3 design/tools/icons.py)")
+        except OSError:
+            out.append(f"{os.path.relpath(p, DESIGN)}: missing")
+    for d in (SYM_DIR, SYM24_DIR):
+        for fn in sorted(os.listdir(d)) if os.path.isdir(d) else []:
+            p = os.path.join(d, fn)
+            if p not in files and p not in keep:
+                out.append(f"{os.path.relpath(p, DESIGN)}: no generator draws this icon (tools/icons.py, tools/ui/glyphs.py)")
+    return out
 
 
 def write(path, data):
@@ -1463,6 +1560,7 @@ def main(argv):
     overlay = os.path.normpath(os.path.join(DESIGN, "..", "desktop", "overlay"))
     sheet_out = None
     only = None
+    check = False
     a = list(argv)
     while a:
         k = a.pop(0)
@@ -1474,24 +1572,36 @@ def main(argv):
             only = "sheet"
         elif k == "--symbolic-only":
             only = "symbolic"
+        elif k == "--check":
+            check = True
         else:
             sys.exit(f"icons.py: unknown argument {k}")
+    if check:
+        bad = check_all(overlay)
+        try:
+            icon_build().build(overlay, check_only=True)     # the full-colour set (build.py --check)
+        except SystemExit as e:
+            bad.append(str(e.code))
+        if bad:
+            print("\n".join(bad), file=sys.stderr)
+            sys.exit(f"icons.py: {len(bad)} problem(s), nothing written")
+        print(f"icons.py: {len(SYMBOLIC)} symbolic, the 24 px set, the themes and the full-colour set match the generators (nothing written)")
+        return
     if only != "sheet":
-        os.makedirs(SYM_DIR, exist_ok=True)
-        for f in os.listdir(SYM_DIR):
-            stem = f[:-4] if f.endswith(".svg") else None
-            if (stem and stem not in SYMBOLIC and stem not in KEEP_SYMBOLIC) or f == "ADWAITA.tsv":
-                os.remove(os.path.join(SYM_DIR, f))
-        for n in SYMBOLIC:
-            write(os.path.join(SYM_DIR, n + ".svg"), symbolic_svg(n))
+        files, keep = symbolic_files()
+        for d in (SYM_DIR, SYM24_DIR):
+            os.makedirs(d, exist_ok=True)
+            for f in os.listdir(d):
+                p = os.path.join(d, f)
+                if (p not in files and p not in keep) or f == "ADWAITA.tsv":
+                    os.remove(p)
+        for p, text in files.items():
+            write(p, text)
     if only == "symbolic":
         print(f"icons.py: {len(SYMBOLIC)} symbolic (full-colour icons, aliases and overlay untouched)")
     if only is None:
-        write(os.path.join(DESIGN, "icons", "index.theme"), INDEX_THEME)
-        write(os.path.join(DESIGN, "icons", "dev.theme"), DEV_THEME)
-        theme = os.path.join(overlay, "usr", "share", "icons", "WolOS")
-        if os.path.isdir(os.path.dirname(os.path.dirname(theme))):
-            write(os.path.join(theme, "index.theme"), INDEX_THEME)
+        for p, text in theme_files(overlay).items():
+            write(p, text)
         icon_build().build(overlay)     # cards, places, devices, mimetypes, aliases.tsv, app PNGs
         print(f"icons.py: {len(SYMBOLIC)} symbolic")
     if sheet_out:
