@@ -1,0 +1,49 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Split view: written by DS-COMPONENTS (M3: (Canonical layouts: list-detail)); tests/kit_collection.rs builds every case.
+
+schema = 1
+id = "split-view"
+name = "Split view"
+category = "containment"
+status = "beta"
+since = "0.12"
+summary = "Two panes side by side with a handle a person drags between them (a list and its detail)."
+hig = "hig.md section 1 (AppWindow)"
+m3 = "(Canonical layouts: list-detail)"
+
+[implementations.gtk]
+api = "kit::collection::split_view"
+css = "paned.split-view"
+file = "crates/shell/src/kit/collection.rs"
+
+[anatomy]
+start = "the list pane; keeps its width when the window grows"
+handle = "a 1 px hairline, a wider invisible grab area"
+end = "the detail pane"
+
+[states]
+wide = "A list and its detail at 900 px."
+
+[keyboard]
+F6 = "Moves between the panes."
+Tab = "Moves through each pane's controls."
+
+[a11y]
+gtk_role = "group"
+web_role = "group"
+wolkit_role = "group"
+name = "None."
+description = "The handle is a separator with its position as a value."
+
+[[rules]]
+id = "RU-450"
+kind = "do"
+text = "Under the narrow breakpoint a split view shows one pane at a time with a way back, like the AppWindow sidebar."
+enforced = "manual"
+
+[tests]
+states = ["wide"]
+densities = ["standard"]
+variants = ["light", "dark"]
+width = 900

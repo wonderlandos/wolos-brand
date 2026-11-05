@@ -1,0 +1,62 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Navigation rail: written by DS-COMPONENTS (M3: Navigation rail); tests/kit_navigation.rs builds every case.
+
+schema = 1
+id = "navigation-rail"
+name = "Navigation rail"
+category = "navigation"
+status = "beta"
+since = "0.12"
+summary = "Three to seven destinations in a narrow column at the start of a window too narrow for the sidebar."
+hig = "hig.md section 1 (sidebar 240)"
+m3 = "Navigation rail"
+
+[implementations.gtk]
+api = "kit::navigation::navigation_rail"
+css = ".navigation-rail"
+file = "crates/shell/src/kit/navigation.rs"
+
+[anatomy]
+rail = "84 wide, the sidebar fill, a hairline at the end"
+destination = "glyph pill over an 11 px label, 4 px apart"
+picked = "the pill in the accent at 18 percent"
+
+[sizes.rail]
+width = 84
+
+[states]
+first = "The first destination is picked."
+last = "The last destination is picked."
+
+[keyboard]
+Tab = "Moves to the picked destination."
+"Up and Down" = "Move between destinations."
+Space = "Opens the focused destination."
+
+[a11y]
+gtk_role = "navigation"
+web_role = "navigation"
+wolkit_role = "navigation"
+name = "Each destination by its label."
+description = "The picked one is pressed."
+
+[copy]
+label = "One word in Title Case per destination."
+
+[[rules]]
+id = "RU-315"
+kind = "do"
+text = "A rail replaces the sidebar between the narrow breakpoint and the sidebar's width; never both at once."
+enforced = "manual"
+
+[[rules]]
+id = "RU-316"
+kind = "do"
+text = "Every rail destination has a glyph and a label."
+enforced = "kit_navigation"
+
+[tests]
+states = ["first", "last"]
+densities = ["standard"]
+variants = ["light", "dark"]

@@ -1,0 +1,56 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Carousel: written by DS-COMPONENTS (M3: Carousel); tests/kit_collection.rs builds every case.
+
+schema = 1
+id = "carousel"
+name = "Carousel"
+category = "containment"
+status = "beta"
+since = "0.12"
+summary = "A row of items that scrolls sideways (featured apps, photos) with previous and next buttons at its ends."
+hig = "hig.md section 1 (store)"
+m3 = "Carousel"
+
+[implementations.gtk]
+api = "kit::collection::carousel"
+css = ".carousel"
+file = "crates/shell/src/kit/collection.rs"
+
+[anatomy]
+strip = "items 8 px apart, scrolling sideways with no scrollbar"
+steps = "previous and next icon buttons on a card disc with elevation 1"
+
+[states]
+start = "At the start, more items to the right."
+
+[keyboard]
+Tab = "Moves to the previous button, the items, then the next button."
+Space = "On a step button, moves by one item."
+
+[a11y]
+gtk_role = "group"
+web_role = "region"
+wolkit_role = "group"
+name = "The step buttons by their names (Previous, Next)."
+description = "None."
+
+[copy]
+steps = "Previous and Next."
+
+[[rules]]
+id = "RU-470"
+kind = "do"
+text = "A carousel can be moved with its buttons and the keyboard, never only by dragging."
+enforced = "kit_collection"
+
+[[rules]]
+id = "RU-471"
+kind = "dont"
+text = "Do not advance a carousel by itself."
+enforced = "manual"
+
+[tests]
+states = ["start"]
+densities = ["standard"]
+variants = ["light", "dark"]

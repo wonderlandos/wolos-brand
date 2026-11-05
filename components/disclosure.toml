@@ -1,0 +1,71 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Disclosure: written by DS-COMPONENTS (M3: (no M3 equivalent; WolOS)); tests/kit_navigation.rs builds every case.
+
+schema = 1
+id = "disclosure"
+name = "Disclosure"
+category = "navigation"
+status = "beta"
+since = "0.12"
+summary = "A header that shows and hides the part under it (advanced options, details), with a chevron that turns."
+hig = "hig.md section 1 (progressive disclosure)"
+m3 = "(no M3 equivalent; WolOS)"
+
+[implementations.gtk]
+api = "kit::navigation::disclosure"
+css = "expander-widget.disclosure"
+file = "crates/shell/src/kit/navigation.rs"
+
+[implementations.view]
+node = "disclosure"
+file = "crates/shared/src/view.rs"
+
+[anatomy]
+header = "a row of the list-row height: chevron in the dim ink, 8 px, then the title 13 medium"
+body = "the hidden part, under the header"
+
+[density.compact]
+row = 32
+
+[density.standard]
+row = 40
+
+[density.comfortable]
+row = 48
+
+[states]
+closed = "The body is hidden."
+open = "The body shows."
+
+[keyboard]
+Tab = "Moves the focus to the header."
+Space = "Shows or hides the body."
+Enter = "Shows or hides the body."
+
+[a11y]
+gtk_role = "button"
+web_role = "button"
+wolkit_role = "button"
+name = "The header title."
+description = "The expanded state."
+
+[copy]
+title = "Names what is inside: Advanced Options, Details; Title Case."
+
+[[rules]]
+id = "RU-360"
+kind = "do"
+text = "A disclosure exposes its expanded state, so a screen reader says open or closed."
+enforced = "kit_navigation"
+
+[[rules]]
+id = "RU-361"
+kind = "dont"
+text = "Do not hide something a person needs on most visits behind a disclosure."
+enforced = "manual"
+
+[tests]
+states = ["closed", "open"]
+densities = ["compact", "standard", "comfortable"]
+variants = ["light", "dark"]

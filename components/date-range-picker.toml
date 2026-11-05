@@ -1,0 +1,65 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Date range picker: written by DS-COMPONENTS (M3: Date picker, range); tests/kit_calendar.rs builds every case.
+
+schema = 1
+id = "date-range-picker"
+name = "Date range picker"
+category = "input"
+status = "beta"
+since = "0.12"
+summary = "Picks a first and a last day from a month grid; the days between are tinted."
+hig = "hig.md section 1 (forms)"
+m3 = "Date picker (range)"
+
+[implementations.gtk]
+api = "kit::calendar::DatePicker::range"
+css = ".date-picker"
+file = "crates/shell/src/kit/calendar.rs"
+
+[anatomy]
+header = "month and year (13 semibold), previous and next buttons at the end"
+weekdays = "the letters M T W T F S S in the dim caption, weeks from Monday"
+day = "28 px circle; today a 1 px accent ring; the two ends the accent disc; the days between a square tinted at 18 percent"
+card = "the card fill, a hairline, radius 12, the 12 px inset"
+
+[sizes.day]
+width = 28
+height = 28
+
+[states]
+today = "Nothing picked; today is ringed."
+picked = "A range is picked: the two ends in the accent, the days between tinted."
+
+[keyboard]
+Tab = "Moves through the month buttons and into the days."
+Arrows = "Move between days."
+Space = "Picks the focused day as the first, then the last day."
+Enter = "Picks the focused day as the first, then the last day."
+
+[a11y]
+gtk_role = "grid"
+web_role = "grid"
+wolkit_role = "grid"
+name = "The month and year; every day by its full date (Monday 26 October 2026)."
+description = "None."
+
+[copy]
+month = "Full month name and the year: October 2026."
+
+[[rules]]
+id = "RU-216"
+kind = "do"
+text = "Every day button is named by its full date for assistive technology, not by its number alone."
+enforced = "kit_calendar"
+
+[[rules]]
+id = "RU-217"
+kind = "do"
+text = "A range picker starts a new range at the third click and never keeps a half range once the second end is picked."
+enforced = "kit_calendar"
+
+[tests]
+states = ["today", "picked"]
+densities = ["standard"]
+variants = ["light", "dark"]

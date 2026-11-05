@@ -1,0 +1,77 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Menu: written by DS-COMPONENTS (M3: Menus); tests/kit_navigation.rs builds every case.
+
+schema = 1
+id = "menu"
+name = "Menu"
+category = "navigation"
+status = "beta"
+since = "0.12"
+summary = "A short list of commands that opens from a button or a right-click, each a verb, with its shortcut at the end."
+hig = "hig.md section 3 (Behaviour: the context menu mirrors the toolbar)"
+m3 = "Menus"
+
+[implementations.gtk]
+api = "kit::widgets::menu_keys"
+plain = "kit::widgets::menu"
+context = "kit::data::popup_menu"
+css = "popover.menu, button.menu-item"
+file = "crates/shell/src/kit/widgets.rs"
+
+[anatomy]
+surface = "glass, radius 12, elevation 2"
+item = "a flat button, the label 13 and the shortcut dim at the end, 24 px gap"
+separator = "a hairline between groups"
+
+[density.compact]
+item = 24
+
+[density.standard]
+item = 28
+
+[density.comfortable]
+item = 32
+
+[states]
+plain = "Three commands and a separator."
+keys = "Commands with their shortcuts."
+
+[keyboard]
+"Up and Down" = "Move between items."
+Enter = "Runs the focused item and closes the menu."
+Escape = "Closes the menu."
+Letters = "Move to the next item that starts with them."
+
+[a11y]
+gtk_role = "button"
+web_role = "menu"
+wolkit_role = "menu"
+name = "Each item by its label."
+description = "The shortcut, as text."
+
+[copy]
+item = "Title Case verbs (Move to Trash); an item that asks for more ends in an ellipsis (Rename...)."
+
+[[rules]]
+id = "RU-350"
+kind = "do"
+text = "A menu item says what it does in Title Case and shows its shortcut at the end in the dim ink."
+enforced = "kit_navigation"
+
+[[rules]]
+id = "RU-351"
+kind = "do"
+text = "A context menu offers the same verbs as the toolbar, with the same names and keys."
+enforced = "manual"
+
+[[rules]]
+id = "RU-352"
+kind = "dont"
+text = "Do not put more than twelve items in a menu without separators between groups."
+enforced = "manual"
+
+[tests]
+states = ["plain", "keys"]
+densities = ["compact", "standard", "comfortable"]
+variants = ["light", "dark"]

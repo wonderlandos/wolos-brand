@@ -1,0 +1,57 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Section header: written by DS-COMPONENTS (M3: (Lists: subheader)); tests/kit_collection.rs builds every case.
+
+schema = 1
+id = "section-header"
+name = "Section header"
+category = "containment"
+status = "beta"
+since = "0.12"
+summary = "The heading over a group of rows or cards, with at most one text action at the end (See All)."
+hig = "hig.md section 1 (sections)"
+m3 = "(Lists: subheader)"
+
+[implementations.gtk]
+api = "kit::collection::section_header"
+section = "kit::widgets::section"
+css = ".section-header"
+file = "crates/shell/src/kit/collection.rs"
+
+[anatomy]
+title = "heading 15 semibold"
+action = "a plain button at the end"
+
+[states]
+plain = "A title alone."
+action = "A title and a See All action."
+
+[keyboard]
+Tab = "Moves to the action."
+
+[a11y]
+gtk_role = "heading"
+web_role = "heading"
+wolkit_role = "heading"
+name = "Its text."
+description = "None."
+
+[copy]
+title = "Title Case, a noun phrase: Recently Added."
+
+[[rules]]
+id = "RU-460"
+kind = "do"
+text = "A section header is a heading for assistive technology."
+enforced = "kit_collection"
+
+[[rules]]
+id = "RU-461"
+kind = "dont"
+text = "Do not put more than one action in a section header."
+enforced = "manual"
+
+[tests]
+states = ["plain", "action"]
+densities = ["standard"]
+variants = ["light", "dark"]

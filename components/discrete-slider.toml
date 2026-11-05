@@ -1,0 +1,64 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Discrete slider: written by DS-COMPONENTS (M3: Slider (discrete)); tests/kit_choice.rs builds every case.
+
+schema = 1
+id = "discrete-slider"
+name = "Discrete slider"
+category = "selection"
+status = "beta"
+since = "0.12"
+summary = "Picks a value that only makes sense in whole steps (a level from 1 to 5), with a tick at each stop."
+hig = "hig.md section 1 (Settings-style apps)"
+m3 = "Slider (discrete)"
+
+[implementations.gtk]
+api = "kit::choice::discrete_slider"
+css = "scale.slider.discrete"
+file = "crates/shell/src/kit/choice.rs"
+
+[implementations.view]
+node = "slider"
+file = "crates/shared/src/view.rs"
+
+[anatomy]
+track = "4 px, the control fill; the part before the knob in the accent"
+ticks = "1 x 4 px marks in the dim ink under the track, one per stop"
+knob = "16 px white circle, elevation 1"
+
+[states]
+low = "The first stop."
+high = "The last stop."
+disabled = "The value cannot change now."
+
+[keyboard]
+Tab = "Moves the focus to the knob."
+"Left and Right" = "Move one stop."
+"Home and End" = "Jump to the first or last stop."
+
+[a11y]
+gtk_role = "slider"
+web_role = "slider"
+wolkit_role = "slider"
+name = "The row title (labelled-by)."
+description = "The value in words when the number alone is unclear (Level 3 of 5)."
+
+[copy]
+title = "The row title names the quantity: Text size, never Change text size."
+
+[[rules]]
+id = "RU-100"
+kind = "do"
+text = "A discrete slider has three to eleven stops; more is a continuous slider."
+enforced = "manual"
+
+[[rules]]
+id = "RU-101"
+kind = "do"
+text = "The value of a discrete slider always sits on a stop; a drag between stops snaps."
+enforced = "kit_choice"
+
+[tests]
+states = ["low", "high", "disabled"]
+densities = ["standard"]
+variants = ["light", "dark"]

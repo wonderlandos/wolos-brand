@@ -1,0 +1,62 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Breadcrumb: written by DS-COMPONENTS (M3: (no M3 equivalent; WolOS)); tests/kit_navigation.rs builds every case.
+
+schema = 1
+id = "breadcrumb"
+name = "Breadcrumb"
+category = "navigation"
+status = "beta"
+since = "0.12"
+summary = "Shows where a page sits in a hierarchy; each parent is a link back, the current page is plain text at the end."
+hig = "hig.md section 1 (sub-pages)"
+m3 = "(no M3 equivalent; WolOS)"
+
+[implementations.gtk]
+api = "kit::navigation::breadcrumb"
+css = ".breadcrumb"
+file = "crates/shell/src/kit/navigation.rs"
+
+[anatomy]
+crumb = "a plain button in the accent ink, 24 tall, 4 px each side"
+separator = "a 16 px chevron in the dim ink"
+current = "body text, medium, ellipsized in the middle when long"
+
+[sizes.crumb]
+height = 24
+
+[states]
+two = "One parent and the current page."
+deep = "Three parents and a long current page."
+
+[keyboard]
+Tab = "Moves through the parent links."
+Space = "Opens the focused parent."
+Enter = "Opens the focused parent."
+
+[a11y]
+gtk_role = "navigation"
+web_role = "navigation"
+wolkit_role = "navigation"
+name = "Each link by its page title."
+description = "None."
+
+[copy]
+crumb = "The page titles exactly as their pages say them."
+
+[[rules]]
+id = "RU-340"
+kind = "do"
+text = "The last crumb is the current page and is not a link."
+enforced = "kit_navigation"
+
+[[rules]]
+id = "RU-341"
+kind = "dont"
+text = "Do not use a breadcrumb for a flat set of pages; use the sidebar or tabs."
+enforced = "manual"
+
+[tests]
+states = ["two", "deep"]
+densities = ["standard"]
+variants = ["light", "dark"]

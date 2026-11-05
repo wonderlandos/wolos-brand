@@ -1,0 +1,65 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Tree: written by DS-COMPONENTS (M3: (no M3 equivalent; WolOS)); tests/kit_collection.rs builds every case.
+
+schema = 1
+id = "tree"
+name = "Tree"
+category = "data"
+status = "beta"
+since = "0.12"
+summary = "Rows that open and close to show their children (folders, groups), with a chevron and an indent per level."
+hig = "hig.md section 1 (lists)"
+m3 = "(no M3 equivalent; WolOS)"
+
+[implementations.gtk]
+api = "kit::collection::tree"
+css = "listview.tree"
+file = "crates/shell/src/kit/collection.rs"
+
+[anatomy]
+row = "28 tall (compact 24, comfortable 32), radius 8"
+chevron = "16 px in the dim ink, turns when open"
+indent = "16 per level"
+
+[density.compact]
+item = 24
+
+[density.standard]
+item = 28
+
+[density.comfortable]
+item = 32
+
+[states]
+open = "Two levels open."
+closed = "Only the top level."
+
+[keyboard]
+"Up and Down" = "Move between rows."
+Right = "Opens the focused row, then moves into it."
+Left = "Closes it, then moves to its parent."
+
+[a11y]
+gtk_role = "list"
+web_role = "tree"
+wolkit_role = "tree"
+name = "Each row by its label."
+description = "The expanded state of a row with children."
+
+[[rules]]
+id = "RU-620"
+kind = "do"
+text = "Right and Left open and close the focused row of a tree."
+enforced = "manual"
+
+[[rules]]
+id = "RU-621"
+kind = "do"
+text = "A tree row is 28 px at standard density and follows the density."
+enforced = "kit_collection"
+
+[tests]
+states = ["open", "closed"]
+densities = ["compact", "standard", "comfortable"]
+variants = ["light", "dark"]

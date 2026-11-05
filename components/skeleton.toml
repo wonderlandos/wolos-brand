@@ -1,0 +1,59 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Skeleton: written by DS-COMPONENTS (M3: (Progress indicators: loading placeholder)); tests/kit_collection.rs builds every case.
+
+schema = 1
+id = "skeleton"
+name = "Skeleton"
+category = "communication"
+status = "beta"
+since = "0.12"
+summary = "The shape of content still loading: grey bars where the lines will be, and a disc for an avatar."
+hig = "hig.md section 5 (empty, loading and error states)"
+m3 = "(Progress indicators: loading placeholder)"
+
+[implementations.gtk]
+api = "kit::collection::skeleton"
+css = ".skeleton"
+file = "crates/shell/src/kit/collection.rs"
+
+[anatomy]
+line = "12 px bars of the text at 10 percent, radius 4, 8 px apart; the last one shorter"
+avatar = "a 32 px disc of the same tint"
+
+[sizes.line]
+height = 12
+
+[states]
+lines = "Three lines."
+avatar = "An avatar and two lines."
+
+[keyboard]
+Tab = "Skips it."
+
+[a11y]
+gtk_role = "progressbar"
+web_role = "progressbar"
+wolkit_role = "progress"
+name = "What is loading (Loading apps)."
+description = "Busy."
+
+[copy]
+name = "Loading followed by what: Loading apps."
+
+[[rules]]
+id = "RU-530"
+kind = "do"
+text = "A skeleton is busy and named for assistive technology by what is loading."
+enforced = "kit_collection"
+
+[[rules]]
+id = "RU-531"
+kind = "do"
+text = "A skeleton shows only after 150 ms of waiting and has the shape of what will come."
+enforced = "manual"
+
+[tests]
+states = ["lines", "avatar"]
+densities = ["standard"]
+variants = ["light", "dark"]

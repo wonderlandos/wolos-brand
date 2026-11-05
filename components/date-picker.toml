@@ -1,0 +1,71 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Date picker: written by DS-COMPONENTS (M3: Date picker); tests/kit_calendar.rs builds every case.
+
+schema = 1
+id = "date-picker"
+name = "Date picker"
+category = "input"
+status = "beta"
+since = "0.12"
+summary = "Picks one day from a month grid, with the previous and next month a click away and today marked."
+hig = "hig.md section 1 (forms)"
+m3 = "Date picker"
+
+[implementations.gtk]
+api = "kit::calendar::DatePicker"
+css = ".date-picker"
+file = "crates/shell/src/kit/calendar.rs"
+
+[anatomy]
+header = "month and year (13 semibold), previous and next buttons at the end"
+weekdays = "the letters M T W T F S S in the dim caption, weeks from Monday"
+day = "28 px circle; today a 1 px accent ring; the picked day the accent disc"
+card = "the card fill, a hairline, radius 12, the 12 px inset"
+
+[sizes.day]
+width = 28
+height = 28
+
+[states]
+today = "Nothing picked; today is ringed."
+picked = "A day is picked."
+
+[keyboard]
+Tab = "Moves through the month buttons and into the days."
+Arrows = "Move between days."
+Space = "Picks the focused day."
+Enter = "Picks the focused day."
+
+[a11y]
+gtk_role = "grid"
+web_role = "grid"
+wolkit_role = "grid"
+name = "The month and year; every day by its full date (Monday 26 October 2026)."
+description = "None."
+
+[copy]
+month = "Full month name and the year: October 2026."
+
+[[rules]]
+id = "RU-270"
+kind = "do"
+text = "Every day button is named by its full date for assistive technology, not by its number alone."
+enforced = "kit_calendar"
+
+[[rules]]
+id = "RU-271"
+kind = "do"
+text = "Weeks start on Monday, like the calendar widget."
+enforced = "kit_calendar"
+
+[[rules]]
+id = "RU-272"
+kind = "dont"
+text = "Do not make a person scroll month by month to a far date; offer a text field for typing it as well."
+enforced = "manual"
+
+[tests]
+states = ["today", "picked"]
+densities = ["standard"]
+variants = ["light", "dark"]

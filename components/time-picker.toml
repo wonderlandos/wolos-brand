@@ -1,0 +1,62 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Time picker: written by DS-COMPONENTS (M3: Time picker); tests/kit_calendar.rs builds every case.
+
+schema = 1
+id = "time-picker"
+name = "Time picker"
+category = "input"
+status = "beta"
+since = "0.12"
+summary = "Picks an hour and a minute on the 24-hour clock, each a two-digit field that wraps around."
+hig = "hig.md section 1 (forms)"
+m3 = "Time picker"
+
+[implementations.gtk]
+api = "kit::calendar::time_picker"
+css = "spinbutton.time-part"
+file = "crates/shell/src/kit/calendar.rs"
+
+[anatomy]
+hour = "a spin button of two digits, tabular figures"
+colon = "13 semibold"
+minute = "a spin button of two digits that wraps from 59 to 00"
+
+[sizes.part]
+height = 24
+
+[states]
+morning = "09:05."
+evening = "18:30."
+
+[keyboard]
+Tab = "Moves from the hour to the minute."
+"Up and Down" = "Change the focused part by one."
+Digits = "Type the value."
+
+[a11y]
+gtk_role = "spinbutton"
+web_role = "spinbutton"
+wolkit_role = "spinbutton"
+name = "Hour and Minute."
+description = "None."
+
+[copy]
+names = "Hour and Minute, never H and M."
+
+[[rules]]
+id = "RU-280"
+kind = "do"
+text = "Times show two digits on each side of the colon (09:05)."
+enforced = "kit_calendar"
+
+[[rules]]
+id = "RU-281"
+kind = "do"
+text = "The hour and the minute are named for assistive technology."
+enforced = "kit_calendar"
+
+[tests]
+states = ["morning", "evening"]
+densities = ["standard"]
+variants = ["light", "dark"]

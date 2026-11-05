@@ -1,0 +1,59 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Side sheet: written by DS-COMPONENTS (M3: Side sheets); tests/kit_sheets.rs builds every case.
+
+schema = 1
+id = "side-sheet"
+name = "Side sheet"
+category = "containment"
+status = "beta"
+since = "0.12"
+summary = "A pane at the end of the window with details or options of what is selected (an inspector); it narrows the content, it never covers it."
+hig = "hig.md section 1 (AppWindow)"
+m3 = "Side sheets"
+
+[implementations.gtk]
+api = "kit::sheets::side_sheet"
+css = ".side-sheet"
+file = "crates/shell/src/kit/sheets.rs"
+
+[anatomy]
+pane = "336 wide (the Control Center width), the card fill, a hairline at the start, the 12 px inset"
+header = "title 13 semibold and a close button"
+
+[sizes.pane]
+width = 336
+
+[states]
+details = "Details of a selected file."
+
+[keyboard]
+Tab = "Moves into the pane after the content."
+Escape = "Closes the pane."
+
+[a11y]
+gtk_role = "group"
+web_role = "complementary"
+wolkit_role = "group"
+name = "Its title (labelled-by)."
+description = "None."
+
+[copy]
+title = "Title Case: Details, Info."
+
+[[rules]]
+id = "RU-445"
+kind = "do"
+text = "A side sheet sits beside the content and narrows it; it never covers it."
+enforced = "manual"
+
+[[rules]]
+id = "RU-446"
+kind = "do"
+text = "A side sheet has a close button named Close and is labelled by its title."
+enforced = "kit_sheets"
+
+[tests]
+states = ["details"]
+densities = ["standard"]
+variants = ["light", "dark"]

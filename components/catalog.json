@@ -2,6 +2,2578 @@
  "components": [
   {
    "a11y": {
+    "description": "None.",
+    "gtk_role": "toolbar",
+    "name": "Each action by its tooltip or label.",
+    "web_role": "toolbar",
+    "wolkit_role": "toolbar"
+   },
+   "anatomy": {
+    "actions": "icon buttons at the start, 8 px apart",
+    "bar": "glass fill, an inset hairline on top, 40 tall, 16 px at each end",
+    "primary": "one primary button at the end"
+   },
+   "category": "navigation",
+   "copy": {
+    "actions": "Icon actions have a tooltip in Title Case; the primary button is a verb."
+   },
+   "density": {
+    "comfortable": {
+     "row": 48
+    },
+    "compact": {
+     "row": 32
+    },
+    "standard": {
+     "row": 40
+    }
+   },
+   "hig": "hig.md section 1 (toolbar 40)",
+   "id": "bottom-app-bar",
+   "implementations": {
+    "gtk": {
+     "api": "kit::navigation::bottom_app_bar",
+     "css": ".bottom-app-bar",
+     "file": "crates/shell/src/kit/navigation.rs"
+    }
+   },
+   "keyboard": {
+    "Space": "Activates the focused action.",
+    "Tab": "Moves through the actions in order."
+   },
+   "m3": "Bottom app bar",
+   "name": "Bottom app bar",
+   "rules": [
+    {
+     "enforced": "kit_navigation",
+     "id": "RU-335",
+     "kind": "do",
+     "text": "A bottom app bar holds at most four actions and at most one primary action, at the end."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-336",
+     "kind": "dont",
+     "text": "Do not show a bottom app bar and a toolbar with the same actions at once."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "actions": "Three icon actions.",
+    "primary": "Two icon actions and a primary button."
+   },
+   "status": "beta",
+   "summary": "Two to four actions at the bottom of a narrow window or a touch surface; the toolbar keeps them on a wide window.",
+   "tests": {
+    "densities": [
+     "compact",
+     "standard",
+     "comfortable"
+    ],
+    "states": [
+     "actions",
+     "primary"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "dialog",
+    "name": "Its heading.",
+    "web_role": "dialog",
+    "wolkit_role": "dialog"
+   },
+   "anatomy": {
+    "content": "rows or details, the 12 px inset at the sides",
+    "handle": "a 40 x 4 pill of the text at 24 percent, centred",
+    "surface": "the card fill, radius 24 at the top corners, a hairline, elevation 2"
+   },
+   "category": "containment",
+   "hig": "hig.md section 1 (sheets)",
+   "id": "bottom-sheet",
+   "implementations": {
+    "gtk": {
+     "api": "kit::sheets::bottom_sheet",
+     "css": ".bottom-sheet",
+     "file": "crates/shell/src/kit/sheets.rs"
+    }
+   },
+   "keyboard": {
+    "Escape": "Closes the sheet.",
+    "Tab": "Moves through the content."
+   },
+   "m3": "Bottom sheets",
+   "name": "Bottom sheet",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-440",
+     "kind": "do",
+     "text": "A bottom sheet is for narrow windows and touch; wide windows use a sheet from the toolbar or a side sheet."
+    },
+    {
+     "enforced": "kit_sheets",
+     "id": "RU-441",
+     "kind": "do",
+     "text": "A bottom sheet closes with Escape and shows its grab handle."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "handle": {
+     "height": 4,
+     "width": 40
+    }
+   },
+   "states": {
+    "actions": "A short list of actions."
+   },
+   "status": "beta",
+   "summary": "A sheet anchored to the bottom edge of a narrow window or a touch surface, with a grab handle on top.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "actions"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "navigation",
+    "name": "Each link by its page title.",
+    "web_role": "navigation",
+    "wolkit_role": "navigation"
+   },
+   "anatomy": {
+    "crumb": "a plain button in the accent ink, 24 tall, 4 px each side",
+    "current": "body text, medium, ellipsized in the middle when long",
+    "separator": "a 16 px chevron in the dim ink"
+   },
+   "category": "navigation",
+   "copy": {
+    "crumb": "The page titles exactly as their pages say them."
+   },
+   "hig": "hig.md section 1 (sub-pages)",
+   "id": "breadcrumb",
+   "implementations": {
+    "gtk": {
+     "api": "kit::navigation::breadcrumb",
+     "css": ".breadcrumb",
+     "file": "crates/shell/src/kit/navigation.rs"
+    }
+   },
+   "keyboard": {
+    "Enter": "Opens the focused parent.",
+    "Space": "Opens the focused parent.",
+    "Tab": "Moves through the parent links."
+   },
+   "m3": "(no M3 equivalent; WolOS)",
+   "name": "Breadcrumb",
+   "rules": [
+    {
+     "enforced": "kit_navigation",
+     "id": "RU-340",
+     "kind": "do",
+     "text": "The last crumb is the current page and is not a link."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-341",
+     "kind": "dont",
+     "text": "Do not use a breadcrumb for a flat set of pages; use the sidebar or tabs."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "crumb": {
+     "height": 24
+    }
+   },
+   "states": {
+    "deep": "Three parents and a long current page.",
+    "two": "One parent and the current page."
+   },
+   "status": "beta",
+   "summary": "Shows where a page sits in a hierarchy; each parent is a link back, the current page is plain text at the end.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "two",
+     "deep"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "group",
+    "name": "The group by what its buttons do (Text Style); every button by its label or tooltip.",
+    "web_role": "group",
+    "wolkit_role": "group"
+   },
+   "anatomy": {
+    "block": "24 tall, radius 8 on the outer corners only, the control fill",
+    "divider": "a 1 px hairline between neighbours",
+    "item": "a glyph or one word; the same height as a button"
+   },
+   "category": "actions",
+   "copy": {
+    "label": "One word, or a glyph with a tooltip, per button."
+   },
+   "hig": "hig.md section 1 (toolbars)",
+   "id": "button-group",
+   "implementations": {
+    "gtk": {
+     "api": "kit::groups::button_group",
+     "css": ".button-group",
+     "file": "crates/shell/src/kit/groups.rs"
+    }
+   },
+   "keyboard": {
+    "Enter": "Runs the focused button.",
+    "Space": "Runs the focused button.",
+    "Tab": "Moves through the buttons one by one."
+   },
+   "m3": "Button groups",
+   "name": "Button group",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-135",
+     "kind": "do",
+     "text": "A button group has two to five buttons; for exactly one choice from several use the segmented control."
+    },
+    {
+     "enforced": "kit_groups",
+     "id": "RU-136",
+     "kind": "do",
+     "text": "A button group is named for assistive technology, and every glyph button in it has a tooltip."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 24
+    }
+   },
+   "states": {
+    "glyphs": "Three glyph buttons (Zoom Out, Zoom In, Full Screen).",
+    "words": "Two buttons with words (Day, Week)."
+   },
+   "status": "beta",
+   "summary": "Buttons that belong together, joined into one block: Zoom Out, Zoom In, Full Screen. Each acts alone.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "glyphs",
+     "words"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "group",
+    "name": "Its title, when it has one.",
+    "web_role": "group",
+    "wolkit_role": "group"
+   },
+   "anatomy": {
+    "elevated": "the card fill and elevation 1",
+    "filled": "the control fill, no shadow",
+    "outlined": "the card fill and a hairline",
+    "surface": "radius 12, the inset on all four sides (12; compact 8, comfortable 16)"
+   },
+   "category": "containment",
+   "copy": {
+    "title": "Title Case for the card title, sentence case for its text."
+   },
+   "density": {
+    "comfortable": {
+     "inset": 16,
+     "row": 48
+    },
+    "compact": {
+     "inset": 8,
+     "row": 32
+    },
+    "standard": {
+     "inset": 12,
+     "row": 40
+    }
+   },
+   "hig": "hig.md section 2 (radius 12, inset 12)",
+   "id": "card",
+   "implementations": {
+    "gtk": {
+     "api": "kit::collection::card",
+     "css": ".surface-card",
+     "file": "crates/shell/src/kit/collection.rs"
+    },
+    "view": {
+     "file": "crates/shared/src/view.rs",
+     "node": "card"
+    }
+   },
+   "keyboard": {
+    "Tab": "Moves to the controls inside the card; the card itself takes no focus unless it is one button."
+   },
+   "m3": "Cards (elevated, filled, outlined)",
+   "name": "Card",
+   "rules": [
+    {
+     "enforced": "kit_collection",
+     "id": "RU-400",
+     "kind": "do",
+     "text": "A card insets its content equally on all four sides by the density's inset."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-401",
+     "kind": "do",
+     "text": "Use one card style per surface: elevated on the window ground, filled inside another card, outlined in dense lists."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-402",
+     "kind": "dont",
+     "text": "Do not nest an elevated card in an elevated card."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "elevated": "An elevated card.",
+    "filled": "A filled card.",
+    "outlined": "An outlined card."
+   },
+   "status": "beta",
+   "summary": "Holds one subject (an app, a photo, a summary) on a surface of its own: elevated, filled or outlined.",
+   "tests": {
+    "densities": [
+     "compact",
+     "standard",
+     "comfortable"
+    ],
+    "states": [
+     "elevated",
+     "filled",
+     "outlined"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "group",
+    "name": "The step buttons by their names (Previous, Next).",
+    "web_role": "region",
+    "wolkit_role": "group"
+   },
+   "anatomy": {
+    "steps": "previous and next icon buttons on a card disc with elevation 1",
+    "strip": "items 8 px apart, scrolling sideways with no scrollbar"
+   },
+   "category": "containment",
+   "copy": {
+    "steps": "Previous and Next."
+   },
+   "hig": "hig.md section 1 (store)",
+   "id": "carousel",
+   "implementations": {
+    "gtk": {
+     "api": "kit::collection::carousel",
+     "css": ".carousel",
+     "file": "crates/shell/src/kit/collection.rs"
+    }
+   },
+   "keyboard": {
+    "Space": "On a step button, moves by one item.",
+    "Tab": "Moves to the previous button, the items, then the next button."
+   },
+   "m3": "Carousel",
+   "name": "Carousel",
+   "rules": [
+    {
+     "enforced": "kit_collection",
+     "id": "RU-470",
+     "kind": "do",
+     "text": "A carousel can be moved with its buttons and the keyboard, never only by dragging."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-471",
+     "kind": "dont",
+     "text": "Do not advance a carousel by itself."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "start": "At the start, more items to the right."
+   },
+   "status": "beta",
+   "summary": "A row of items that scrolls sideways (featured apps, photos) with previous and next buttons at its ends.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "start"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The row subtitle, when the box sits in a row.",
+    "gtk_role": "checkbox",
+    "name": "Its own label.",
+    "web_role": "checkbox",
+    "wolkit_role": "checkbox"
+   },
+   "anatomy": {
+    "box": "16 px square, radius 4, a hairline of the text at 36 percent; card fill",
+    "check": "the accent fill with the check mark in the accent ink (or a dash when mixed)",
+    "label": "body text 13/20, 8 px after the box"
+   },
+   "category": "selection",
+   "copy": {
+    "label": "Sentence case, a noun phrase or a short clause that is true when the box is on: Show hidden files."
+   },
+   "density": {
+    "comfortable": {
+     "control": 32
+    },
+    "compact": {
+     "control": 20
+    },
+    "standard": {
+     "control": 24
+    }
+   },
+   "hig": "hig.md section 1 (forms) and section 3 (Behaviour)",
+   "id": "checkbox",
+   "implementations": {
+    "gtk": {
+     "api": "kit::choice::checkbox",
+     "css": "checkbutton.checkbox",
+     "file": "crates/shell/src/kit/choice.rs",
+     "mixed": "kit::choice::set_mixed"
+    },
+    "view": {
+     "file": "crates/shared/src/view.rs",
+     "node": "checkbox"
+    }
+   },
+   "keyboard": {
+    "Space": "Turns it on or off.",
+    "Tab": "Moves the focus to the box."
+   },
+   "m3": "Checkbox",
+   "name": "Checkbox",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-190",
+     "kind": "do",
+     "text": "Use a checkbox for an option among several that can be on together; for one setting that applies at once use a switch."
+    },
+    {
+     "enforced": "kit_choice",
+     "id": "RU-191",
+     "kind": "do",
+     "text": "A checkbox carries its label and the label toggles it too."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-192",
+     "kind": "dont",
+     "text": "Do not phrase a checkbox label as a negative (Do not show); say what is true when it is on."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "box": 16,
+     "height": 24
+    }
+   },
+   "states": {
+    "disabled": "The option cannot change now; the text near it says why.",
+    "mixed": "Some of the options the box stands for are on; a click turns them all on.",
+    "off": "The option is off.",
+    "on": "The option is on."
+   },
+   "status": "beta",
+   "summary": "Turns one option of a list on or off, where several can be on at once and nothing applies until the list is used.",
+   "tests": {
+    "densities": [
+     "compact",
+     "standard",
+     "comfortable"
+    ],
+    "states": [
+     "off",
+     "on",
+     "mixed",
+     "disabled"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "button",
+    "name": "Its label; a filter chip is a toggle button with the pressed state; the remove button by its tooltip.",
+    "web_role": "button",
+    "wolkit_role": "button"
+   },
+   "anatomy": {
+    "container": "24 px, radius 8, the control fill (suggestion: a hairline, no fill)",
+    "glyph": "16 px, assist only, in the accent ink; a filter chip that is on shows a check",
+    "label": "13 medium, one to three words",
+    "remove": "input chips end in a 20 px close button named Remove <thing>"
+   },
+   "category": "selection",
+   "copy": {
+    "label": "One to three words in sentence case; a filter names what it keeps (Installed), an assist chip is a verb phrase (Add to Calendar)."
+   },
+   "density": {
+    "comfortable": {
+     "control": 32
+    },
+    "compact": {
+     "control": 20
+    },
+    "standard": {
+     "control": 24
+    }
+   },
+   "hig": "hig.md section 1 (toolbars and filters)",
+   "id": "chip",
+   "implementations": {
+    "gtk": {
+     "api": "kit::choice::chip",
+     "css": "button.chip, .chip-input",
+     "file": "crates/shell/src/kit/choice.rs",
+     "filter": "kit::choice::filter_chip",
+     "input": "kit::choice::input_chip",
+     "set": "kit::choice::chip_set"
+    },
+    "view": {
+     "file": "crates/shared/src/view.rs",
+     "node": "chips"
+    }
+   },
+   "keyboard": {
+    "Delete": "On an input chip, the remove button removes it.",
+    "Enter": "Activates the chip or flips the filter.",
+    "Space": "Activates the chip or flips the filter.",
+    "Tab": "Moves the focus to the chip (and to its remove button)."
+   },
+   "m3": "Chips (assist, filter, input, suggestion)",
+   "name": "Chip",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-196",
+     "kind": "do",
+     "text": "Chips appear in a set, 8 px apart, about the content above or below them; never as the main action of a surface."
+    },
+    {
+     "enforced": "kit_choice",
+     "id": "RU-197",
+     "kind": "do",
+     "text": "A filter chip shows a check when it is on, so the state is not colour alone."
+    },
+    {
+     "enforced": "kit_choice",
+     "id": "RU-198",
+     "kind": "do",
+     "text": "An input chip's remove button is named Remove followed by what it removes."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-199",
+     "kind": "dont",
+     "text": "Do not put more than eight chips in a set; use a dropdown or a search field."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 24
+    }
+   },
+   "states": {
+    "assist": "An assist chip with its glyph (Add to Calendar).",
+    "disabled": "The chip cannot act now.",
+    "filter-off": "A filter that is off.",
+    "filter-on": "A filter that is on: the accent tint and a check.",
+    "input": "Something the person entered, with its remove button.",
+    "suggestion": "A suggested answer or query."
+   },
+   "status": "beta",
+   "summary": "A compact element that starts a related action, filters a view, stands for something entered, or offers a suggestion.",
+   "tests": {
+    "densities": [
+     "compact",
+     "standard",
+     "comfortable"
+    ],
+    "states": [
+     "assist",
+     "filter-off",
+     "filter-on",
+     "input",
+     "suggestion",
+     "disabled"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "An invalid field says so (aria-invalid).",
+    "gtk_role": "textbox",
+    "name": "The field by what the date is for (Start Date); the button by Choose Date.",
+    "web_role": "textbox",
+    "wolkit_role": "textbox"
+   },
+   "anatomy": {
+    "button": "an icon button with the calendar glyph, 8 px from the field",
+    "field": "the text field, 12 characters wide, the placeholder YYYY-MM-DD",
+    "invalid": "a 1 px danger ring on the field and the field marked invalid for assistive technology"
+   },
+   "category": "input",
+   "copy": {
+    "button": "Choose Date.",
+    "label": "What the date is for, in Title Case: Start Date."
+   },
+   "hig": "hig.md section 1 (forms)",
+   "id": "date-input",
+   "implementations": {
+    "gtk": {
+     "api": "kit::groups::DateInput",
+     "css": ".date-input",
+     "file": "crates/shell/src/kit/groups.rs"
+    }
+   },
+   "keyboard": {
+    "Enter": "In the field, accepts the typed day.",
+    "Space": "On the calendar button, opens the date picker.",
+    "Tab": "Moves from the field to the calendar button."
+   },
+   "m3": "Date input",
+   "name": "Date input",
+   "rules": [
+    {
+     "enforced": "kit_groups",
+     "id": "RU-214",
+     "kind": "do",
+     "text": "A date field says the shape it wants and marks a day that does not exist as invalid for assistive technology, not by colour alone."
+    },
+    {
+     "enforced": "kit_groups",
+     "id": "RU-215",
+     "kind": "do",
+     "text": "A date field always comes with the calendar button, so a far date is a click away."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 24
+    }
+   },
+   "states": {
+    "empty": "Nothing typed; the placeholder shows the shape.",
+    "filled": "A real day typed.",
+    "invalid": "Ten characters typed that are not a real day (2026-02-30)."
+   },
+   "status": "beta",
+   "summary": "A date typed in a field in the shape YYYY-MM-DD, with the calendar button beside it.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "empty",
+     "filled",
+     "invalid"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "grid",
+    "name": "The month and year; every day by its full date (Monday 26 October 2026).",
+    "web_role": "grid",
+    "wolkit_role": "grid"
+   },
+   "anatomy": {
+    "card": "the card fill, a hairline, radius 12, the 12 px inset",
+    "day": "28 px circle; today a 1 px accent ring; the picked day the accent disc",
+    "header": "month and year (13 semibold), previous and next buttons at the end",
+    "weekdays": "the letters M T W T F S S in the dim caption, weeks from Monday"
+   },
+   "category": "input",
+   "copy": {
+    "month": "Full month name and the year: October 2026."
+   },
+   "hig": "hig.md section 1 (forms)",
+   "id": "date-picker",
+   "implementations": {
+    "gtk": {
+     "api": "kit::calendar::DatePicker",
+     "css": ".date-picker",
+     "file": "crates/shell/src/kit/calendar.rs"
+    }
+   },
+   "keyboard": {
+    "Arrows": "Move between days.",
+    "Enter": "Picks the focused day.",
+    "Space": "Picks the focused day.",
+    "Tab": "Moves through the month buttons and into the days."
+   },
+   "m3": "Date picker",
+   "name": "Date picker",
+   "rules": [
+    {
+     "enforced": "kit_calendar",
+     "id": "RU-270",
+     "kind": "do",
+     "text": "Every day button is named by its full date for assistive technology, not by its number alone."
+    },
+    {
+     "enforced": "kit_calendar",
+     "id": "RU-271",
+     "kind": "do",
+     "text": "Weeks start on Monday, like the calendar widget."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-272",
+     "kind": "dont",
+     "text": "Do not make a person scroll month by month to a far date; offer a text field for typing it as well."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "day": {
+     "height": 28,
+     "width": 28
+    }
+   },
+   "states": {
+    "picked": "A day is picked.",
+    "today": "Nothing picked; today is ringed."
+   },
+   "status": "beta",
+   "summary": "Picks one day from a month grid, with the previous and next month a click away and today marked.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "today",
+     "picked"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "grid",
+    "name": "The month and year; every day by its full date (Monday 26 October 2026).",
+    "web_role": "grid",
+    "wolkit_role": "grid"
+   },
+   "anatomy": {
+    "card": "the card fill, a hairline, radius 12, the 12 px inset",
+    "day": "28 px circle; today a 1 px accent ring; the two ends the accent disc; the days between a square tinted at 18 percent",
+    "header": "month and year (13 semibold), previous and next buttons at the end",
+    "weekdays": "the letters M T W T F S S in the dim caption, weeks from Monday"
+   },
+   "category": "input",
+   "copy": {
+    "month": "Full month name and the year: October 2026."
+   },
+   "hig": "hig.md section 1 (forms)",
+   "id": "date-range-picker",
+   "implementations": {
+    "gtk": {
+     "api": "kit::calendar::DatePicker::range",
+     "css": ".date-picker",
+     "file": "crates/shell/src/kit/calendar.rs"
+    }
+   },
+   "keyboard": {
+    "Arrows": "Move between days.",
+    "Enter": "Picks the focused day as the first, then the last day.",
+    "Space": "Picks the focused day as the first, then the last day.",
+    "Tab": "Moves through the month buttons and into the days."
+   },
+   "m3": "Date picker (range)",
+   "name": "Date range picker",
+   "rules": [
+    {
+     "enforced": "kit_calendar",
+     "id": "RU-216",
+     "kind": "do",
+     "text": "Every day button is named by its full date for assistive technology, not by its number alone."
+    },
+    {
+     "enforced": "kit_calendar",
+     "id": "RU-217",
+     "kind": "do",
+     "text": "A range picker starts a new range at the third click and never keeps a half range once the second end is picked."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "day": {
+     "height": 28,
+     "width": 28
+    }
+   },
+   "states": {
+    "picked": "A range is picked: the two ends in the accent, the days between tinted.",
+    "today": "Nothing picked; today is ringed."
+   },
+   "status": "beta",
+   "summary": "Picks a first and a last day from a month grid; the days between are tinted.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "today",
+     "picked"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The expanded state.",
+    "gtk_role": "button",
+    "name": "The header title.",
+    "web_role": "button",
+    "wolkit_role": "button"
+   },
+   "anatomy": {
+    "body": "the hidden part, under the header",
+    "header": "a row of the list-row height: chevron in the dim ink, 8 px, then the title 13 medium"
+   },
+   "category": "navigation",
+   "copy": {
+    "title": "Names what is inside: Advanced Options, Details; Title Case."
+   },
+   "density": {
+    "comfortable": {
+     "row": 48
+    },
+    "compact": {
+     "row": 32
+    },
+    "standard": {
+     "row": 40
+    }
+   },
+   "hig": "hig.md section 1 (progressive disclosure)",
+   "id": "disclosure",
+   "implementations": {
+    "gtk": {
+     "api": "kit::navigation::disclosure",
+     "css": "expander-widget.disclosure",
+     "file": "crates/shell/src/kit/navigation.rs"
+    },
+    "view": {
+     "file": "crates/shared/src/view.rs",
+     "node": "disclosure"
+    }
+   },
+   "keyboard": {
+    "Enter": "Shows or hides the body.",
+    "Space": "Shows or hides the body.",
+    "Tab": "Moves the focus to the header."
+   },
+   "m3": "(no M3 equivalent; WolOS)",
+   "name": "Disclosure",
+   "rules": [
+    {
+     "enforced": "kit_navigation",
+     "id": "RU-360",
+     "kind": "do",
+     "text": "A disclosure exposes its expanded state, so a screen reader says open or closed."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-361",
+     "kind": "dont",
+     "text": "Do not hide something a person needs on most visits behind a disclosure."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "closed": "The body is hidden.",
+    "open": "The body shows."
+   },
+   "status": "beta",
+   "summary": "A header that shows and hides the part under it (advanced options, details), with a chevron that turns.",
+   "tests": {
+    "densities": [
+     "compact",
+     "standard",
+     "comfortable"
+    ],
+    "states": [
+     "closed",
+     "open"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The value in words when the number alone is unclear (Level 3 of 5).",
+    "gtk_role": "slider",
+    "name": "The row title (labelled-by).",
+    "web_role": "slider",
+    "wolkit_role": "slider"
+   },
+   "anatomy": {
+    "knob": "16 px white circle, elevation 1",
+    "ticks": "1 x 4 px marks in the dim ink under the track, one per stop",
+    "track": "4 px, the control fill; the part before the knob in the accent"
+   },
+   "category": "selection",
+   "copy": {
+    "title": "The row title names the quantity: Text size, never Change text size."
+   },
+   "hig": "hig.md section 1 (Settings-style apps)",
+   "id": "discrete-slider",
+   "implementations": {
+    "gtk": {
+     "api": "kit::choice::discrete_slider",
+     "css": "scale.slider.discrete",
+     "file": "crates/shell/src/kit/choice.rs"
+    },
+    "view": {
+     "file": "crates/shared/src/view.rs",
+     "node": "slider"
+    }
+   },
+   "keyboard": {
+    "Home and End": "Jump to the first or last stop.",
+    "Left and Right": "Move one stop.",
+    "Tab": "Moves the focus to the knob."
+   },
+   "m3": "Slider (discrete)",
+   "name": "Discrete slider",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-100",
+     "kind": "do",
+     "text": "A discrete slider has three to eleven stops; more is a continuous slider."
+    },
+    {
+     "enforced": "kit_choice",
+     "id": "RU-101",
+     "kind": "do",
+     "text": "The value of a discrete slider always sits on a stop; a drag between stops snaps."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "disabled": "The value cannot change now.",
+    "high": "The last stop.",
+    "low": "The first stop."
+   },
+   "status": "beta",
+   "summary": "Picks a value that only makes sense in whole steps (a level from 1 to 5), with a tick at each stop.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "low",
+     "high",
+     "disabled"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "separator",
+    "name": "None.",
+    "web_role": "separator",
+    "wolkit_role": "separator"
+   },
+   "anatomy": {
+    "line": "1 px of the line colour; inset 12 px at both ends when inset"
+   },
+   "category": "containment",
+   "hig": "hig.md section 2 (hairline inset, never to the frame edge)",
+   "id": "divider",
+   "implementations": {
+    "gtk": {
+     "api": "kit::collection::divider",
+     "css": "separator.divider",
+     "file": "crates/shell/src/kit/collection.rs"
+    },
+    "view": {
+     "file": "crates/shared/src/view.rs",
+     "node": "divider"
+    }
+   },
+   "keyboard": {
+    "Tab": "Skips it."
+   },
+   "m3": "Divider",
+   "name": "Divider",
+   "rules": [
+    {
+     "enforced": "kit_collection",
+     "id": "RU-420",
+     "kind": "do",
+     "text": "A divider inside a card is inset by the card's inset, never drawn to the card edge."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "line": {
+     "height": 1,
+     "off_grid": [
+      "height"
+     ],
+     "why": "A hairline or a grab handle is drawn thinner than one fen."
+    }
+   },
+   "states": {
+    "full": "A full divider between sections.",
+    "inset": "An inset divider between rows."
+   },
+   "status": "beta",
+   "summary": "A hairline between groups of content: inset between rows of a card, full between sections.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "full",
+     "inset"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "button",
+    "name": "Its label, or its tooltip when it shows a glyph alone.",
+    "web_role": "button",
+    "wolkit_role": "button"
+   },
+   "anatomy": {
+    "container": "40 x 40, radius 12, the accent fill, elevation 2; extended: 40 tall, a pill, 16 px each side",
+    "glyph": "16 px in the accent ink",
+    "label": "13 semibold, extended only"
+   },
+   "category": "actions",
+   "copy": {
+    "label": "A verb phrase in Title Case: New Note."
+   },
+   "hig": "hig.md section 1 (one primary action per surface)",
+   "id": "fab",
+   "implementations": {
+    "gtk": {
+     "api": "kit::collection::fab",
+     "css": "button.fab",
+     "file": "crates/shell/src/kit/collection.rs"
+    }
+   },
+   "keyboard": {
+    "Enter": "Runs the action.",
+    "Space": "Runs the action.",
+    "Tab": "Moves to it after the content."
+   },
+   "m3": "FAB, extended FAB",
+   "name": "Floating action button",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-104",
+     "kind": "do",
+     "text": "A surface has at most one floating action button, and only when its toolbar does not hold that action."
+    },
+    {
+     "enforced": "kit_collection",
+     "id": "RU-105",
+     "kind": "do",
+     "text": "A floating action button with a glyph alone has a tooltip, which is its name."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "extended": {
+     "height": 40
+    },
+    "regular": {
+     "height": 40,
+     "width": 40
+    }
+   },
+   "states": {
+    "extended": "A glyph and the words.",
+    "regular": "A glyph alone (New Note)."
+   },
+   "status": "beta",
+   "summary": "The one main action of a touch or narrow surface that has no toolbar for it; a glyph alone or extended with words.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "regular",
+     "extended"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "toolbar",
+    "name": "The toolbar by what it acts on (Image Tools); every action by its tooltip.",
+    "web_role": "toolbar",
+    "wolkit_role": "toolbar"
+   },
+   "anatomy": {
+    "action": "a 24 px icon button, a circle on hover",
+    "pill": "32 tall, a pill, the glass fill, elevation 3, a hairline",
+    "primary": "at most one, at the end, in the accent fill"
+   },
+   "category": "actions",
+   "copy": {
+    "tooltip": "A verb in Title Case: Rotate."
+   },
+   "hig": "hig.md section 1 (toolbars)",
+   "id": "floating-toolbar",
+   "implementations": {
+    "gtk": {
+     "api": "kit::groups::floating_toolbar",
+     "css": ".floating-toolbar",
+     "file": "crates/shell/src/kit/groups.rs"
+    }
+   },
+   "keyboard": {
+    "Enter": "Runs the focused action.",
+    "Space": "Runs the focused action.",
+    "Tab": "Moves through the actions."
+   },
+   "m3": "Toolbars (floating)",
+   "name": "Floating toolbar",
+   "rules": [
+    {
+     "enforced": "kit_groups",
+     "id": "RU-137",
+     "kind": "do",
+     "text": "A floating toolbar holds two to five actions, every one with a tooltip, and at most one primary."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-138",
+     "kind": "dont",
+     "text": "Do not float a toolbar over text a person is reading or typing; keep it for images, maps and canvases."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 32
+    }
+   },
+   "states": {
+    "actions": "Three icon buttons.",
+    "primary": "Two icon buttons and a primary one at the end."
+   },
+   "status": "beta",
+   "summary": "A pill that floats over content with the few actions of that content, such as undo, redo and copy in an image editor.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "actions",
+     "primary"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "generic",
+    "name": "The trailing control is labelled by the title and described by the supporting text.",
+    "web_role": "listitem",
+    "wolkit_role": "list-item"
+   },
+   "anatomy": {
+    "leading": "nothing, a 16 px glyph, a 32 px avatar or a 32 px picture, 12 px before the text",
+    "supporting": "secondary 11/16; wraps; a three-line item shows two lines and ellipsizes",
+    "title": "body 13/20",
+    "trailing": "a control or a short text at the end, named by the title"
+   },
+   "category": "containment",
+   "copy": {
+    "title": "Sentence case; the supporting text completes it and does not repeat it."
+   },
+   "hig": "hig.md section 1 (rows); the row height is the list-row spec's",
+   "id": "list-item",
+   "implementations": {
+    "gtk": {
+     "api": "kit::collection::list_item",
+     "css": ".list-row",
+     "file": "crates/shell/src/kit/collection.rs",
+     "row": "kit::widgets::list_row"
+    }
+   },
+   "keyboard": {
+    "Tab": "Moves to the trailing control, when there is one."
+   },
+   "m3": "Lists",
+   "name": "List item",
+   "rules": [
+    {
+     "enforced": "kit_collection",
+     "id": "RU-410",
+     "kind": "do",
+     "text": "A trailing control in a list item is named by the item's title."
+    },
+    {
+     "enforced": "kit_collection",
+     "id": "RU-411",
+     "kind": "do",
+     "text": "A three-line item ellipsizes its supporting text after two lines instead of growing."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-412",
+     "kind": "dont",
+     "text": "Do not mix one-, two- and three-line items in one list without a reason a person can see."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "avatar": "A person: an avatar, a name and an address.",
+    "one-line": "Title only, with a glyph.",
+    "three-line": "Title and two supporting lines with a picture.",
+    "trailing": "A trailing switch named by the title.",
+    "two-line": "Title and one supporting line."
+   },
+   "status": "beta",
+   "summary": "The content layouts of a list row: one, two or three lines, with a leading glyph, avatar or picture and a trailing control.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "one-line",
+     "two-line",
+     "three-line",
+     "avatar",
+     "trailing"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The shortcut, as text.",
+    "gtk_role": "button",
+    "name": "Each item by its label.",
+    "web_role": "menu",
+    "wolkit_role": "menu"
+   },
+   "anatomy": {
+    "item": "a flat button, the label 13 and the shortcut dim at the end, 24 px gap",
+    "separator": "a hairline between groups",
+    "surface": "glass, radius 12, elevation 2"
+   },
+   "category": "navigation",
+   "copy": {
+    "item": "Title Case verbs (Move to Trash); an item that asks for more ends in an ellipsis (Rename...)."
+   },
+   "density": {
+    "comfortable": {
+     "item": 32
+    },
+    "compact": {
+     "item": 24
+    },
+    "standard": {
+     "item": 28
+    }
+   },
+   "hig": "hig.md section 3 (Behaviour: the context menu mirrors the toolbar)",
+   "id": "menu",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::menu_keys",
+     "context": "kit::data::popup_menu",
+     "css": "popover.menu, button.menu-item",
+     "file": "crates/shell/src/kit/widgets.rs",
+     "plain": "kit::widgets::menu"
+    }
+   },
+   "keyboard": {
+    "Enter": "Runs the focused item and closes the menu.",
+    "Escape": "Closes the menu.",
+    "Letters": "Move to the next item that starts with them.",
+    "Up and Down": "Move between items."
+   },
+   "m3": "Menus",
+   "name": "Menu",
+   "rules": [
+    {
+     "enforced": "kit_navigation",
+     "id": "RU-350",
+     "kind": "do",
+     "text": "A menu item says what it does in Title Case and shows its shortcut at the end in the dim ink."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-351",
+     "kind": "do",
+     "text": "A context menu offers the same verbs as the toolbar, with the same names and keys."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-352",
+     "kind": "dont",
+     "text": "Do not put more than twelve items in a menu without separators between groups."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "keys": "Commands with their shortcuts.",
+    "plain": "Three commands and a separator."
+   },
+   "status": "beta",
+   "summary": "A short list of commands that opens from a button or a right-click, each a verb, with its shortcut at the end.",
+   "tests": {
+    "densities": [
+     "compact",
+     "standard",
+     "comfortable"
+    ],
+    "states": [
+     "plain",
+     "keys"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The picked one is pressed.",
+    "gtk_role": "navigation",
+    "name": "Each destination by its label.",
+    "web_role": "navigation",
+    "wolkit_role": "navigation"
+   },
+   "anatomy": {
+    "bar": "glass fill with a hairline on top, 52 tall",
+    "destination": "a 16 px glyph in a 24 x 48 pill over an 11 px label; equal shares of the width",
+    "picked": "the pill takes the accent at 18 percent and the glyph the accent ink"
+   },
+   "category": "navigation",
+   "copy": {
+    "label": "One word in Title Case per destination: Library, Store, Updates."
+   },
+   "hig": "hig.md section 1 (sidebar collapses under 640)",
+   "id": "navigation-bar",
+   "implementations": {
+    "gtk": {
+     "api": "kit::navigation::navigation_bar",
+     "css": ".navigation-bar",
+     "file": "crates/shell/src/kit/navigation.rs"
+    }
+   },
+   "keyboard": {
+    "Left and Right": "Move between destinations.",
+    "Space": "Opens the focused destination.",
+    "Tab": "Moves to the picked destination."
+   },
+   "m3": "Navigation bar",
+   "name": "Navigation bar",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-310",
+     "kind": "do",
+     "text": "A navigation bar shows only when the window is narrower than 640 px; wider windows use the sidebar."
+    },
+    {
+     "enforced": "kit_navigation",
+     "id": "RU-311",
+     "kind": "do",
+     "text": "Every destination has a glyph and a label; never a glyph alone."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "bar": {
+     "height": 60
+    }
+   },
+   "states": {
+    "first": "The first destination is picked.",
+    "last": "The last destination is picked."
+   },
+   "status": "beta",
+   "summary": "Three to five destinations at the bottom of a narrow window, in place of the sidebar.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "first",
+     "last"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The picked one is pressed.",
+    "gtk_role": "navigation",
+    "name": "The drawer by its title; each destination by its label.",
+    "web_role": "navigation",
+    "wolkit_role": "navigation"
+   },
+   "anatomy": {
+    "destination": "a pill row: a 16 px glyph and a 13 label, 12 px apart",
+    "drawer": "240 wide, the card fill, radius 12 on the end side, elevation 3, a hairline",
+    "picked": "the accent at 18 percent with the label in semibold",
+    "title": "13 semibold, 8 px in from the edge"
+   },
+   "category": "navigation",
+   "copy": {
+    "label": "One or two words in Title Case per destination.",
+    "title": "The name of the app or the place: Settings."
+   },
+   "density": {
+    "comfortable": {
+     "item": 40
+    },
+    "compact": {
+     "item": 28
+    },
+    "standard": {
+     "item": 32
+    }
+   },
+   "hig": "hig.md section 1 (sidebar 240)",
+   "id": "navigation-drawer",
+   "implementations": {
+    "gtk": {
+     "api": "kit::groups::navigation_drawer",
+     "css": ".navigation-drawer",
+     "file": "crates/shell/src/kit/groups.rs"
+    }
+   },
+   "keyboard": {
+    "Escape": "Closes the drawer without moving.",
+    "Space": "Opens the focused destination and closes the drawer.",
+    "Tab": "Moves to the picked destination.",
+    "Up and Down": "Move between destinations."
+   },
+   "m3": "Navigation drawer",
+   "name": "Navigation drawer",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-317",
+     "kind": "do",
+     "text": "The drawer opens over the content with a scrim and closes when a destination is picked or Escape is pressed; the wide window shows the sidebar instead, never both."
+    },
+    {
+     "enforced": "kit_groups",
+     "id": "RU-318",
+     "kind": "do",
+     "text": "Every drawer destination has a glyph and a label, and the drawer is named by its title."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "drawer": {
+     "width": 240
+    }
+   },
+   "states": {
+    "first": "The first destination is picked.",
+    "last": "The last destination is picked."
+   },
+   "status": "beta",
+   "summary": "The modal drawer of a window too narrow for its sidebar: a title, then the destinations as rows.",
+   "tests": {
+    "densities": [
+     "compact",
+     "standard",
+     "comfortable"
+    ],
+    "states": [
+     "first",
+     "last"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The picked one is pressed.",
+    "gtk_role": "navigation",
+    "name": "Each destination by its label.",
+    "web_role": "navigation",
+    "wolkit_role": "navigation"
+   },
+   "anatomy": {
+    "destination": "glyph pill over an 11 px label, 4 px apart",
+    "picked": "the pill in the accent at 18 percent",
+    "rail": "84 wide, the sidebar fill, a hairline at the end"
+   },
+   "category": "navigation",
+   "copy": {
+    "label": "One word in Title Case per destination."
+   },
+   "hig": "hig.md section 1 (sidebar 240)",
+   "id": "navigation-rail",
+   "implementations": {
+    "gtk": {
+     "api": "kit::navigation::navigation_rail",
+     "css": ".navigation-rail",
+     "file": "crates/shell/src/kit/navigation.rs"
+    }
+   },
+   "keyboard": {
+    "Space": "Opens the focused destination.",
+    "Tab": "Moves to the picked destination.",
+    "Up and Down": "Move between destinations."
+   },
+   "m3": "Navigation rail",
+   "name": "Navigation rail",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-315",
+     "kind": "do",
+     "text": "A rail replaces the sidebar between the narrow breakpoint and the sidebar's width; never both at once."
+    },
+    {
+     "enforced": "kit_navigation",
+     "id": "RU-316",
+     "kind": "do",
+     "text": "Every rail destination has a glyph and a label."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "rail": {
+     "width": 84
+    }
+   },
+   "states": {
+    "first": "The first destination is picked.",
+    "last": "The last destination is picked."
+   },
+   "status": "beta",
+   "summary": "Three to seven destinations in a narrow column at the start of a window too narrow for the sidebar.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "first",
+     "last"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "progressbar",
+    "name": "The level's name (Volume).",
+    "web_role": "progressbar",
+    "wolkit_role": "progress"
+   },
+   "anatomy": {
+    "bar": "a 4 px progress bar",
+    "glyph": "16 px, the level's icon",
+    "pill": "glass, radius 999, the same 8 px inside on all four sides, at least 216 wide"
+   },
+   "category": "communication",
+   "hig": "brand-screens.md (OSD)",
+   "id": "osd",
+   "implementations": {
+    "gtk": {
+     "api": "kit::sheets::osd_pill",
+     "css": ".osd-pill",
+     "file": "crates/shell/src/kit/sheets.rs",
+     "surface": "ui::panels::Osd"
+    }
+   },
+   "keyboard": {
+    "(none)": "It never takes the keyboard."
+   },
+   "m3": "(no M3 equivalent; WolOS)",
+   "name": "On-screen display",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-535",
+     "kind": "do",
+     "text": "The on-screen display never takes the keyboard from the app in front."
+    },
+    {
+     "enforced": "kit_sheets",
+     "id": "RU-536",
+     "kind": "do",
+     "text": "The level is a bar and a glyph, never colour alone."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "full": "Volume at 100 percent.",
+    "low": "Volume at 20 percent."
+   },
+   "status": "beta",
+   "summary": "A glass pill near the bottom of the screen that shows a level while a key changes it (volume, brightness).",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "low",
+     "full"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "radiogroup",
+    "name": "Each option by its label; the group by the row title (labelled-by).",
+    "web_role": "radiogroup",
+    "wolkit_role": "radio"
+   },
+   "anatomy": {
+    "dot": "the accent disc with a dot of the accent ink when picked",
+    "group": "options one per line, 4 px apart, named by the row title or heading",
+    "label": "body text, 8 px after the ring",
+    "ring": "16 px circle, a hairline of the text at 36 percent"
+   },
+   "category": "selection",
+   "copy": {
+    "option": "Sentence case, the same grammatical kind in every option, no end punctuation."
+   },
+   "density": {
+    "comfortable": {
+     "control": 32
+    },
+    "compact": {
+     "control": 20
+    },
+    "standard": {
+     "control": 24
+    }
+   },
+   "hig": "hig.md section 1 (forms)",
+   "id": "radio",
+   "implementations": {
+    "gtk": {
+     "api": "kit::choice::radio_group",
+     "css": "checkbutton.radio",
+     "file": "crates/shell/src/kit/choice.rs"
+    },
+    "view": {
+     "file": "crates/shared/src/view.rs",
+     "node": "radio-group"
+    }
+   },
+   "keyboard": {
+    "Space": "Picks the focused option.",
+    "Tab": "Moves the focus into the group and out of it.",
+    "Up and Down": "Move to the next option and pick it."
+   },
+   "m3": "Radio button",
+   "name": "Radio group",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-193",
+     "kind": "do",
+     "text": "Use a radio group for two to six exclusive options a person compares; use a dropdown for more."
+    },
+    {
+     "enforced": "kit_choice",
+     "id": "RU-194",
+     "kind": "do",
+     "text": "A radio group always has one option picked, and the group is named by its title."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-195",
+     "kind": "dont",
+     "text": "Do not use a radio group to start actions; each option is a state."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 24,
+     "ring": 16
+    }
+   },
+   "states": {
+    "disabled": "No option can be picked now.",
+    "first": "The first option is picked.",
+    "second": "The second option is picked."
+   },
+   "status": "beta",
+   "summary": "Picks exactly one of two to six options that are shown at once, each with a dot.",
+   "tests": {
+    "densities": [
+     "compact",
+     "standard",
+     "comfortable"
+    ],
+    "states": [
+     "first",
+     "second",
+     "disabled"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "slider",
+    "name": "Each knob by its own name (Lowest price, Highest price).",
+    "web_role": "slider",
+    "wolkit_role": "slider"
+   },
+   "anatomy": {
+    "knobs": "two 16 px white circles, each its own slider for the keyboard",
+    "range": "the part between the knobs in the accent",
+    "track": "4 px, the control fill"
+   },
+   "category": "selection",
+   "copy": {
+    "names": "The two knob names say which end they are: Lowest and Highest, or From and To, with the quantity."
+   },
+   "hig": "hig.md section 1 (filters)",
+   "id": "range-slider",
+   "implementations": {
+    "gtk": {
+     "api": "kit::choice::RangeSlider",
+     "css": ".range-slider",
+     "file": "crates/shell/src/kit/choice.rs"
+    }
+   },
+   "keyboard": {
+    "Left and Right": "Move the focused knob; it stops at the other one.",
+    "Tab": "Moves to the low knob, then the high knob."
+   },
+   "m3": "Slider (range)",
+   "name": "Range slider",
+   "rules": [
+    {
+     "enforced": "kit_choice",
+     "id": "RU-102",
+     "kind": "do",
+     "text": "Each knob of a range slider is a slider of its own with its own name."
+    },
+    {
+     "enforced": "kit_choice",
+     "id": "RU-103",
+     "kind": "do",
+     "text": "The low knob never passes the high knob."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "disabled": "The range cannot change now.",
+    "narrow": "A short range in the middle of the track.",
+    "wide": "The range covers most of the track."
+   },
+   "status": "beta",
+   "summary": "Picks a range with two knobs on one track (a price from and to); neither knob can pass the other.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "narrow",
+     "wide",
+     "disabled"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "Its text.",
+    "gtk_role": "tooltip",
+    "name": "Its title.",
+    "web_role": "tooltip",
+    "wolkit_role": "tooltip"
+   },
+   "anatomy": {
+    "action": "one plain button",
+    "surface": "glass, radius 12, the 12 px inset, elevation 2",
+    "text": "11 secondary, at most 40 characters a line",
+    "title": "13 semibold"
+   },
+   "category": "communication",
+   "copy": {
+    "text": "One or two sentences that explain, not repeat the label."
+   },
+   "hig": "hig.md section 1 (tooltips)",
+   "id": "rich-tooltip",
+   "implementations": {
+    "gtk": {
+     "api": "kit::sheets::rich_tooltip",
+     "body": "kit::sheets::rich_tooltip_body",
+     "css": ".rich-tooltip",
+     "file": "crates/shell/src/kit/sheets.rs"
+    }
+   },
+   "keyboard": {
+    "Escape": "Closes it.",
+    "Tab": "From its anchor, moves into the action."
+   },
+   "m3": "Tooltips (rich)",
+   "name": "Rich tooltip",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-592",
+     "kind": "do",
+     "text": "A rich tooltip holds at most one action and never the only way to do something."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-593",
+     "kind": "dont",
+     "text": "Do not put a rich tooltip on a control that has a plain tooltip; one or the other."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "action": "A title, a sentence and a Learn More action.",
+    "text": "A title and a sentence."
+   },
+   "status": "beta",
+   "summary": "A tooltip with a title, one or two sentences and at most one text action, which stays while the pointer is over it.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "text",
+     "action"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "list",
+    "name": "The field by its placeholder; each result by its title.",
+    "web_role": "listbox",
+    "wolkit_role": "list"
+   },
+   "anatomy": {
+    "field": "the search field (search-field spec)",
+    "none": "one secondary line that says nothing matched, in words",
+    "results": "list buttons on a card, 4 px inside"
+   },
+   "category": "input",
+   "copy": {
+    "none": "Say what was searched: No apps match, never No results."
+   },
+   "hig": "hig.md section 1 (search rightmost in the toolbar)",
+   "id": "search-view",
+   "implementations": {
+    "gtk": {
+     "api": "kit::sheets::search_view",
+     "css": ".search-view",
+     "field": "kit::widgets::search_field",
+     "file": "crates/shell/src/kit/sheets.rs",
+     "rows": "kit::widgets::list_button"
+    }
+   },
+   "keyboard": {
+    "Down": "Moves into the results.",
+    "Enter": "Opens the focused result.",
+    "Escape": "Clears the field, then closes the view.",
+    "Tab": "Moves from the field to the first result."
+   },
+   "m3": "Search (bar and view)",
+   "name": "Search view",
+   "rules": [
+    {
+     "enforced": "kit_sheets",
+     "id": "RU-290",
+     "kind": "do",
+     "text": "When nothing matches, the view says so in a sentence fragment that names what was searched."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-291",
+     "kind": "dont",
+     "text": "Do not open a search view on its own; it opens from the search field a person typed in."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "none": "Nothing matches.",
+    "results": "Three rows match."
+   },
+   "status": "beta",
+   "summary": "The search field with what it found under it as rows, or one quiet line when nothing matches.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "results",
+     "none"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "heading",
+    "name": "Its text.",
+    "web_role": "heading",
+    "wolkit_role": "heading"
+   },
+   "anatomy": {
+    "action": "a plain button at the end",
+    "title": "heading 15 semibold"
+   },
+   "category": "containment",
+   "copy": {
+    "title": "Title Case, a noun phrase: Recently Added."
+   },
+   "hig": "hig.md section 1 (sections)",
+   "id": "section-header",
+   "implementations": {
+    "gtk": {
+     "api": "kit::collection::section_header",
+     "css": ".section-header",
+     "file": "crates/shell/src/kit/collection.rs",
+     "section": "kit::widgets::section"
+    }
+   },
+   "keyboard": {
+    "Tab": "Moves to the action."
+   },
+   "m3": "(Lists: subheader)",
+   "name": "Section header",
+   "rules": [
+    {
+     "enforced": "kit_collection",
+     "id": "RU-460",
+     "kind": "do",
+     "text": "A section header is a heading for assistive technology."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-461",
+     "kind": "dont",
+     "text": "Do not put more than one action in a section header."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "action": "A title and a See All action.",
+    "plain": "A title alone."
+   },
+   "status": "beta",
+   "summary": "The heading over a group of rows or cards, with at most one text action at the end (See All).",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "plain",
+     "action"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The text (described-by).",
+    "gtk_role": "dialog",
+    "name": "The title (labelled-by).",
+    "web_role": "dialog",
+    "wolkit_role": "dialog"
+   },
+   "anatomy": {
+    "buttons": "at the end, 8 px apart, the default one last; destructive in the destructive style",
+    "surface": "the card fill, radius 12, 16 px inside, elevation 2",
+    "text": "one or two sentences",
+    "title": "13 semibold, wraps"
+   },
+   "category": "containment",
+   "copy": {
+    "buttons": "Verbs in Title Case: Move to Trash, never Yes or OK.",
+    "title": "A question or a statement of what will happen: Move 3 items to the Trash?"
+   },
+   "hig": "hig.md section 1 (sheets) and RU-046 (no floating dialogs)",
+   "id": "sheet",
+   "implementations": {
+    "gtk": {
+     "api": "kit::sheets::question_sheet",
+     "css": ".sheet",
+     "file": "crates/shell/src/kit/sheets.rs",
+     "sheet": "kit::widgets::sheet"
+    }
+   },
+   "keyboard": {
+    "Enter": "The default action.",
+    "Escape": "Cancels and closes the sheet.",
+    "Tab": "Moves between the buttons."
+   },
+   "m3": "Dialogs",
+   "name": "Sheet",
+   "rules": [
+    {
+     "enforced": "kit_sheets",
+     "id": "RU-430",
+     "kind": "do",
+     "text": "A sheet's buttons are verbs that say what happens, the default one last."
+    },
+    {
+     "enforced": "kit_sheets",
+     "id": "RU-431",
+     "kind": "do",
+     "text": "A sheet is a dialog for assistive technology, named by its title and described by its text."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-432",
+     "kind": "dont",
+     "text": "Do not stack a sheet on a sheet; finish or cancel the first."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "destructive": "A destructive question: Cancel and a destructive action.",
+    "question": "A question with Cancel and a default action."
+   },
+   "status": "beta",
+   "summary": "A question or a short task that slides from the toolbar over the window it belongs to (our dialog).",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "question",
+     "destructive"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "group",
+    "name": "Its title (labelled-by).",
+    "web_role": "complementary",
+    "wolkit_role": "group"
+   },
+   "anatomy": {
+    "header": "title 13 semibold and a close button",
+    "pane": "336 wide (the Control Center width), the card fill, a hairline at the start, the 12 px inset"
+   },
+   "category": "containment",
+   "copy": {
+    "title": "Title Case: Details, Info."
+   },
+   "hig": "hig.md section 1 (AppWindow)",
+   "id": "side-sheet",
+   "implementations": {
+    "gtk": {
+     "api": "kit::sheets::side_sheet",
+     "css": ".side-sheet",
+     "file": "crates/shell/src/kit/sheets.rs"
+    }
+   },
+   "keyboard": {
+    "Escape": "Closes the pane.",
+    "Tab": "Moves into the pane after the content."
+   },
+   "m3": "Side sheets",
+   "name": "Side sheet",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-445",
+     "kind": "do",
+     "text": "A side sheet sits beside the content and narrows it; it never covers it."
+    },
+    {
+     "enforced": "kit_sheets",
+     "id": "RU-446",
+     "kind": "do",
+     "text": "A side sheet has a close button named Close and is labelled by its title."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "pane": {
+     "width": 336
+    }
+   },
+   "states": {
+    "details": "Details of a selected file."
+   },
+   "status": "beta",
+   "summary": "A pane at the end of the window with details or options of what is selected (an inspector); it narrows the content, it never covers it.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "details"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "Busy.",
+    "gtk_role": "progressbar",
+    "name": "What is loading (Loading apps).",
+    "web_role": "progressbar",
+    "wolkit_role": "progress"
+   },
+   "anatomy": {
+    "avatar": "a 32 px disc of the same tint",
+    "line": "12 px bars of the text at 10 percent, radius 4, 8 px apart; the last one shorter"
+   },
+   "category": "communication",
+   "copy": {
+    "name": "Loading followed by what: Loading apps."
+   },
+   "hig": "hig.md section 5 (empty, loading and error states)",
+   "id": "skeleton",
+   "implementations": {
+    "gtk": {
+     "api": "kit::collection::skeleton",
+     "css": ".skeleton",
+     "file": "crates/shell/src/kit/collection.rs"
+    }
+   },
+   "keyboard": {
+    "Tab": "Skips it."
+   },
+   "m3": "(Progress indicators: loading placeholder)",
+   "name": "Skeleton",
+   "rules": [
+    {
+     "enforced": "kit_collection",
+     "id": "RU-530",
+     "kind": "do",
+     "text": "A skeleton is busy and named for assistive technology by what is loading."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-531",
+     "kind": "do",
+     "text": "A skeleton shows only after 150 ms of waiting and has the shape of what will come."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "line": {
+     "height": 12
+    }
+   },
+   "states": {
+    "avatar": "An avatar and two lines.",
+    "lines": "Three lines."
+   },
+   "status": "beta",
+   "summary": "The shape of content still loading: grey bars where the lines will be, and a disc for an avatar.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "lines",
+     "avatar"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "group",
+    "name": "The main button by its label, the arrow by the name you give it (More Ways to Save).",
+    "web_role": "group",
+    "wolkit_role": "group"
+   },
+   "anatomy": {
+    "arrow": "a 24 wide menu button with a small down arrow, the same fill, radius 8 on the outer corners",
+    "gap": "2 px between the two, so they read as two targets",
+    "main": "the primary button: 24 tall, radius 8 on the outer corners, the accent fill"
+   },
+   "category": "actions",
+   "copy": {
+    "arrow": "More Ways to <Verb>: More Ways to Save.",
+    "label": "A verb in Title Case: Save."
+   },
+   "hig": "hig.md section 1 (toolbars)",
+   "id": "split-button",
+   "implementations": {
+    "gtk": {
+     "api": "kit::groups::split_button",
+     "css": ".split-button",
+     "file": "crates/shell/src/kit/groups.rs"
+    }
+   },
+   "keyboard": {
+    "Down": "On the arrow, opens the menu.",
+    "Enter": "Runs the main action, or opens the menu on the arrow.",
+    "Space": "Runs the main action, or opens the menu on the arrow.",
+    "Tab": "Moves to the main button, then to the arrow."
+   },
+   "m3": "Split button",
+   "name": "Split button",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-133",
+     "kind": "do",
+     "text": "The menu under a split button holds variations of the main action, never unrelated commands."
+    },
+    {
+     "enforced": "kit_groups",
+     "id": "RU-134",
+     "kind": "do",
+     "text": "The arrow of a split button is named for assistive technology."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 24
+    }
+   },
+   "states": {
+    "disabled": "Neither part can act.",
+    "rest": "Both parts at rest."
+   },
+   "status": "beta",
+   "summary": "A main action with a menu of related ones beside it: Save, and under the arrow Save As and Save a Copy.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "rest",
+     "disabled"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The handle is a separator with its position as a value.",
+    "gtk_role": "group",
+    "name": "None.",
+    "web_role": "group",
+    "wolkit_role": "group"
+   },
+   "anatomy": {
+    "end": "the detail pane",
+    "handle": "a 1 px hairline, a wider invisible grab area",
+    "start": "the list pane; keeps its width when the window grows"
+   },
+   "category": "containment",
+   "hig": "hig.md section 1 (AppWindow)",
+   "id": "split-view",
+   "implementations": {
+    "gtk": {
+     "api": "kit::collection::split_view",
+     "css": "paned.split-view",
+     "file": "crates/shell/src/kit/collection.rs"
+    }
+   },
+   "keyboard": {
+    "F6": "Moves between the panes.",
+    "Tab": "Moves through each pane's controls."
+   },
+   "m3": "(Canonical layouts: list-detail)",
+   "name": "Split view",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-450",
+     "kind": "do",
+     "text": "Under the narrow breakpoint a split view shows one pane at a time with a way back, like the AppWindow sidebar."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "wide": "A list and its detail at 900 px."
+   },
+   "status": "beta",
+   "summary": "Two panes side by side with a handle a person drags between them (a list and its detail).",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "wide"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ],
+    "width": 900
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "status",
+    "name": "Its text.",
+    "web_role": "status",
+    "wolkit_role": "status"
+   },
+   "anatomy": {
+    "line": "11 px secondary text, 24 tall, 16 px at each end, a hairline on top"
+   },
+   "category": "navigation",
+   "copy": {
+    "text": "Facts, not sentences: 12 items, 3 selected; numbers in figures."
+   },
+   "hig": "hig.md section 1 (status bar) and section 4 (no actions in the status bar)",
+   "id": "status-bar",
+   "implementations": {
+    "gtk": {
+     "api": "kit::navigation::status_bar",
+     "css": "label.status-bar",
+     "file": "crates/shell/src/kit/navigation.rs",
+     "window": "kit::widgets::AppWindow::status"
+    }
+   },
+   "keyboard": {
+    "Tab": "Skips it: there is nothing to do there."
+   },
+   "m3": "(no M3 equivalent; WolOS)",
+   "name": "Status bar",
+   "rules": [
+    {
+     "enforced": "kit_navigation",
+     "id": "RU-345",
+     "kind": "dont",
+     "text": "Do not put buttons or links in a status bar."
+    },
+    {
+     "enforced": "kit_navigation",
+     "id": "RU-346",
+     "kind": "do",
+     "text": "A status bar is a status for assistive technology, so its changes are announced politely."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "line": {
+     "height": 24
+    }
+   },
+   "states": {
+    "counts": "Counts of a list."
+   },
+   "status": "beta",
+   "summary": "A quiet line at the bottom of a window or pane for counts and facts (12 items, 3 selected); never an action.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "counts"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
     "description": "The row subtitle (described-by), when there is one.",
     "gtk_role": "switch",
     "name": "The row title (labelled-by).",
@@ -123,6 +2695,431 @@
      "on",
      "disabled",
      "pending"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "treegrid",
+    "name": "Column titles; each cell by its text.",
+    "web_role": "grid",
+    "wolkit_role": "table"
+   },
+   "anatomy": {
+    "cell": "12 px each side; numbers right-aligned",
+    "header": "column titles in the 11 dim caption, 28 tall",
+    "row": "32 tall (compact 24, comfortable 40), hairlines between rows",
+    "selection": "the accent at 18 percent"
+   },
+   "category": "data",
+   "copy": {
+    "columns": "Title Case nouns, units in the title (Memory, MB) and not in every cell."
+   },
+   "density": {
+    "comfortable": {
+     "item": 40
+    },
+    "compact": {
+     "item": 24
+    },
+    "standard": {
+     "item": 32
+    }
+   },
+   "hig": "hig.md section 1 (lists and tables)",
+   "id": "table",
+   "implementations": {
+    "gtk": {
+     "api": "kit::collection::table",
+     "css": "columnview.table",
+     "file": "crates/shell/src/kit/collection.rs"
+    }
+   },
+   "keyboard": {
+    "Enter": "Opens the focused row.",
+    "Shift+Up and Shift+Down": "Extend the selection.",
+    "Tab": "Moves into the table.",
+    "Up and Down": "Move between rows."
+   },
+   "m3": "(Data tables)",
+   "name": "Table",
+   "rules": [
+    {
+     "enforced": "kit_collection",
+     "id": "RU-610",
+     "kind": "do",
+     "text": "Number columns are right-aligned in tabular figures."
+    },
+    {
+     "enforced": "kit_collection",
+     "id": "RU-611",
+     "kind": "do",
+     "text": "A table row is 32 px at standard density and follows the density."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-612",
+     "kind": "dont",
+     "text": "Do not put more than one control in a table cell."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "rows": "Four processes with their memory."
+   },
+   "status": "beta",
+   "summary": "Rows of data with column titles, one cell per column; numbers right-aligned in tabular figures.",
+   "tests": {
+    "densities": [
+     "compact",
+     "standard",
+     "comfortable"
+    ],
+    "states": [
+     "rows"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ],
+    "width": 640
+   }
+  },
+  {
+   "a11y": {
+    "description": "The picked tab has the selected state.",
+    "gtk_role": "tablist",
+    "name": "Each tab by its label; the panel is labelled by its tab and the tab controls it.",
+    "web_role": "tablist",
+    "wolkit_role": "tab-list"
+   },
+   "anatomy": {
+    "indicator": "primary: a 2 px accent line and the accent ink; secondary: a 2 px line and the label in the text colour",
+    "panels": "the picked tab's panel, 12 px under the list",
+    "tab": "label 13 medium, 12 px each side; dim until picked",
+    "tab list": "a hairline under the whole list"
+   },
+   "category": "navigation",
+   "copy": {
+    "tab": "One or two words in Title Case; nouns for views (Overview, Details), never verbs."
+   },
+   "density": {
+    "comfortable": {
+     "row": 48
+    },
+    "compact": {
+     "row": 32
+    },
+    "standard": {
+     "row": 40
+    }
+   },
+   "hig": "hig.md section 1 (navigation)",
+   "id": "tabs",
+   "implementations": {
+    "gtk": {
+     "api": "kit::navigation::Tabs",
+     "css": "button.tab, .tab-list",
+     "file": "crates/shell/src/kit/navigation.rs"
+    },
+    "view": {
+     "file": "crates/shared/src/view.rs",
+     "node": "tabs"
+    }
+   },
+   "keyboard": {
+    "Enter": "Picks the focused tab.",
+    "Left and Right": "Move between tabs.",
+    "Space": "Picks the focused tab.",
+    "Tab": "Moves the focus to the picked tab, then into its panel."
+   },
+   "m3": "Tabs (primary, secondary, scrollable)",
+   "name": "Tabs",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-300",
+     "kind": "do",
+     "text": "Tabs hold two to six views of one subject; more than six scroll and say so with the cut-off tab."
+    },
+    {
+     "enforced": "kit_navigation",
+     "id": "RU-301",
+     "kind": "do",
+     "text": "The picked tab is shown by the indicator line and the label colour, never colour alone."
+    },
+    {
+     "enforced": "kit_navigation",
+     "id": "RU-302",
+     "kind": "do",
+     "text": "Each tab panel is labelled by its tab and each tab controls its panel for assistive technology."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-303",
+     "kind": "dont",
+     "text": "Do not nest primary tabs; inside a tab use secondary tabs or a segmented control."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "tab": {
+     "height": 40
+    }
+   },
+   "states": {
+    "primary": "Primary tabs, the second picked.",
+    "scrollable": "Eight tabs in a scroller narrower than them.",
+    "secondary": "Secondary tabs inside a pane, the first picked."
+   },
+   "status": "beta",
+   "summary": "Switches between views of the same subject at one level; primary tabs change the whole pane, secondary tabs a part of it.",
+   "tests": {
+    "densities": [
+     "compact",
+     "standard",
+     "comfortable"
+    ],
+    "states": [
+     "primary",
+     "secondary",
+     "scrollable"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The hint or the error line under it.",
+    "gtk_role": "textbox",
+    "name": "The row title or the field label (labelled-by).",
+    "web_role": "textbox",
+    "wolkit_role": "text-area"
+   },
+   "anatomy": {
+    "field": "the control fill, a hairline, radius 8, 8 px inside",
+    "placeholder": "dim text while empty",
+    "text": "body 13/20, wraps at word boundaries"
+   },
+   "category": "input",
+   "copy": {
+    "placeholder": "An example of what goes in, not the label: A few words about this app."
+   },
+   "hig": "hig.md section 1 (forms)",
+   "id": "text-area",
+   "implementations": {
+    "gtk": {
+     "api": "kit::text::TextArea",
+     "css": "scrolledwindow.text-area-field",
+     "file": "crates/shell/src/kit/text.rs"
+    }
+   },
+   "keyboard": {
+    "Ctrl+A": "Selects all.",
+    "Enter": "A new line.",
+    "Tab": "Moves the focus into the area (Tab inside it moves on; Ctrl+Tab types a tab)."
+   },
+   "m3": "Text field (multi-line)",
+   "name": "Text area",
+   "rules": [
+    {
+     "enforced": "kit_calendar",
+     "id": "RU-260",
+     "kind": "do",
+     "text": "A text area is at least three lines (84 px) tall and grows to the content up to its page."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-261",
+     "kind": "dont",
+     "text": "Do not use a text area for one line; use a text field."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 84
+    }
+   },
+   "states": {
+    "disabled": "The text can be read and not changed.",
+    "empty": "Nothing typed: the placeholder shows.",
+    "filled": "Three lines of text."
+   },
+   "status": "beta",
+   "summary": "Takes text of several lines (a note, a description) that wraps at the field's width and scrolls when long.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "empty",
+     "filled",
+     "disabled"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "spinbutton",
+    "name": "Hour and Minute.",
+    "web_role": "spinbutton",
+    "wolkit_role": "spinbutton"
+   },
+   "anatomy": {
+    "colon": "13 semibold",
+    "hour": "a spin button of two digits, tabular figures",
+    "minute": "a spin button of two digits that wraps from 59 to 00"
+   },
+   "category": "input",
+   "copy": {
+    "names": "Hour and Minute, never H and M."
+   },
+   "hig": "hig.md section 1 (forms)",
+   "id": "time-picker",
+   "implementations": {
+    "gtk": {
+     "api": "kit::calendar::time_picker",
+     "css": "spinbutton.time-part",
+     "file": "crates/shell/src/kit/calendar.rs"
+    }
+   },
+   "keyboard": {
+    "Digits": "Type the value.",
+    "Tab": "Moves from the hour to the minute.",
+    "Up and Down": "Change the focused part by one."
+   },
+   "m3": "Time picker",
+   "name": "Time picker",
+   "rules": [
+    {
+     "enforced": "kit_calendar",
+     "id": "RU-280",
+     "kind": "do",
+     "text": "Times show two digits on each side of the colon (09:05)."
+    },
+    {
+     "enforced": "kit_calendar",
+     "id": "RU-281",
+     "kind": "do",
+     "text": "The hour and the minute are named for assistive technology."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "part": {
+     "height": 24
+    }
+   },
+   "states": {
+    "evening": "18:30.",
+    "morning": "09:05."
+   },
+   "status": "beta",
+   "summary": "Picks an hour and a minute on the 24-hour clock, each a two-digit field that wraps around.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "morning",
+     "evening"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The expanded state of a row with children.",
+    "gtk_role": "list",
+    "name": "Each row by its label.",
+    "web_role": "tree",
+    "wolkit_role": "tree"
+   },
+   "anatomy": {
+    "chevron": "16 px in the dim ink, turns when open",
+    "indent": "16 per level",
+    "row": "28 tall (compact 24, comfortable 32), radius 8"
+   },
+   "category": "data",
+   "density": {
+    "comfortable": {
+     "item": 32
+    },
+    "compact": {
+     "item": 24
+    },
+    "standard": {
+     "item": 28
+    }
+   },
+   "hig": "hig.md section 1 (lists)",
+   "id": "tree",
+   "implementations": {
+    "gtk": {
+     "api": "kit::collection::tree",
+     "css": "listview.tree",
+     "file": "crates/shell/src/kit/collection.rs"
+    }
+   },
+   "keyboard": {
+    "Left": "Closes it, then moves to its parent.",
+    "Right": "Opens the focused row, then moves into it.",
+    "Up and Down": "Move between rows."
+   },
+   "m3": "(no M3 equivalent; WolOS)",
+   "name": "Tree",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-620",
+     "kind": "do",
+     "text": "Right and Left open and close the focused row of a tree."
+    },
+    {
+     "enforced": "kit_collection",
+     "id": "RU-621",
+     "kind": "do",
+     "text": "A tree row is 28 px at standard density and follows the density."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "closed": "Only the top level.",
+    "open": "Two levels open."
+   },
+   "status": "beta",
+   "summary": "Rows that open and close to show their children (folders, groups), with a chevron and an indent per level.",
+   "tests": {
+    "densities": [
+     "compact",
+     "standard",
+     "comfortable"
+    ],
+    "states": [
+     "open",
+     "closed"
     ],
     "variants": [
      "light",

@@ -1,0 +1,58 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Status bar: written by DS-COMPONENTS (M3: (no M3 equivalent; WolOS)); tests/kit_navigation.rs builds every case.
+
+schema = 1
+id = "status-bar"
+name = "Status bar"
+category = "navigation"
+status = "beta"
+since = "0.12"
+summary = "A quiet line at the bottom of a window or pane for counts and facts (12 items, 3 selected); never an action."
+hig = "hig.md section 1 (status bar) and section 4 (no actions in the status bar)"
+m3 = "(no M3 equivalent; WolOS)"
+
+[implementations.gtk]
+api = "kit::navigation::status_bar"
+window = "kit::widgets::AppWindow::status"
+css = "label.status-bar"
+file = "crates/shell/src/kit/navigation.rs"
+
+[anatomy]
+line = "11 px secondary text, 24 tall, 16 px at each end, a hairline on top"
+
+[sizes.line]
+height = 24
+
+[states]
+counts = "Counts of a list."
+
+[keyboard]
+Tab = "Skips it: there is nothing to do there."
+
+[a11y]
+gtk_role = "status"
+web_role = "status"
+wolkit_role = "status"
+name = "Its text."
+description = "None."
+
+[copy]
+text = "Facts, not sentences: 12 items, 3 selected; numbers in figures."
+
+[[rules]]
+id = "RU-345"
+kind = "dont"
+text = "Do not put buttons or links in a status bar."
+enforced = "kit_navigation"
+
+[[rules]]
+id = "RU-346"
+kind = "do"
+text = "A status bar is a status for assistive technology, so its changes are announced politely."
+enforced = "kit_navigation"
+
+[tests]
+states = ["counts"]
+densities = ["standard"]
+variants = ["light", "dark"]

@@ -1,0 +1,64 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Date input: written by DS-COMPONENTS (M3: Date input); tests/kit_groups.rs builds every case.
+
+schema = 1
+id = "date-input"
+name = "Date input"
+category = "input"
+status = "beta"
+since = "0.12"
+summary = "A date typed in a field in the shape YYYY-MM-DD, with the calendar button beside it."
+hig = "hig.md section 1 (forms)"
+m3 = "Date input"
+
+[implementations.gtk]
+api = "kit::groups::DateInput"
+css = ".date-input"
+file = "crates/shell/src/kit/groups.rs"
+
+[anatomy]
+field = "the text field, 12 characters wide, the placeholder YYYY-MM-DD"
+button = "an icon button with the calendar glyph, 8 px from the field"
+invalid = "a 1 px danger ring on the field and the field marked invalid for assistive technology"
+
+[sizes.regular]
+height = 24
+
+[states]
+empty = "Nothing typed; the placeholder shows the shape."
+filled = "A real day typed."
+invalid = "Ten characters typed that are not a real day (2026-02-30)."
+
+[keyboard]
+Tab = "Moves from the field to the calendar button."
+Enter = "In the field, accepts the typed day."
+Space = "On the calendar button, opens the date picker."
+
+[a11y]
+gtk_role = "textbox"
+web_role = "textbox"
+wolkit_role = "textbox"
+name = "The field by what the date is for (Start Date); the button by Choose Date."
+description = "An invalid field says so (aria-invalid)."
+
+[copy]
+label = "What the date is for, in Title Case: Start Date."
+button = "Choose Date."
+
+[[rules]]
+id = "RU-214"
+kind = "do"
+text = "A date field says the shape it wants and marks a day that does not exist as invalid for assistive technology, not by colour alone."
+enforced = "kit_groups"
+
+[[rules]]
+id = "RU-215"
+kind = "do"
+text = "A date field always comes with the calendar button, so a far date is a click away."
+enforced = "kit_groups"
+
+[tests]
+states = ["empty", "filled", "invalid"]
+densities = ["standard"]
+variants = ["light", "dark"]
