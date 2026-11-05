@@ -1,0 +1,45 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Sidebar row: written by WOLKIT-1TO1 from kit::widgets::AppWindow (SIDEBAR_WIDTH, NARROW) and
+# design/tokens/space.json surface.sidebar.
+schema = 1
+id = "sidebar-row"
+name = "Sidebar row"
+category = "navigation"
+status = "beta"
+since = "0.12"
+summary = "One page of a Settings-style window in the sidebar; under the narrow width the sidebar collapses."
+hig = "hig.md section 1 (Sidebars)"
+rules = []
+
+[implementations.gtk]
+api = "kit::widgets::AppWindow::sidebar"
+css = ".sidebar row"
+file = "crates/shell/src/kit/widgets.rs"
+
+[anatomy]
+glyph = "16 px symbolic, tinted by its phase"
+title = "body text"
+selection = "accent pill"
+
+[geometry]
+sidebar_width = 240
+row = 24
+radius = 8
+narrow = 640
+
+[states]
+plain = "A row at rest."
+selected = "The page shown."
+
+[keyboard]
+Up = "Moves to the page above."
+Down = "Moves to the page below."
+
+[a11y]
+gtk_role = "list-item"
+name = "The page name."
+
+[tests]
+states = ["plain", "selected"]
+variants = ["light", "dark"]

@@ -1,0 +1,45 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Toolbar: written by WOLKIT-1TO1 from kit.css .toolbar and design/tokens/space.json surface.toolbar.
+schema = 1
+id = "toolbar"
+name = "Toolbar"
+category = "navigation"
+status = "beta"
+since = "0.12"
+summary = "The title row's tools: the window's frequent actions as buttons, overflowing into a menu when narrow."
+hig = "hig.md section 1 (Toolbars)"
+rules = []
+
+[implementations.gtk]
+api = "kit::widgets::AppWindow::actions"
+css = ".toolbar"
+file = "crates/shell/src/kit/widgets.rs"
+
+[implementations.view]
+node = "toolbar"
+file = "crates/shared/src/view.rs"
+
+[anatomy]
+row = "the title row of the window chrome"
+tools = "buttons and icon buttons, the spacer pushes the rest to the end"
+
+[geometry]
+height = 40
+pad_x = 16
+gap = 8
+
+[states]
+plain = "Tools at rest."
+
+[keyboard]
+Tab = "Moves through the tools in order."
+
+[a11y]
+gtk_role = "toolbar"
+wolkit_role = "toolbar"
+name = "None; each tool is named by its label."
+
+[tests]
+states = ["plain"]
+variants = ["light", "dark"]

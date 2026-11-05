@@ -1,0 +1,48 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Label: the six type roles (design/tokens/type.json) as the Kit draws text. Written by WOLKIT-1TO1.
+schema = 1
+id = "label"
+name = "Label"
+category = "communication"
+status = "beta"
+since = "0.12"
+summary = "Text in one of the six roles: display, large, title, body, secondary and caption."
+hig = "hig.md section 2 (Type)"
+rules = []
+
+[implementations.gtk]
+api = "kit::data::label"
+css = "label.title, label.secondary, label.caption"
+file = "crates/shell/src/kit/data.rs"
+
+[implementations.view]
+node = "label"
+file = "crates/shared/src/view.rs"
+
+[anatomy]
+text = "Inter; size and line height from the role (design/tokens/type.json)"
+
+# No numbers here: a role's size, line, weight and tracking are design/tokens/type.json, read the
+# way the Kit draws each role (kit.css): display = display, large = large-title, title = title,
+# body = body, secondary = caption (dim), caption = eyebrow. crates/wolkit-render tests/spec_sheet.rs
+# writes the view sheet's role rules from the same file.
+
+[states]
+display = "The largest role."
+large = "Page titles."
+title = "Row and section titles: the body size, semibold."
+body = "Running text."
+secondary = "Supporting text, dim."
+caption = "The smallest text, dim."
+
+[keyboard]
+
+[a11y]
+gtk_role = "label"
+wolkit_role = "text"
+name = "Its text."
+
+[tests]
+states = ["display", "large", "title", "body", "secondary", "caption"]
+variants = ["light", "dark"]

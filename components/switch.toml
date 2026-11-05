@@ -1,0 +1,118 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1). One file per component; design/tools/components.py
+# validates every file and writes design/components/catalog.json, which the docs site
+# (wolos.org/design), the Kit widget tests (crates/shell/tests/kit_components.rs), the libWolkit
+# component snapshots and the web kit node tests read. Lengths are px at scale 1 on the fen (4 px).
+schema = 1
+id = "switch"
+name = "Switch"
+category = "selection"
+status = "stable"
+since = "0.12"
+summary = "Turns one setting on or off, and the change applies at once."
+hig = "hig.md section 1 (Settings-style apps) and section 3 (Behaviour)"
+
+[implementations.gtk]
+api = "kit::widgets::toggle"
+row = "kit::form::toggle_row"
+pending = "kit::form::pending_toggle_row"
+css = "switch.toggle"
+file = "crates/shell/src/kit/widgets.rs"
+
+[implementations.wolkit]
+element = "toggle"
+kind = "WOLKIT_KIND_TOGGLE"
+role = "WOLKIT_ROLE_TOGGLE"
+file = "wolos-crystal/shards/wolkit/src/wolkit/dsl/tables.cr"
+
+[implementations.web]
+element = "wol-switch"
+file = "webapps/kit/wolkit.js"
+
+[implementations.view]
+node = "toggle"
+file = "crates/shared/src/view.rs"
+
+[anatomy]
+track = "control-off when off, accent when on; a pill"
+thumb = "white, elevation 1, a circle inset by the padding"
+
+# Outer size as drawn: the approved 36 x 24 with a 20 thumb (brand-screens.md 1.1; GAP-TABLE M2, the
+# lead: one visual system, the approved numbers win). Kit windows draw through libWolkit by default
+# (crates/shell ui::app_wolkit), which draws exactly this. GtkSwitch is two thumbs wide, so the GTK
+# fallback draws 44; kit_components.rs freezes that in KNOWN.
+[sizes.regular]
+width = 36
+height = 24
+thumb = 20
+padding = 2
+
+[sizes.small]
+width = 28
+height = 16
+thumb = 12
+padding = 2
+use = "compact density, and the Control Center detail header"
+
+# The row that holds the switch: one line of 13/20 body text.
+[density.compact]
+row = 32
+pad_y = 4
+
+[density.standard]
+row = 40
+pad_y = 6
+
+[density.comfortable]
+row = 48
+pad_y = 8
+
+[states]
+off = "The setting is off."
+on = "The setting is on."
+disabled = "The setting cannot change now; the row subtitle says why."
+pending = "The change runs: the switch waits, a 16 px spinner turns beside it, a failure flips it back."
+
+[keyboard]
+Tab = "Moves the focus to the switch."
+Space = "Flips it."
+Enter = "Flips it."
+
+[a11y]
+gtk_role = "switch"
+web_role = "switch"
+wolkit_role = "toggle"
+name = "The row title (labelled-by)."
+description = "The row subtitle (described-by), when there is one."
+
+[copy]
+title = "The row title names the setting, not the action: Bluetooth, never Turn On Bluetooth."
+
+[[rules]]
+id = "RU-110"
+kind = "do"
+text = "A switch applies its change at once; no Save or Apply button follows it."
+enforced = "manual"
+
+[[rules]]
+id = "RU-111"
+kind = "dont"
+text = "Do not use a switch to start an action such as Install or Restart; use a button."
+enforced = "manual"
+
+[[rules]]
+id = "RU-112"
+kind = "do"
+text = "A change that leaves the process uses the pending switch: it waits, then shows the confirmed state (RC-01)."
+enforced = "RH-011"
+
+[[rules]]
+id = "RU-113"
+kind = "do"
+text = "A switch in a row is named by the row title and described by its subtitle for assistive technology."
+enforced = "kit_components"
+
+[tests]
+states = ["off", "on", "disabled", "pending"]
+densities = ["compact", "standard", "comfortable"]
+variants = ["light", "dark"]

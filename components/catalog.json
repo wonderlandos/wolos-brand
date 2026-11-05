@@ -1,0 +1,414 @@
+{
+ "components": [
+  {
+   "a11y": {
+    "gtk_role": "label",
+    "name": "Its text.",
+    "wolkit_role": "text"
+   },
+   "anatomy": {
+    "text": "Inter; size and line height from the role (design/tokens/type.json)"
+   },
+   "category": "communication",
+   "hig": "hig.md section 2 (Type)",
+   "id": "label",
+   "implementations": {
+    "gtk": {
+     "api": "kit::data::label",
+     "css": "label.title, label.secondary, label.caption",
+     "file": "crates/shell/src/kit/data.rs"
+    },
+    "view": {
+     "file": "crates/shared/src/view.rs",
+     "node": "label"
+    }
+   },
+   "keyboard": {},
+   "name": "Label",
+   "rules": [],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "body": "Running text.",
+    "caption": "The smallest text, dim.",
+    "display": "The largest role.",
+    "large": "Page titles.",
+    "secondary": "Supporting text, dim.",
+    "title": "Row and section titles: the body size, semibold."
+   },
+   "status": "beta",
+   "summary": "Text in one of the six roles: display, large, title, body, secondary and caption.",
+   "tests": {
+    "states": [
+     "display",
+     "large",
+     "title",
+     "body",
+     "secondary",
+     "caption"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "gtk_role": "list-item",
+    "name": "The row title.",
+    "wolkit_role": "row"
+   },
+   "anatomy": {
+    "card": "the list's card: card fill, card radius, small shadow",
+    "divider": "1 px line between rows",
+    "row": "title at the start, the control at the end, centred on the row"
+   },
+   "category": "containment",
+   "density": {
+    "comfortable": {
+     "pad_y": 8,
+     "row": 48
+    },
+    "compact": {
+     "pad_y": 4,
+     "row": 32
+    },
+    "standard": {
+     "pad_y": 6,
+     "row": 40
+    }
+   },
+   "geometry": {
+    "card_pad_x": 12,
+    "card_pad_y": 4,
+    "card_radius": 12,
+    "gap": 8
+   },
+   "hig": "hig.md section 1 (Lists and rows)",
+   "id": "list-row",
+   "implementations": {
+    "gtk": {
+     "api": "kit::data::card_list",
+     "css": ".list-row",
+     "file": "crates/shell/src/kit/data.rs"
+    },
+    "view": {
+     "file": "crates/wolkit-render/src/view.rs",
+     "node": "list"
+    }
+   },
+   "keyboard": {
+    "Tab": "Moves to the row's control."
+   },
+   "name": "List row",
+   "rules": [],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "plain": "A row at rest."
+   },
+   "status": "beta",
+   "summary": "One line of a card list: a title, an optional value or control at its end, a hairline between rows.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "plain"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "gtk_role": "list-item",
+    "name": "The page name."
+   },
+   "anatomy": {
+    "glyph": "16 px symbolic, tinted by its phase",
+    "selection": "accent pill",
+    "title": "body text"
+   },
+   "category": "navigation",
+   "geometry": {
+    "narrow": 640,
+    "radius": 8,
+    "row": 24,
+    "sidebar_width": 240
+   },
+   "hig": "hig.md section 1 (Sidebars)",
+   "id": "sidebar-row",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::AppWindow::sidebar",
+     "css": ".sidebar row",
+     "file": "crates/shell/src/kit/widgets.rs"
+    }
+   },
+   "keyboard": {
+    "Down": "Moves to the page below.",
+    "Up": "Moves to the page above."
+   },
+   "name": "Sidebar row",
+   "rules": [],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "plain": "A row at rest.",
+    "selected": "The page shown."
+   },
+   "status": "beta",
+   "summary": "One page of a Settings-style window in the sidebar; under the narrow width the sidebar collapses.",
+   "tests": {
+    "states": [
+     "plain",
+     "selected"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The row subtitle (described-by), when there is one.",
+    "gtk_role": "switch",
+    "name": "The row title (labelled-by).",
+    "web_role": "switch",
+    "wolkit_role": "toggle"
+   },
+   "anatomy": {
+    "thumb": "white, elevation 1, a circle inset by the padding",
+    "track": "control-off when off, accent when on; a pill"
+   },
+   "category": "selection",
+   "copy": {
+    "title": "The row title names the setting, not the action: Bluetooth, never Turn On Bluetooth."
+   },
+   "density": {
+    "comfortable": {
+     "pad_y": 8,
+     "row": 48
+    },
+    "compact": {
+     "pad_y": 4,
+     "row": 32
+    },
+    "standard": {
+     "pad_y": 6,
+     "row": 40
+    }
+   },
+   "hig": "hig.md section 1 (Settings-style apps) and section 3 (Behaviour)",
+   "id": "switch",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::toggle",
+     "css": "switch.toggle",
+     "file": "crates/shell/src/kit/widgets.rs",
+     "pending": "kit::form::pending_toggle_row",
+     "row": "kit::form::toggle_row"
+    },
+    "view": {
+     "file": "crates/shared/src/view.rs",
+     "node": "toggle"
+    },
+    "web": {
+     "element": "wol-switch",
+     "file": "webapps/kit/wolkit.js"
+    },
+    "wolkit": {
+     "element": "toggle",
+     "file": "wolos-crystal/shards/wolkit/src/wolkit/dsl/tables.cr",
+     "kind": "WOLKIT_KIND_TOGGLE",
+     "role": "WOLKIT_ROLE_TOGGLE"
+    }
+   },
+   "keyboard": {
+    "Enter": "Flips it.",
+    "Space": "Flips it.",
+    "Tab": "Moves the focus to the switch."
+   },
+   "name": "Switch",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-110",
+     "kind": "do",
+     "text": "A switch applies its change at once; no Save or Apply button follows it."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-111",
+     "kind": "dont",
+     "text": "Do not use a switch to start an action such as Install or Restart; use a button."
+    },
+    {
+     "enforced": "RH-011",
+     "id": "RU-112",
+     "kind": "do",
+     "text": "A change that leaves the process uses the pending switch: it waits, then shows the confirmed state (RC-01)."
+    },
+    {
+     "enforced": "kit_components",
+     "id": "RU-113",
+     "kind": "do",
+     "text": "A switch in a row is named by the row title and described by its subtitle for assistive technology."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 24,
+     "padding": 2,
+     "thumb": 20,
+     "width": 36
+    },
+    "small": {
+     "height": 16,
+     "padding": 2,
+     "thumb": 12,
+     "use": "compact density, and the Control Center detail header",
+     "width": 28
+    }
+   },
+   "states": {
+    "disabled": "The setting cannot change now; the row subtitle says why.",
+    "off": "The setting is off.",
+    "on": "The setting is on.",
+    "pending": "The change runs: the switch waits, a 16 px spinner turns beside it, a failure flips it back."
+   },
+   "status": "stable",
+   "summary": "Turns one setting on or off, and the change applies at once.",
+   "tests": {
+    "densities": [
+     "compact",
+     "standard",
+     "comfortable"
+    ],
+    "states": [
+     "off",
+     "on",
+     "disabled",
+     "pending"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "gtk_role": "toolbar",
+    "name": "None; each tool is named by its label.",
+    "wolkit_role": "toolbar"
+   },
+   "anatomy": {
+    "row": "the title row of the window chrome",
+    "tools": "buttons and icon buttons, the spacer pushes the rest to the end"
+   },
+   "category": "navigation",
+   "geometry": {
+    "gap": 8,
+    "height": 40,
+    "pad_x": 16
+   },
+   "hig": "hig.md section 1 (Toolbars)",
+   "id": "toolbar",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::AppWindow::actions",
+     "css": ".toolbar",
+     "file": "crates/shell/src/kit/widgets.rs"
+    },
+    "view": {
+     "file": "crates/shared/src/view.rs",
+     "node": "toolbar"
+    }
+   },
+   "keyboard": {
+    "Tab": "Moves through the tools in order."
+   },
+   "name": "Toolbar",
+   "rules": [],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "plain": "Tools at rest."
+   },
+   "status": "beta",
+   "summary": "The title row's tools: the window's frequent actions as buttons, overflowing into a menu when narrow.",
+   "tests": {
+    "states": [
+     "plain"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "gtk_role": "application",
+    "name": "The window title.",
+    "wolkit_role": "window"
+   },
+   "anatomy": {
+    "divider": "a 1 px line hairline under the title row, inset from both window edges",
+    "page": "the surface the content sits on, padded on the left, right and bottom",
+    "title_row": "the row the window is dragged by; the app's tools sit at its end"
+   },
+   "category": "containment",
+   "geometry": {
+    "divider": 1,
+    "divider_inset": 12,
+    "page_gap": 12,
+    "page_pad": 16,
+    "title_row": 40
+   },
+   "hig": "hig.md section 1 (Window anatomy)",
+   "id": "window-chrome",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::AppWindow",
+     "css": ".app-window, .toolbar",
+     "file": "crates/shell/src/kit/widgets.rs"
+    },
+    "view": {
+     "file": "crates/wolkit-render/src/view.rs",
+     "node": "page"
+    }
+   },
+   "keyboard": {
+    "Super+Q": "Closes the window (the system shortcut)."
+   },
+   "name": "Window chrome",
+   "rules": [],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "active": "The window has the focus."
+   },
+   "status": "beta",
+   "summary": "The frame of every Kit window: the title row, the hairline under it and the page padding.",
+   "tests": {
+    "states": [
+     "active"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  }
+ ],
+ "schema": 1
+}
