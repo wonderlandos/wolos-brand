@@ -1,0 +1,97 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Slider: written by DS-SPEC-A from the Kit as it draws today (kit_actions.rs measures it).
+schema = 1
+id = "slider"
+name = "Slider"
+category = "selection"
+status = "beta"
+since = "0.12"
+summary = "Sets a number on a range by dragging; the change applies when the knob settles."
+hig = "hig.md section 3 (Behaviour)"
+
+[implementations.gtk]
+api = "kit::widgets::slider"
+row = "kit::form::slider_row"
+row_slider = "kit::widgets::row_slider"
+css = "scale.slider"
+file = "crates/shell/src/kit/widgets.rs"
+
+[implementations.wolkit]
+element = "slider"
+kind = "WOLKIT_KIND_SLIDER"
+role = "WOLKIT_ROLE_SLIDER"
+file = "wolos-crystal/shards/wolkit/src/wolkit/dsl/tables.cr"
+
+[implementations.view]
+node = "slider"
+file = "crates/shared/src/view.rs"
+
+[anatomy]
+trough = "4 px, control fill, radius 2"
+highlight = "accent from the start to the knob"
+knob = "16 px white circle, elevation 1"
+ends = "optional low and high words (11 px, dim) either side"
+
+# Brand-ui.md section 2: trough 4, knob 16; the fat slider (24) is a Control Center surface, not this component.
+
+[sizes.regular]
+height = 16
+thumb = 16
+
+[density.compact]
+row_stack = 52
+pad_y = 4
+
+[density.standard]
+row_stack = 60
+pad_y = 8
+
+[density.comfortable]
+row_stack = 68
+pad_y = 8
+
+[states]
+low = "The knob is at the low end of the range."
+high = "The knob is at the high end."
+disabled = "The value cannot change now."
+
+[keyboard]
+Tab = "Moves the focus to the knob."
+Left = "One step down."
+Right = "One step up."
+Home = "To the low end."
+End = "To the high end."
+
+[a11y]
+gtk_role = "slider"
+web_role = "slider"
+wolkit_role = "slider"
+name = "The row title (labelled-by)."
+description = "None."
+
+[copy]
+ends = "Two single words that say the direction: Slow and Fast, never 0 and 100."
+
+[[rules]]
+id = "RU-150"
+kind = "do"
+text = "A slider reports its value once, after the knob settles, not on every pixel."
+enforced = "kit_actions"
+
+[[rules]]
+id = "RU-151"
+kind = "do"
+text = "A slider row names its ends in words and its title names the setting."
+enforced = "manual"
+
+[[rules]]
+id = "RU-152"
+kind = "dont"
+text = "Do not use a slider for a choice among a few named options; use a segmented control."
+enforced = "manual"
+
+[tests]
+states = ["low", "high", "disabled"]
+densities = ["standard"]
+variants = ["light", "dark"]

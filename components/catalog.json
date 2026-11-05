@@ -2,6 +2,1902 @@
  "components": [
   {
    "a11y": {
+    "description": "None.",
+    "gtk_role": "img",
+    "name": "The person's name, in full."
+   },
+   "anatomy": {
+    "disc": "a gradient in the person's tone, radius 999",
+    "initials": "white, semibold, one or two letters"
+   },
+   "category": "communication",
+   "copy": {
+    "initials": "The first letters of the first two words of the name."
+   },
+   "hig": "hig.md section 3 (Behaviour)",
+   "id": "avatar",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::avatar",
+     "css": "label.avatar",
+     "file": "crates/shell/src/kit/widgets.rs",
+     "tone": "kit::assistant::tone_class"
+    }
+   },
+   "keyboard": {
+    "None": "An avatar is not interactive and not in the Tab order."
+   },
+   "name": "Avatar",
+   "rules": [
+    {
+     "enforced": "kit_comms",
+     "id": "RU-572",
+     "kind": "do",
+     "text": "An avatar is square, so it draws a circle."
+    },
+    {
+     "enforced": "kit_comms",
+     "id": "RU-573",
+     "kind": "do",
+     "text": "The same name always gets the same tone."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-574",
+     "kind": "do",
+     "text": "An avatar is named by the person's full name for assistive technology, not by its initials."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "large": {
+     "height": 64,
+     "width": 64
+    },
+    "small": {
+     "height": 32,
+     "width": 32
+    },
+    "xl": {
+     "height": 84,
+     "width": 84
+    }
+   },
+   "states": {
+    "large": "64 px.",
+    "small": "32 px.",
+    "xl": "84 px."
+   },
+   "status": "beta",
+   "summary": "Shows a person as a coloured disc with their initials.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "small",
+     "large",
+     "xl"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "label",
+    "name": "Its text, read with the thing beside it.",
+    "web_role": "status"
+   },
+   "anatomy": {
+    "pill": "tone fill, radius 999, padding 0 8",
+    "text": "11 px semibold"
+   },
+   "category": "communication",
+   "copy": {
+    "text": "A count or one word: 3, Online, Beta."
+   },
+   "hig": "hig.md section 3 (Behaviour)",
+   "id": "badge",
+   "implementations": {
+    "gtk": {
+     "api": "kit::data::badge",
+     "css": "label.badge",
+     "file": "crates/shell/src/kit/data.rs"
+    },
+    "web": {
+     "element": "wol-badge",
+     "file": "webapps/kit/wolkit.js"
+    }
+   },
+   "keyboard": {
+    "None": "A badge is not interactive and not in the Tab order."
+   },
+   "name": "Badge",
+   "rules": [
+    {
+     "enforced": "kit_comms",
+     "id": "RU-520",
+     "kind": "do",
+     "text": "A badge is one word or a count, twelve characters at most."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-521",
+     "kind": "dont",
+     "text": "Do not carry meaning by the tone alone; the word says it too."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-522",
+     "kind": "dont",
+     "text": "Do not make a badge a button."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 16
+    }
+   },
+   "states": {
+    "accent": "Information, the accent tone.",
+    "danger": "Failed or blocked, the danger tone.",
+    "neutral": "A count in the control fill.",
+    "success": "Done or online, the success tone.",
+    "warning": "Needs a look, the warning tone."
+   },
+   "status": "beta",
+   "summary": "A small pill with a count or one word about the thing beside it.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "neutral",
+     "accent",
+     "success",
+     "warning",
+     "danger"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None; a longer reason goes in the surface text.",
+    "gtk_role": "button",
+    "name": "Its label.",
+    "web_role": "button",
+    "wolkit_role": "button"
+   },
+   "anatomy": {
+    "fill": "control for default, accent for primary, danger for destructive, none for plain",
+    "label": "13 px medium, Title Case verb phrase",
+    "shape": "radius 8, padding 0 12"
+   },
+   "category": "actions",
+   "copy": {
+    "label": "A verb phrase in Title Case: Install, Add Printer; never Click Here or OK when a verb fits."
+   },
+   "density": {
+    "comfortable": {
+     "control": 32
+    },
+    "compact": {
+     "control": 20
+    },
+    "standard": {
+     "control": 24
+    }
+   },
+   "hig": "hig.md section 1 (Buttons) and section 3 (Behaviour)",
+   "id": "button",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::button",
+     "css": "button.btn",
+     "file": "crates/shell/src/kit/widgets.rs",
+     "kinds": "kit::widgets::Kind",
+     "row": "kit::form::button_row"
+    },
+    "view": {
+     "file": "crates/shared/src/view.rs",
+     "node": "button"
+    },
+    "web": {
+     "element": "wol-button",
+     "file": "webapps/kit/wolkit.js"
+    },
+    "wolkit": {
+     "element": "button",
+     "file": "wolos-crystal/shards/wolkit/src/wolkit/dsl/tables.cr",
+     "kind": "WOLKIT_KIND_BUTTON",
+     "role": "WOLKIT_ROLE_BUTTON"
+    }
+   },
+   "keyboard": {
+    "Enter": "Presses it.",
+    "Space": "Presses it.",
+    "Tab": "Moves the focus to the button."
+   },
+   "name": "Button",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-120",
+     "kind": "do",
+     "text": "A surface has one primary button; the other actions are default or plain."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-121",
+     "kind": "dont",
+     "text": "Do not use a destructive button for an action that loses nothing."
+    },
+    {
+     "enforced": "kit_actions",
+     "id": "RU-122",
+     "kind": "do",
+     "text": "A button whose action runs waits and shows a spinner beside it; it never stays pressable."
+    },
+    {
+     "enforced": "kit_actions",
+     "id": "RU-123",
+     "kind": "do",
+     "text": "A button is named by its own label, and a button without words is an icon button."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 24,
+     "padding": 12,
+     "use": "every button; the width follows the label"
+    }
+   },
+   "states": {
+    "busy": "The action runs: the button waits and a 16 px spinner turns beside it.",
+    "default": "The quiet button: the safe choice or one of several.",
+    "destructive": "Deletes or erases; the label names what is lost.",
+    "disabled": "The action is not possible now; nothing explains it on the button, the surface does.",
+    "plain": "A text action with no fill, for quiet or inline choices.",
+    "primary": "The one action the surface is for; one per surface."
+   },
+   "status": "beta",
+   "summary": "Starts one action; its label says what it does.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "default",
+     "primary",
+     "destructive",
+     "plain",
+     "disabled",
+     "busy"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "button",
+    "name": "The row title and the colour in words or hex."
+   },
+   "anatomy": {
+    "palette": "a popover with swatches and a #rrggbb field",
+    "well": "a 22 px disc in the colour, ringed in the line colour; a clear colour sits on a two-tone disc"
+   },
+   "category": "input",
+   "copy": {
+    "tooltip": "The hex value, #rrggbb."
+   },
+   "density": {
+    "comfortable": {
+     "control": 32,
+     "pad_y": 8,
+     "row": 48
+    },
+    "compact": {
+     "control": 20,
+     "pad_y": 4,
+     "row": 32
+    },
+    "standard": {
+     "control": 24,
+     "pad_y": 6,
+     "row": 40
+    }
+   },
+   "hig": "hig.md section 1 (Settings-style apps: Appearance)",
+   "id": "colour-well",
+   "implementations": {
+    "gtk": {
+     "api": "kit::pickers::ColorWell",
+     "css": "button.color-well",
+     "file": "crates/shell/src/kit/pickers.rs",
+     "swatch": "kit::widgets::accent_swatch"
+    }
+   },
+   "keyboard": {
+    "Enter": "In the hex field, applies a valid colour.",
+    "Escape": "Closes it.",
+    "Space": "Opens the palette.",
+    "Tab": "Moves the focus to the well."
+   },
+   "name": "Colour well",
+   "rules": [
+    {
+     "enforced": "kit_input",
+     "id": "RU-250",
+     "kind": "do",
+     "text": "A colour is also shown as text (the tooltip), never by the disc alone."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-251",
+     "kind": "do",
+     "text": "The palette reports a valid colour only; a mistyped hex changes nothing."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 24,
+     "width": 24
+    }
+   },
+   "states": {
+    "disabled": "The colour cannot change now.",
+    "rest": "Closed, showing the colour."
+   },
+   "status": "beta",
+   "summary": "Shows one colour and opens a small palette to change it.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "rest",
+     "disabled"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The row subtitle (described-by), when there is one.",
+    "gtk_role": "combobox",
+    "name": "The row title (labelled-by).",
+    "web_role": "combobox"
+   },
+   "anatomy": {
+    "button": "control fill, 1 px line, radius 8, the picked option and a chevron",
+    "list": "pop-up menu of the options",
+    "search": "a search field on top of the list when there are many options"
+   },
+   "category": "selection",
+   "copy": {
+    "option": "One to three words in Title Case; the list is ordered by how often people pick."
+   },
+   "density": {
+    "comfortable": {
+     "control": 32,
+     "pad_y": 8,
+     "row": 48
+    },
+    "compact": {
+     "control": 20,
+     "pad_y": 4,
+     "row": 32
+    },
+    "standard": {
+     "control": 24,
+     "pad_y": 6,
+     "row": 40
+    }
+   },
+   "hig": "hig.md section 1 (Settings-style apps)",
+   "id": "dropdown",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::dropdown",
+     "css": "dropdown.dropdown",
+     "file": "crates/shell/src/kit/widgets.rs",
+     "pending": "kit::form::pending_picker",
+     "row": "kit::form::picker_row",
+     "search": "kit::form::search_picker_row"
+    }
+   },
+   "keyboard": {
+    "Down": "Moves in the open list.",
+    "Enter": "Opens the list.",
+    "Escape": "Closes the list without a change.",
+    "Space": "Opens the list.",
+    "Tab": "Moves the focus to the dropdown.",
+    "Up": "Moves in the open list."
+   },
+   "name": "Dropdown",
+   "rules": [
+    {
+     "enforced": "kit_actions",
+     "id": "RU-170",
+     "kind": "do",
+     "text": "A dropdown reports its pick once and applies it at once."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-171",
+     "kind": "do",
+     "text": "A list of more than about twelve options has a search field."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-172",
+     "kind": "do",
+     "text": "A change that leaves the process uses the pending dropdown, which waits and puts the confirmed choice back on failure (RC-01)."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-173",
+     "kind": "dont",
+     "text": "Do not use a dropdown for two or three options that fit on screen; use a segmented control."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 24
+    }
+   },
+   "states": {
+    "disabled": "The choice cannot change now.",
+    "first": "The first option is picked.",
+    "last": "The last option is picked.",
+    "search": "A long list: the pop-up has a search field."
+   },
+   "status": "beta",
+   "summary": "Picks one option from a short list in a pop-up menu.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "first",
+     "last",
+     "search",
+     "disabled"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "Its hint.",
+    "gtk_role": "group",
+    "name": "Its title.",
+    "web_role": "status"
+   },
+   "anatomy": {
+    "action": "one button, optional",
+    "hint": "13 px secondary, wraps",
+    "icon": "64 px, dim",
+    "title": "24 px on 36, semibold"
+   },
+   "category": "communication",
+   "copy": {
+    "hint": "Says how to add it in one line.",
+    "title": "Says what is missing: Nothing here yet."
+   },
+   "hig": "hig.md section 3 (Behaviour: empty, loading and error states)",
+   "id": "empty-state",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::empty_state",
+     "css": ".empty-state",
+     "file": "crates/shell/src/kit/widgets.rs"
+    },
+    "web": {
+     "element": "wol-empty",
+     "file": "webapps/kit/wolkit.js"
+    }
+   },
+   "keyboard": {
+    "Tab": "Moves the focus to the action, when there is one."
+   },
+   "name": "Empty state",
+   "rules": [
+    {
+     "enforced": "kit_comms",
+     "id": "RU-570",
+     "kind": "do",
+     "text": "An empty page says what to do next, in one line and at most one action."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-571",
+     "kind": "dont",
+     "text": "Do not leave a page blank when there is nothing to show."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "padding": 40,
+     "thumb": 64
+    }
+   },
+   "states": {
+    "action": "Icon, title, hint and one button.",
+    "plain": "Icon, title and hint."
+   },
+   "status": "beta",
+   "summary": "Fills a page that has nothing yet with one picture, one line and at most one action.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "plain",
+     "action"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "alert",
+    "name": "Its sentence."
+   },
+   "anatomy": {
+    "line": "11 or 13 px, the danger colour, wraps, hidden when empty"
+   },
+   "category": "communication",
+   "copy": {
+    "sentence": "Says what to do, not what failed: That name is taken. Try another."
+   },
+   "hig": "hig.md section 3 (Behaviour: errors say what to do)",
+   "id": "error-line",
+   "implementations": {
+    "gtk": {
+     "api": "kit::assistant::problem_line",
+     "css": "label.assistant-problem",
+     "file": "crates/shell/src/kit/assistant.rs"
+    }
+   },
+   "keyboard": {
+    "None": "An error line is not interactive and not in the Tab order."
+   },
+   "name": "Error line",
+   "rules": [
+    {
+     "enforced": "kit_comms",
+     "id": "RU-580",
+     "kind": "do",
+     "text": "An error line says what to do in one sentence and is drawn in the danger colour."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-581",
+     "kind": "dont",
+     "text": "Do not show an error line before the person has done something."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "hidden": "No problem: nothing is drawn and no space is kept.",
+    "shown": "A sentence under the field."
+   },
+   "status": "beta",
+   "summary": "Says what is wrong with one field, in one sentence, under it.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "shown",
+     "hidden"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "Its value.",
+    "gtk_role": "meter",
+    "name": "Its caption."
+   },
+   "anatomy": {
+    "caption": "11 px secondary under the ring, one line",
+    "ring": "track at 18 %, fill in the tone, round caps, from the top clockwise",
+    "value": "in the middle, or a glyph"
+   },
+   "category": "data",
+   "copy": {
+    "caption": "What is measured: Memory."
+   },
+   "hig": "hig.md section 3 (Behaviour)",
+   "id": "gauge",
+   "implementations": {
+    "gtk": {
+     "api": "kit::data::Gauge",
+     "css": ".gauge",
+     "file": "crates/shell/src/kit/data.rs"
+    }
+   },
+   "keyboard": {
+    "None": "A gauge is not interactive and not in the Tab order."
+   },
+   "name": "Gauge",
+   "rules": [
+    {
+     "enforced": "kit_comms",
+     "id": "RU-602",
+     "kind": "do",
+     "text": "A gauge shows its value in words as well as in the ring."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-603",
+     "kind": "do",
+     "text": "A gauge exposes its caption and value to assistive technology."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "large": {
+     "height": 88,
+     "width": 88
+    },
+    "medium": {
+     "height": 56,
+     "width": 56
+    },
+    "small": {
+     "height": 40,
+     "width": 40
+    }
+   },
+   "states": {
+    "danger": "56 px near the limit, the danger tone.",
+    "large": "88 px.",
+    "medium": "56 px.",
+    "small": "40 px."
+   },
+   "status": "beta",
+   "summary": "Shows a share of a whole as a ring with its value in the middle.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "small",
+     "medium",
+     "large",
+     "danger"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "button",
+    "name": "The tooltip text (accessible label).",
+    "web_role": "button",
+    "wolkit_role": "button"
+   },
+   "anatomy": {
+    "glyph": "16 px symbolic icon in the text colour",
+    "hover": "control fill, radius 8"
+   },
+   "category": "actions",
+   "copy": {
+    "tooltip": "Names the action in Title Case, two words at most: Add, Show Sidebar."
+   },
+   "density": {
+    "comfortable": {
+     "control": 32
+    },
+    "compact": {
+     "control": 20
+    },
+    "standard": {
+     "control": 24
+    }
+   },
+   "hig": "hig.md section 1 (Toolbar: icon-only buttons need a tooltip)",
+   "id": "icon-button",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::icon_button",
+     "css": "button.icon-button",
+     "file": "crates/shell/src/kit/widgets.rs"
+    },
+    "wolkit": {
+     "element": "icon_button",
+     "file": "wolos-crystal/shards/wolkit/src/wolkit/dsl/tables.cr",
+     "kind": "WOLKIT_KIND_BUTTON",
+     "role": "WOLKIT_ROLE_BUTTON"
+    }
+   },
+   "keyboard": {
+    "Enter": "Presses it.",
+    "Space": "Presses it.",
+    "Tab": "Moves the focus to the button."
+   },
+   "name": "Icon button",
+   "rules": [
+    {
+     "enforced": "kit_actions",
+     "id": "RU-130",
+     "kind": "do",
+     "text": "An icon button has a tooltip, and the tooltip is its accessible name."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-131",
+     "kind": "dont",
+     "text": "Do not use an icon button for an action the glyph cannot say; use a button with words."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-132",
+     "kind": "do",
+     "text": "A toolbar holds at most five actions; the rest go in a menu button."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 24,
+     "padding": 4,
+     "width": 24
+    }
+   },
+   "states": {
+    "disabled": "The action is not possible now.",
+    "rest": "The glyph alone, no fill."
+   },
+   "status": "beta",
+   "summary": "Starts one action with a 16 px glyph; its tooltip is its name.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "rest",
+     "disabled"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "button",
+    "name": "The tooltip text (accessible label).",
+    "web_role": "button"
+   },
+   "anatomy": {
+    "button": "the view-more glyph, no frame",
+    "menu": "a popover of action rows, destructive last"
+   },
+   "category": "actions",
+   "copy": {
+    "tooltip": "More, or the name of the thing the actions are for."
+   },
+   "density": {
+    "comfortable": {
+     "control": 32
+    },
+    "compact": {
+     "control": 20
+    },
+    "standard": {
+     "control": 24
+    }
+   },
+   "hig": "hig.md section 1 (Toolbar: the rest in a menu)",
+   "id": "menu-button",
+   "implementations": {
+    "gtk": {
+     "api": "kit::form::actions_button",
+     "css": "menubutton",
+     "file": "crates/shell/src/kit/form.rs",
+     "menu": "kit::widgets::menu"
+    }
+   },
+   "keyboard": {
+    "Enter": "Opens the menu.",
+    "Escape": "Closes the menu.",
+    "Space": "Opens the menu.",
+    "Tab": "Moves the focus to the button."
+   },
+   "name": "Menu button",
+   "rules": [
+    {
+     "enforced": "kit_actions",
+     "id": "RU-180",
+     "kind": "do",
+     "text": "A menu button with no actions is not built."
+    },
+    {
+     "enforced": "kit_actions",
+     "id": "RU-181",
+     "kind": "do",
+     "text": "A menu button has a tooltip and opens with Space and Enter."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-182",
+     "kind": "dont",
+     "text": "Do not hide the one action people need most behind a menu button."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 24
+    }
+   },
+   "states": {
+    "disabled": "The menu cannot open now.",
+    "rest": "Closed, the glyph alone."
+   },
+   "status": "beta",
+   "summary": "Opens a short menu of actions for one row or one surface.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "rest",
+     "disabled"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The value in words.",
+    "gtk_role": "meter",
+    "name": "The text beside it says what is measured (labelled-by)."
+   },
+   "anatomy": {
+    "fill": "the tone colour",
+    "track": "the text colour at 12 %, radius 3"
+   },
+   "category": "data",
+   "copy": {
+    "neighbour": "The value in words next to it: 6.2 GB of 8 GB."
+   },
+   "hig": "hig.md section 3 (Behaviour)",
+   "id": "meter",
+   "implementations": {
+    "gtk": {
+     "api": "kit::data::meter",
+     "css": "progressbar.meter",
+     "file": "crates/shell/src/kit/data.rs"
+    }
+   },
+   "keyboard": {
+    "None": "A meter is not interactive and not in the Tab order."
+   },
+   "name": "Meter",
+   "rules": [
+    {
+     "enforced": "kit_comms",
+     "id": "RU-600",
+     "kind": "do",
+     "text": "A meter is clamped to the whole: a share above 100 % draws full."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-601",
+     "kind": "dont",
+     "text": "Do not carry meaning by the tone alone; the value is in words beside it."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 6,
+     "off_grid": [
+      "height"
+     ],
+     "why": "A track is an optical length, not spacing: 6 px reads between the 4 px progress bar and the 8 px installer bar."
+    }
+   },
+   "states": {
+    "accent": "A share, the accent tone.",
+    "danger": "A share near the limit, the danger tone.",
+    "empty": "Nothing used.",
+    "full": "All used.",
+    "success": "A share, the success tone.",
+    "warning": "A share, the warning tone."
+   },
+   "status": "beta",
+   "summary": "Shows a share of a whole (memory, a quota) as a bar in a tone.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "accent",
+     "success",
+     "warning",
+     "danger",
+     "empty",
+     "full"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "alert",
+    "name": "Its sentence.",
+    "web_role": "status"
+   },
+   "anatomy": {
+    "actions": "buttons on the right, centred on the text",
+    "icon": "16 px warning glyph in the warning colour",
+    "text": "13 px, wraps"
+   },
+   "category": "communication",
+   "copy": {
+    "sentence": "Says what is wrong and what can be done, with the names in quotes: Super+Space is used by Show Search."
+   },
+   "hig": "hig.md section 3 (Behaviour: inline warnings)",
+   "id": "notice",
+   "implementations": {
+    "gtk": {
+     "api": "kit::form::notice",
+     "css": ".notice",
+     "file": "crates/shell/src/kit/form.rs"
+    },
+    "web": {
+     "element": "wol-badge",
+     "file": "webapps/kit/wolkit.js"
+    }
+   },
+   "keyboard": {
+    "Space": "Presses the focused button.",
+    "Tab": "Moves the focus to the first button."
+   },
+   "name": "Notice",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-510",
+     "kind": "do",
+     "text": "A notice sits next to what it is about, not at the top of the window."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-511",
+     "kind": "do",
+     "text": "A notice is one sentence and its buttons are verbs."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-512",
+     "kind": "dont",
+     "text": "Do not use a notice for something that only needs a toast."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 40
+    }
+   },
+   "states": {
+    "actions": "A warning and one or two buttons.",
+    "text": "A warning with no way out on the notice itself."
+   },
+   "status": "beta",
+   "summary": "Warns next to its cause, in one sentence, with the ways out as buttons.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "text",
+     "actions"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The Caps Lock note, when shown.",
+    "gtk_role": "textbox",
+    "name": "The placeholder or the label next to it.",
+    "web_role": "textbox",
+    "wolkit_role": "textbox"
+   },
+   "anatomy": {
+    "field": "a text field whose characters are dots, with a peek icon",
+    "note": "a line under the field that says the words Caps Lock is on, only while it is"
+   },
+   "category": "input",
+   "copy": {
+    "placeholder": "Password, or what the secret is for (Network password)."
+   },
+   "density": {
+    "comfortable": {
+     "control": 32
+    },
+    "compact": {
+     "control": 20
+    },
+    "standard": {
+     "control": 24
+    }
+   },
+   "hig": "hig.md section 3 (Behaviour)",
+   "id": "password-field",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::password_field",
+     "caps_lock": "kit::widgets::caps_lock_note",
+     "css": "entry.text-field",
+     "file": "crates/shell/src/kit/widgets.rs"
+    }
+   },
+   "keyboard": {
+    "Enter": "Submits the secret (the surface decides).",
+    "Escape": "Leaves the field.",
+    "Tab": "Moves the focus into the field."
+   },
+   "name": "Password field",
+   "rules": [
+    {
+     "enforced": "kit_input",
+     "id": "RU-220",
+     "kind": "do",
+     "text": "A password field never shows what was typed unless the person asks (peek)."
+    },
+    {
+     "enforced": "kit_input",
+     "id": "RU-221",
+     "kind": "do",
+     "text": "The Caps Lock note says so in words under the field, not only with an icon."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-222",
+     "kind": "dont",
+     "text": "Do not put a secret in a text field, a log, a tooltip or a golden."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 24
+    }
+   },
+   "states": {
+    "caps": "Caps Lock is on: the note shows in words.",
+    "disabled": "The field cannot take input now.",
+    "empty": "Nothing typed; the placeholder shows.",
+    "filled": "Typed; the characters are masked."
+   },
+   "status": "beta",
+   "summary": "Takes a secret: it is masked, can be shown on request, and says when Caps Lock is on.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "empty",
+     "filled",
+     "caps",
+     "disabled"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The percentage.",
+    "gtk_role": "progressbar",
+    "name": "The line beside it says what runs (labelled-by).",
+    "web_role": "progressbar",
+    "wolkit_role": "progress"
+   },
+   "anatomy": {
+    "fill": "the text colour; the accent in the installer",
+    "track": "control fill, radius 2"
+   },
+   "category": "communication",
+   "copy": {
+    "line": "What runs and, when known, what is left: Copying 12 of 40 files."
+   },
+   "hig": "hig.md section 3 (Behaviour: long work)",
+   "id": "progress-bar",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::progress",
+     "css": "progressbar",
+     "file": "crates/shell/src/kit/widgets.rs",
+     "installer": "kit::assistant::Progress"
+    },
+    "web": {
+     "element": "wol-progress",
+     "file": "webapps/kit/wolkit.js"
+    },
+    "wolkit": {
+     "file": "wolos-crystal/shards/wolkit/src/wolkit/lib_wolkit.cr",
+     "role": "WOLKIT_ROLE_PROGRESS"
+    }
+   },
+   "keyboard": {
+    "None": "A progress bar is not interactive and not in the Tab order."
+   },
+   "name": "Progress bar",
+   "rules": [
+    {
+     "enforced": "kit_comms",
+     "id": "RU-550",
+     "kind": "do",
+     "text": "A progress bar that knows its fraction shows it; one that does not is indeterminate."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-551",
+     "kind": "dont",
+     "text": "Do not move a bar backwards."
+    },
+    {
+     "enforced": "kit_comms",
+     "id": "RU-552",
+     "kind": "do",
+     "text": "A progress bar has a name and exposes its value to assistive technology."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 4
+    }
+   },
+   "states": {
+    "empty": "Nothing done yet.",
+    "full": "Done.",
+    "half": "Half done.",
+    "indeterminate": "Running, with no known end: the fill moves."
+   },
+   "status": "beta",
+   "summary": "Shows how much of a job is done, or that it runs when that is not known.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "empty",
+     "half",
+     "full",
+     "indeterminate"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The percentage.",
+    "gtk_role": "progressbar",
+    "name": "The tile or row it sits in names the job."
+   },
+   "anatomy": {
+    "fill": "the accent, round caps, from the top clockwise",
+    "track": "the accent at 20 %, 3 px"
+   },
+   "category": "communication",
+   "copy": {
+    "neighbour": "The row says what installs: Installing."
+   },
+   "hig": "hig.md section 3 (Behaviour: long work)",
+   "id": "progress-ring",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::progress_ring",
+     "css": "progress-ring",
+     "determinate": "kit::widgets::ring_with",
+     "file": "crates/shell/src/kit/widgets.rs"
+    }
+   },
+   "keyboard": {
+    "None": "A ring is not interactive and not in the Tab order."
+   },
+   "name": "Progress ring",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-560",
+     "kind": "do",
+     "text": "A ring with a known value shows it from the top, clockwise."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-561",
+     "kind": "do",
+     "text": "A ring exposes its value and a name to assistive technology."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 24,
+     "width": 24
+    }
+   },
+   "states": {
+    "busy": "Running with no known end: an arc turns.",
+    "empty": "0 % done.",
+    "full": "100 % done.",
+    "half": "50 % done."
+   },
+   "status": "beta",
+   "summary": "Shows a job's progress in 24 px, beside a name in a tile or a row.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "empty",
+     "half",
+     "full",
+     "busy"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "searchbox",
+    "name": "The placeholder: Search, or Search Settings.",
+    "web_role": "search"
+   },
+   "anatomy": {
+    "clear": "a clear button on the right once there is text",
+    "field": "a text field with a magnifier on the left"
+   },
+   "category": "input",
+   "copy": {
+    "placeholder": "Search, or Search and what is searched."
+   },
+   "density": {
+    "comfortable": {
+     "control": 32
+    },
+    "compact": {
+     "control": 20
+    },
+    "standard": {
+     "control": 24
+    }
+   },
+   "hig": "hig.md section 1 (Toolbar: the search field is rightmost)",
+   "id": "search-field",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::search_field",
+     "css": "entry.search-field",
+     "file": "crates/shell/src/kit/widgets.rs",
+     "sidebar": "kit::widgets::AppWindow::sidebar_search"
+    },
+    "web": {
+     "element": "wol-search",
+     "file": "webapps/kit/wolkit.js"
+    }
+   },
+   "keyboard": {
+    "Down": "Moves to the first result (the surface decides).",
+    "Escape": "Clears the text, then leaves the field.",
+    "Tab": "Moves the focus into the field."
+   },
+   "name": "Search field",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-230",
+     "kind": "do",
+     "text": "A search field is the rightmost item of the toolbar."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-231",
+     "kind": "do",
+     "text": "A search field shows results as the person types and keeps the typed text when they leave."
+    },
+    {
+     "enforced": "kit_input",
+     "id": "RU-232",
+     "kind": "do",
+     "text": "A search field has a name for assistive technology."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 24
+    }
+   },
+   "states": {
+    "disabled": "Search is not possible now.",
+    "empty": "Nothing typed; the placeholder names what is searched.",
+    "filled": "Text typed; the clear button shows."
+   },
+   "status": "beta",
+   "summary": "Filters or finds as the person types; a clear button appears with text.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "empty",
+     "filled",
+     "disabled"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The row subtitle (described-by), when there is one.",
+    "gtk_role": "radiogroup",
+    "name": "The row title (labelled-by).",
+    "web_role": "radiogroup"
+   },
+   "anatomy": {
+    "segment": "one toggle button per option; the picked one has the card fill and elevation 1",
+    "track": "control fill, radius 8, padding 4"
+   },
+   "category": "selection",
+   "copy": {
+    "segment": "One or two words in Title Case, the same grammatical kind in every segment."
+   },
+   "density": {
+    "comfortable": {
+     "pad_y": 8,
+     "row": 48
+    },
+    "compact": {
+     "pad_y": 4,
+     "row": 32
+    },
+    "standard": {
+     "pad_y": 6,
+     "row": 40
+    }
+   },
+   "hig": "hig.md section 1 (Settings-style apps: Light / Dark / Auto)",
+   "id": "segmented",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::segmented",
+     "css": ".segmented",
+     "file": "crates/shell/src/kit/widgets.rs",
+     "row": "kit::form::segmented_row"
+    }
+   },
+   "keyboard": {
+    "Enter": "Picks the focused segment.",
+    "Space": "Picks the focused segment.",
+    "Tab": "Moves the focus into the control and out of it."
+   },
+   "name": "Segmented control",
+   "rules": [
+    {
+     "enforced": "kit_actions",
+     "id": "RU-140",
+     "kind": "do",
+     "text": "A segmented control holds two to four options and applies the pick at once."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-141",
+     "kind": "dont",
+     "text": "Do not use a segmented control for more than four options or for options that start actions; use a dropdown or buttons."
+    },
+    {
+     "enforced": "kit_actions",
+     "id": "RU-142",
+     "kind": "do",
+     "text": "A segmented control in a row is named by the row title for assistive technology."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 32,
+     "padding": 4
+    }
+   },
+   "states": {
+    "disabled": "No option can be picked now.",
+    "first": "The first option is picked.",
+    "last": "The last option is picked."
+   },
+   "status": "beta",
+   "summary": "Shows two to four exclusive choices at once and applies the picked one.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "first",
+     "last",
+     "disabled"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "The row title says which command.",
+    "gtk_role": "button",
+    "name": "The shown combination."
+   },
+   "anatomy": {
+    "button": "a button 112 px wide that shows the combination, or Off, or Type Shortcut while it listens",
+    "warning": "an outline when another shortcut already has the combination"
+   },
+   "category": "input",
+   "copy": {
+    "off": "Off, never None or Not Set."
+   },
+   "density": {
+    "comfortable": {
+     "control": 32,
+     "pad_y": 8,
+     "row": 48
+    },
+    "compact": {
+     "control": 20,
+     "pad_y": 4,
+     "row": 32
+    },
+    "standard": {
+     "control": 24,
+     "pad_y": 6,
+     "row": 40
+    }
+   },
+   "hig": "hig.md section 1 (Settings-style apps: Keyboard)",
+   "id": "shortcut-recorder",
+   "implementations": {
+    "gtk": {
+     "api": "kit::form::ShortcutRecorder",
+     "css": "button.shortcut-recorder",
+     "file": "crates/shell/src/kit/form.rs"
+    }
+   },
+   "keyboard": {
+    "Any combination": "While recording, assigns it.",
+    "Backspace": "While recording, clears the shortcut.",
+    "Escape": "Stops recording without a change.",
+    "Space": "Starts recording.",
+    "Tab": "Moves the focus to the recorder."
+   },
+   "name": "Shortcut recorder",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-240",
+     "kind": "do",
+     "text": "A recorder pauses the other shortcuts while it listens and resumes them when it stops."
+    },
+    {
+     "enforced": "kit_input",
+     "id": "RU-241",
+     "kind": "do",
+     "text": "A recorder that loses the keyboard stops without a change."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-242",
+     "kind": "do",
+     "text": "A combination that another command has is marked with the warning outline and offers to swap."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 24,
+     "width": 112
+    }
+   },
+   "states": {
+    "conflict": "The shown combination is taken by another shortcut: a warning outline.",
+    "locked": "A fixed shortcut: it shows its keys and cannot be recorded.",
+    "off": "No combination; the button says Off.",
+    "recording": "Listening: the button says Type Shortcut; Escape stops, Backspace clears.",
+    "set": "Shows the combination."
+   },
+   "status": "beta",
+   "summary": "Records the key combination a person types for one command.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "set",
+     "off",
+     "recording",
+     "conflict",
+     "locked"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "slider",
+    "name": "The row title (labelled-by).",
+    "web_role": "slider",
+    "wolkit_role": "slider"
+   },
+   "anatomy": {
+    "ends": "optional low and high words (11 px, dim) either side",
+    "highlight": "accent from the start to the knob",
+    "knob": "16 px white circle, elevation 1",
+    "trough": "4 px, control fill, radius 2"
+   },
+   "category": "selection",
+   "copy": {
+    "ends": "Two single words that say the direction: Slow and Fast, never 0 and 100."
+   },
+   "density": {
+    "comfortable": {
+     "pad_y": 8,
+     "row_stack": 68
+    },
+    "compact": {
+     "pad_y": 4,
+     "row_stack": 52
+    },
+    "standard": {
+     "pad_y": 8,
+     "row_stack": 60
+    }
+   },
+   "hig": "hig.md section 3 (Behaviour)",
+   "id": "slider",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::slider",
+     "css": "scale.slider",
+     "file": "crates/shell/src/kit/widgets.rs",
+     "row": "kit::form::slider_row",
+     "row_slider": "kit::widgets::row_slider"
+    },
+    "view": {
+     "file": "crates/shared/src/view.rs",
+     "node": "slider"
+    },
+    "wolkit": {
+     "element": "slider",
+     "file": "wolos-crystal/shards/wolkit/src/wolkit/dsl/tables.cr",
+     "kind": "WOLKIT_KIND_SLIDER",
+     "role": "WOLKIT_ROLE_SLIDER"
+    }
+   },
+   "keyboard": {
+    "End": "To the high end.",
+    "Home": "To the low end.",
+    "Left": "One step down.",
+    "Right": "One step up.",
+    "Tab": "Moves the focus to the knob."
+   },
+   "name": "Slider",
+   "rules": [
+    {
+     "enforced": "kit_actions",
+     "id": "RU-150",
+     "kind": "do",
+     "text": "A slider reports its value once, after the knob settles, not on every pixel."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-151",
+     "kind": "do",
+     "text": "A slider row names its ends in words and its title names the setting."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-152",
+     "kind": "dont",
+     "text": "Do not use a slider for a choice among a few named options; use a segmented control."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 16,
+     "thumb": 16
+    }
+   },
+   "states": {
+    "disabled": "The value cannot change now.",
+    "high": "The knob is at the high end.",
+    "low": "The knob is at the low end of the range."
+   },
+   "status": "beta",
+   "summary": "Sets a number on a range by dragging; the change applies when the knob settles.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "low",
+     "high",
+     "disabled"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "progressbar",
+    "name": "The text beside it says what runs.",
+    "web_role": "progressbar"
+   },
+   "anatomy": {
+    "wheel": "the toolkit spinner in the text colour"
+   },
+   "category": "communication",
+   "copy": {
+    "beside": "A line next to a large spinner says what runs: Loading apps."
+   },
+   "hig": "hig.md section 3 (Behaviour: long work)",
+   "id": "spinner",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::busy_spinner",
+     "css": "spinner",
+     "file": "crates/shell/src/kit/widgets.rs",
+     "large": "kit::widgets::spinner"
+    }
+   },
+   "keyboard": {
+    "None": "A spinner is not interactive and not in the Tab order."
+   },
+   "name": "Spinner",
+   "rules": [
+    {
+     "enforced": "kit_comms",
+     "id": "RU-540",
+     "kind": "do",
+     "text": "A spinner shows only while work runs and is hidden and still otherwise."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-541",
+     "kind": "dont",
+     "text": "Do not show a spinner for work whose progress is known; use a progress bar."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-542",
+     "kind": "do",
+     "text": "Work longer than a second shows a spinner, and longer than ten seconds says what runs."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "large": {
+     "height": 32,
+     "width": 32
+    },
+    "regular": {
+     "height": 16,
+     "width": 16
+    }
+   },
+   "states": {
+    "large": "32 px, centred on a page that loads.",
+    "regular": "16 px, beside a control that waits."
+   },
+   "status": "beta",
+   "summary": "Shows that work is running when its length is not known.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "regular",
+     "large"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "spinbutton",
+    "name": "The row title (labelled-by)."
+   },
+   "anatomy": {
+    "less": "icon button, list-remove",
+    "more": "icon button, list-add",
+    "value": "the formatted number, right aligned, 6 characters wide"
+   },
+   "category": "selection",
+   "copy": {
+    "value": "The number with its unit (12 pt); a unit is never dropped."
+   },
+   "density": {
+    "comfortable": {
+     "pad_y": 8,
+     "row": 48
+    },
+    "compact": {
+     "pad_y": 4,
+     "row": 32
+    },
+    "standard": {
+     "pad_y": 6,
+     "row": 40
+    }
+   },
+   "hig": "hig.md section 3 (Behaviour)",
+   "id": "stepper",
+   "implementations": {
+    "gtk": {
+     "api": "kit::form::stepper_row",
+     "css": ".stepper",
+     "file": "crates/shell/src/kit/form.rs"
+    }
+   },
+   "keyboard": {
+    "Enter": "Steps the focused button once.",
+    "Space": "Steps the focused button once.",
+    "Tab": "Moves the focus to Less, then More."
+   },
+   "name": "Stepper",
+   "rules": [
+    {
+     "enforced": "kit_actions",
+     "id": "RU-160",
+     "kind": "do",
+     "text": "A button that would leave the range waits instead of doing nothing."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-161",
+     "kind": "dont",
+     "text": "Do not use a stepper for a range of more than about 30 steps; use a slider."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-162",
+     "kind": "do",
+     "text": "A stepper exposes its value, minimum and maximum to assistive technology."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 24
+    }
+   },
+   "states": {
+    "max": "At the maximum: More waits.",
+    "min": "At the minimum: Less waits.",
+    "rest": "A value inside the range; both buttons work."
+   },
+   "status": "beta",
+   "summary": "Changes a number one step at a time with Less and More buttons.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "rest",
+     "min",
+     "max"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
     "description": "The row subtitle (described-by), when there is one.",
     "gtk_role": "switch",
     "name": "The row title (labelled-by).",
@@ -123,6 +2019,343 @@
      "on",
      "disabled",
      "pending"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "textbox",
+    "name": "The row title (labelled-by).",
+    "web_role": "textbox",
+    "wolkit_role": "textbox"
+   },
+   "anatomy": {
+    "field": "control fill, 1 px line, radius 8, padding 0 8",
+    "placeholder": "dim text that says what to type",
+    "text": "13 px body"
+   },
+   "category": "input",
+   "copy": {
+    "placeholder": "An example or the kind of text, never the label again."
+   },
+   "density": {
+    "comfortable": {
+     "control": 32,
+     "pad_y": 8,
+     "row": 48
+    },
+    "compact": {
+     "control": 20,
+     "pad_y": 4,
+     "row": 32
+    },
+    "standard": {
+     "control": 24,
+     "pad_y": 6,
+     "row": 40
+    }
+   },
+   "hig": "hig.md section 3 (Behaviour)",
+   "id": "text-field",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::text_field",
+     "css": "entry.text-field",
+     "file": "crates/shell/src/kit/widgets.rs",
+     "pending": "kit::form::pending_entry_row",
+     "row": "kit::form::entry_row"
+    },
+    "view": {
+     "file": "crates/shared/src/view.rs",
+     "node": "text_field"
+    },
+    "wolkit": {
+     "element": "text_field",
+     "file": "wolos-crystal/shards/wolkit/src/wolkit/dsl/tables.cr",
+     "kind": "WOLKIT_KIND_TEXT_INPUT",
+     "role": "WOLKIT_ROLE_TEXTBOX"
+    }
+   },
+   "keyboard": {
+    "Enter": "Commits a changed text.",
+    "Escape": "Leaves the field.",
+    "Tab": "Moves the focus into the field."
+   },
+   "name": "Text field",
+   "rules": [
+    {
+     "enforced": "kit_input",
+     "id": "RU-210",
+     "kind": "do",
+     "text": "A text field commits once on Enter or when it loses the keyboard with a changed text, never on every key."
+    },
+    {
+     "enforced": "kit_input",
+     "id": "RU-211",
+     "kind": "do",
+     "text": "A commit that can fail or be cancelled uses the pending field, which waits and lets Enter commit the same text again (QA-SET-12)."
+    },
+    {
+     "enforced": "kit_input",
+     "id": "RU-212",
+     "kind": "do",
+     "text": "A text field in a row is named by the row title for assistive technology."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-213",
+     "kind": "dont",
+     "text": "Do not use a placeholder as the only label of a field."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 24
+    }
+   },
+   "states": {
+    "disabled": "The text cannot change now.",
+    "empty": "No text: the placeholder shows.",
+    "filled": "Text typed or loaded; nothing to save until it changes.",
+    "pending": "The commit runs: the field waits, a failure or a cancel puts it back and Enter commits the same text again."
+   },
+   "status": "beta",
+   "summary": "Takes one line of text; the change applies on Enter or when the field loses the keyboard.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "empty",
+     "filled",
+     "disabled",
+     "pending"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "Its summary.",
+    "gtk_role": "generic",
+    "name": "Its title; the action button has its own label."
+   },
+   "anatomy": {
+    "action": "Get or Open, or the progress ring while it installs",
+    "icon": "the app icon",
+    "source": "a badge when it is not WolOS's own package",
+    "summary": "11 px secondary, two lines",
+    "title": "13 px semibold, one line"
+   },
+   "category": "communication",
+   "copy": {
+    "summary": "What the app does in a few words, no marketing."
+   },
+   "hig": "hig.md section 1 (Store)",
+   "id": "tile",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::AppTile",
+     "control_tile": "kit::widgets::ControlTile",
+     "css": ".app-tile",
+     "file": "crates/shell/src/kit/widgets.rs"
+    }
+   },
+   "keyboard": {
+    "Space": "Presses it.",
+    "Tab": "Moves the focus to the action button."
+   },
+   "name": "Tile",
+   "rules": [
+    {
+     "enforced": "kit_comms",
+     "id": "RU-575",
+     "kind": "do",
+     "text": "A tile shows one action at a time: the button or the progress, never both."
+    },
+    {
+     "enforced": "kit_comms",
+     "id": "RU-576",
+     "kind": "do",
+     "text": "An app that does not come from WolOS's packages says where from."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "width": 264
+    }
+   },
+   "states": {
+    "get": "Not installed: the Get button.",
+    "open": "Installed: the Open button.",
+    "progress": "Installing: the ring shows the progress in place of the button."
+   },
+   "status": "beta",
+   "summary": "A store tile: an app's icon, name and summary with one action (Get or Open) or its progress.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "get",
+     "open",
+     "progress"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "status",
+    "name": "Its line."
+   },
+   "anatomy": {
+    "action": "one plain button in the accent ink, optional",
+    "pill": "glass fill, 1 px line, radius 999, elevation 2, 16 px from the bottom edge of the content",
+    "text": "13 px, one line"
+   },
+   "category": "communication",
+   "copy": {
+    "line": "What happened, past tense, no full stop: Theme changed. The action is one verb: Undo."
+   },
+   "hig": "hig.md section 3 (Behaviour)",
+   "id": "toast",
+   "implementations": {
+    "gtk": {
+     "api": "kit::toast::Toast",
+     "css": ".toast",
+     "file": "crates/shell/src/kit/toast.rs"
+    }
+   },
+   "keyboard": {
+    "Enter": "Runs the action.",
+    "Space": "Runs the action.",
+    "Tab": "Moves the focus to the action, when there is one."
+   },
+   "name": "Toast",
+   "rules": [
+    {
+     "enforced": "kit_comms",
+     "id": "RU-500",
+     "kind": "do",
+     "text": "A toast replaces the previous toast and leaves after six seconds, longer when Give me more time is set."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-501",
+     "kind": "dont",
+     "text": "Do not put a decision or an error that needs reading in a toast; use a notice or a sheet."
+    },
+    {
+     "enforced": "kit_comms",
+     "id": "RU-502",
+     "kind": "do",
+     "text": "A toast has at most one action, and using it hides the toast."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 40
+    },
+    "text": {
+     "height": 32
+    }
+   },
+   "states": {
+    "action": "A line and one action (Undo); using it runs the action and hides the toast.",
+    "hidden": "Nothing is shown.",
+    "text": "A line with no action."
+   },
+   "status": "beta",
+   "summary": "Says one short thing that just happened, with at most one action to undo it, and leaves on its own.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "text",
+     "action",
+     "hidden"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  },
+  {
+   "a11y": {
+    "description": "None.",
+    "gtk_role": "tooltip",
+    "name": "None; it names the control, it is not named.",
+    "web_role": "tooltip"
+   },
+   "anatomy": {
+    "bubble": "glass fill, 1 px line, radius 8",
+    "text": "11 px, one line"
+   },
+   "category": "communication",
+   "copy": {
+    "text": "A name, three words at most, Title Case, no full stop: Show Sidebar."
+   },
+   "hig": "hig.md section 1 (Toolbar: icon-only buttons need a tooltip)",
+   "id": "tooltip",
+   "implementations": {
+    "gtk": {
+     "api": "gtk::Widget::set_tooltip_text",
+     "css": "tooltip",
+     "file": "crates/shell/src/kit/kit.css"
+    }
+   },
+   "keyboard": {
+    "Tab": "A focused control shows its tooltip like a hover (the toolkit does this)."
+   },
+   "name": "Tooltip",
+   "rules": [
+    {
+     "enforced": "kit_comms",
+     "id": "RU-590",
+     "kind": "do",
+     "text": "A tooltip is a name of at most three words in Title Case with no full stop."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-591",
+     "kind": "dont",
+     "text": "Do not hide information in a tooltip that a person needs to act; tooltips name, they do not explain."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "states": {
+    "owner": "The control that owns the tooltip; the bubble itself cannot be mounted headless, so the case holds the contract on its owner."
+   },
+   "status": "beta",
+   "summary": "Names a control that has no words, after the pointer rests on it.",
+   "tests": {
+    "densities": [
+     "standard"
+    ],
+    "states": [
+     "owner"
     ],
     "variants": [
      "light",

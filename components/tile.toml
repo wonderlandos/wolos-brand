@@ -1,0 +1,63 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Tile: written by DS-SPEC-A from the Kit as it draws today (kit_comms.rs measures it).
+schema = 1
+id = "tile"
+name = "Tile"
+category = "communication"
+status = "beta"
+since = "0.12"
+summary = "A store tile: an app's icon, name and summary with one action (Get or Open) or its progress."
+hig = "hig.md section 1 (Store)"
+
+[implementations.gtk]
+api = "kit::widgets::AppTile"
+control_tile = "kit::widgets::ControlTile"
+css = ".app-tile"
+file = "crates/shell/src/kit/widgets.rs"
+
+[anatomy]
+icon = "the app icon"
+title = "13 px semibold, one line"
+summary = "11 px secondary, two lines"
+source = "a badge when it is not WolOS's own package"
+action = "Get or Open, or the progress ring while it installs"
+
+# STORE_TILE: 264 wide; the height follows the text.
+
+[sizes.regular]
+width = 264
+
+[states]
+get = "Not installed: the Get button."
+open = "Installed: the Open button."
+progress = "Installing: the ring shows the progress in place of the button."
+
+[keyboard]
+Tab = "Moves the focus to the action button."
+Space = "Presses it."
+
+[a11y]
+gtk_role = "generic"
+name = "Its title; the action button has its own label."
+description = "Its summary."
+
+[copy]
+summary = "What the app does in a few words, no marketing."
+
+[[rules]]
+id = "RU-575"
+kind = "do"
+text = "A tile shows one action at a time: the button or the progress, never both."
+enforced = "kit_comms"
+
+[[rules]]
+id = "RU-576"
+kind = "do"
+text = "An app that does not come from WolOS's packages says where from."
+enforced = "kit_comms"
+
+[tests]
+states = ["get", "open", "progress"]
+densities = ["standard"]
+variants = ["light", "dark"]

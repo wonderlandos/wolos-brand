@@ -1,0 +1,81 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Search field: written by DS-SPEC-A from the Kit as it draws today (kit_input.rs measures it).
+schema = 1
+id = "search-field"
+name = "Search field"
+category = "input"
+status = "beta"
+since = "0.12"
+summary = "Filters or finds as the person types; a clear button appears with text."
+hig = "hig.md section 1 (Toolbar: the search field is rightmost)"
+
+[implementations.gtk]
+api = "kit::widgets::search_field"
+sidebar = "kit::widgets::AppWindow::sidebar_search"
+css = "entry.search-field"
+file = "crates/shell/src/kit/widgets.rs"
+
+[implementations.web]
+element = "wol-search"
+file = "webapps/kit/wolkit.js"
+
+[anatomy]
+field = "a text field with a magnifier on the left"
+clear = "a clear button on the right once there is text"
+
+# The height of a text field.
+
+[sizes.regular]
+height = 24
+
+[density.compact]
+control = 20
+
+[density.standard]
+control = 24
+
+[density.comfortable]
+control = 32
+
+[states]
+empty = "Nothing typed; the placeholder names what is searched."
+filled = "Text typed; the clear button shows."
+disabled = "Search is not possible now."
+
+[keyboard]
+Tab = "Moves the focus into the field."
+Escape = "Clears the text, then leaves the field."
+Down = "Moves to the first result (the surface decides)."
+
+[a11y]
+gtk_role = "searchbox"
+web_role = "search"
+name = "The placeholder: Search, or Search Settings."
+description = "None."
+
+[copy]
+placeholder = "Search, or Search and what is searched."
+
+[[rules]]
+id = "RU-230"
+kind = "do"
+text = "A search field is the rightmost item of the toolbar."
+enforced = "manual"
+
+[[rules]]
+id = "RU-231"
+kind = "do"
+text = "A search field shows results as the person types and keeps the typed text when they leave."
+enforced = "manual"
+
+[[rules]]
+id = "RU-232"
+kind = "do"
+text = "A search field has a name for assistive technology."
+enforced = "kit_input"
+
+[tests]
+states = ["empty", "filled", "disabled"]
+densities = ["standard"]
+variants = ["light", "dark"]

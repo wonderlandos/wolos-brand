@@ -1,0 +1,84 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Icon button: written by DS-SPEC-A from the Kit as it draws today (kit_actions.rs measures it).
+schema = 1
+id = "icon-button"
+name = "Icon button"
+category = "actions"
+status = "beta"
+since = "0.12"
+summary = "Starts one action with a 16 px glyph; its tooltip is its name."
+hig = "hig.md section 1 (Toolbar: icon-only buttons need a tooltip)"
+
+[implementations.gtk]
+api = "kit::widgets::icon_button"
+css = "button.icon-button"
+file = "crates/shell/src/kit/widgets.rs"
+
+[implementations.wolkit]
+element = "icon_button"
+kind = "WOLKIT_KIND_BUTTON"
+role = "WOLKIT_ROLE_BUTTON"
+file = "wolos-crystal/shards/wolkit/src/wolkit/dsl/tables.cr"
+
+[anatomy]
+glyph = "16 px symbolic icon in the text colour"
+hover = "control fill, radius 8"
+
+# A 16 px glyph with 4 px of air on every side; the 28 px circle is a different surface (button.control-circle, Control Center).
+
+[sizes.regular]
+width = 24
+height = 24
+padding = 4
+
+[density.compact]
+control = 20
+
+[density.standard]
+control = 24
+
+[density.comfortable]
+control = 32
+
+[states]
+rest = "The glyph alone, no fill."
+disabled = "The action is not possible now."
+
+[keyboard]
+Tab = "Moves the focus to the button."
+Space = "Presses it."
+Enter = "Presses it."
+
+[a11y]
+gtk_role = "button"
+web_role = "button"
+wolkit_role = "button"
+name = "The tooltip text (accessible label)."
+description = "None."
+
+[copy]
+tooltip = "Names the action in Title Case, two words at most: Add, Show Sidebar."
+
+[[rules]]
+id = "RU-130"
+kind = "do"
+text = "An icon button has a tooltip, and the tooltip is its accessible name."
+enforced = "kit_actions"
+
+[[rules]]
+id = "RU-131"
+kind = "dont"
+text = "Do not use an icon button for an action the glyph cannot say; use a button with words."
+enforced = "manual"
+
+[[rules]]
+id = "RU-132"
+kind = "do"
+text = "A toolbar holds at most five actions; the rest go in a menu button."
+enforced = "manual"
+
+[tests]
+states = ["rest", "disabled"]
+densities = ["standard"]
+variants = ["light", "dark"]

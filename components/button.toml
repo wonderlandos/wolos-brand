@@ -1,0 +1,107 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Button: written by DS-SPEC-A from the Kit as it draws today (kit_actions.rs measures it).
+schema = 1
+id = "button"
+name = "Button"
+category = "actions"
+status = "beta"
+since = "0.12"
+summary = "Starts one action; its label says what it does."
+hig = "hig.md section 1 (Buttons) and section 3 (Behaviour)"
+
+[implementations.gtk]
+api = "kit::widgets::button"
+row = "kit::form::button_row"
+kinds = "kit::widgets::Kind"
+css = "button.btn"
+file = "crates/shell/src/kit/widgets.rs"
+
+[implementations.wolkit]
+element = "button"
+kind = "WOLKIT_KIND_BUTTON"
+role = "WOLKIT_ROLE_BUTTON"
+file = "wolos-crystal/shards/wolkit/src/wolkit/dsl/tables.cr"
+
+[implementations.web]
+element = "wol-button"
+file = "webapps/kit/wolkit.js"
+
+[implementations.view]
+node = "button"
+file = "crates/shared/src/view.rs"
+
+[anatomy]
+label = "13 px medium, Title Case verb phrase"
+fill = "control for default, accent for primary, danger for destructive, none for plain"
+shape = "radius 8, padding 0 12"
+
+# Height is the control height of the density below (brand-ui.md section 2: control 24).
+
+[sizes.regular]
+height = 24
+padding = 12
+use = "every button; the width follows the label"
+
+[density.compact]
+control = 20
+
+[density.standard]
+control = 24
+
+[density.comfortable]
+control = 32
+
+[states]
+default = "The quiet button: the safe choice or one of several."
+primary = "The one action the surface is for; one per surface."
+destructive = "Deletes or erases; the label names what is lost."
+plain = "A text action with no fill, for quiet or inline choices."
+disabled = "The action is not possible now; nothing explains it on the button, the surface does."
+busy = "The action runs: the button waits and a 16 px spinner turns beside it."
+
+[keyboard]
+Tab = "Moves the focus to the button."
+Space = "Presses it."
+Enter = "Presses it."
+
+[a11y]
+gtk_role = "button"
+web_role = "button"
+wolkit_role = "button"
+name = "Its label."
+description = "None; a longer reason goes in the surface text."
+
+[copy]
+label = "A verb phrase in Title Case: Install, Add Printer; never Click Here or OK when a verb fits."
+
+[[rules]]
+id = "RU-120"
+kind = "do"
+text = "A surface has one primary button; the other actions are default or plain."
+enforced = "manual"
+
+[[rules]]
+id = "RU-121"
+kind = "dont"
+text = "Do not use a destructive button for an action that loses nothing."
+enforced = "manual"
+
+[[rules]]
+id = "RU-122"
+kind = "do"
+text = "A button whose action runs waits and shows a spinner beside it; it never stays pressable."
+enforced = "kit_actions"
+
+[[rules]]
+id = "RU-123"
+kind = "do"
+text = "A button is named by its own label, and a button without words is an icon button."
+enforced = "kit_actions"
+
+# compact (20) and comfortable (32) join tests.densities with DS-GTK-2, when kit.css draws them.
+
+[tests]
+states = ["default", "primary", "destructive", "plain", "disabled", "busy"]
+densities = ["standard"]
+variants = ["light", "dark"]

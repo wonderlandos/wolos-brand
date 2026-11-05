@@ -1,0 +1,71 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Badge: written by DS-SPEC-A from the Kit as it draws today (kit_comms.rs measures it).
+schema = 1
+id = "badge"
+name = "Badge"
+category = "communication"
+status = "beta"
+since = "0.12"
+summary = "A small pill with a count or one word about the thing beside it."
+hig = "hig.md section 3 (Behaviour)"
+
+[implementations.gtk]
+api = "kit::data::badge"
+css = "label.badge"
+file = "crates/shell/src/kit/data.rs"
+
+[implementations.web]
+element = "wol-badge"
+file = "webapps/kit/wolkit.js"
+
+[anatomy]
+pill = "tone fill, radius 999, padding 0 8"
+text = "11 px semibold"
+
+# brand-screens.md: badge 16, padding 0 8.
+
+[sizes.regular]
+height = 16
+
+[states]
+neutral = "A count in the control fill."
+accent = "Information, the accent tone."
+success = "Done or online, the success tone."
+warning = "Needs a look, the warning tone."
+danger = "Failed or blocked, the danger tone."
+
+[keyboard]
+None = "A badge is not interactive and not in the Tab order."
+
+[a11y]
+gtk_role = "label"
+web_role = "status"
+name = "Its text, read with the thing beside it."
+description = "None."
+
+[copy]
+text = "A count or one word: 3, Online, Beta."
+
+[[rules]]
+id = "RU-520"
+kind = "do"
+text = "A badge is one word or a count, twelve characters at most."
+enforced = "kit_comms"
+
+[[rules]]
+id = "RU-521"
+kind = "dont"
+text = "Do not carry meaning by the tone alone; the word says it too."
+enforced = "manual"
+
+[[rules]]
+id = "RU-522"
+kind = "dont"
+text = "Do not make a badge a button."
+enforced = "manual"
+
+[tests]
+states = ["neutral", "accent", "success", "warning", "danger"]
+densities = ["standard"]
+variants = ["light", "dark"]

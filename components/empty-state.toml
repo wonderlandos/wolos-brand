@@ -1,0 +1,66 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Empty state: written by DS-SPEC-A from the Kit as it draws today (kit_comms.rs measures it).
+schema = 1
+id = "empty-state"
+name = "Empty state"
+category = "communication"
+status = "beta"
+since = "0.12"
+summary = "Fills a page that has nothing yet with one picture, one line and at most one action."
+hig = "hig.md section 3 (Behaviour: empty, loading and error states)"
+
+[implementations.gtk]
+api = "kit::widgets::empty_state"
+css = ".empty-state"
+file = "crates/shell/src/kit/widgets.rs"
+
+[implementations.web]
+element = "wol-empty"
+file = "webapps/kit/wolkit.js"
+
+[anatomy]
+icon = "64 px, dim"
+title = "24 px on 36, semibold"
+hint = "13 px secondary, wraps"
+action = "one button, optional"
+
+# Centred in the page; its height follows its lines.
+
+[sizes.regular]
+thumb = 64
+padding = 40
+
+[states]
+plain = "Icon, title and hint."
+action = "Icon, title, hint and one button."
+
+[keyboard]
+Tab = "Moves the focus to the action, when there is one."
+
+[a11y]
+gtk_role = "group"
+web_role = "status"
+name = "Its title."
+description = "Its hint."
+
+[copy]
+title = "Says what is missing: Nothing here yet."
+hint = "Says how to add it in one line."
+
+[[rules]]
+id = "RU-570"
+kind = "do"
+text = "An empty page says what to do next, in one line and at most one action."
+enforced = "kit_comms"
+
+[[rules]]
+id = "RU-571"
+kind = "dont"
+text = "Do not leave a page blank when there is nothing to show."
+enforced = "manual"
+
+[tests]
+states = ["plain", "action"]
+densities = ["standard"]
+variants = ["light", "dark"]

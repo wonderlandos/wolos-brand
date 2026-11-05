@@ -1,0 +1,86 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Shortcut recorder: written by DS-SPEC-A from the Kit as it draws today (kit_input.rs measures it).
+schema = 1
+id = "shortcut-recorder"
+name = "Shortcut recorder"
+category = "input"
+status = "beta"
+since = "0.12"
+summary = "Records the key combination a person types for one command."
+hig = "hig.md section 1 (Settings-style apps: Keyboard)"
+
+[implementations.gtk]
+api = "kit::form::ShortcutRecorder"
+css = "button.shortcut-recorder"
+file = "crates/shell/src/kit/form.rs"
+
+[anatomy]
+button = "a button 112 px wide that shows the combination, or Off, or Type Shortcut while it listens"
+warning = "an outline when another shortcut already has the combination"
+
+# One width for every recorder, so a column of shortcuts lines up.
+
+[sizes.regular]
+width = 112
+height = 24
+
+[density.compact]
+control = 20
+row = 32
+pad_y = 4
+
+[density.standard]
+control = 24
+row = 40
+pad_y = 6
+
+[density.comfortable]
+control = 32
+row = 48
+pad_y = 8
+
+[states]
+set = "Shows the combination."
+off = "No combination; the button says Off."
+recording = "Listening: the button says Type Shortcut; Escape stops, Backspace clears."
+conflict = "The shown combination is taken by another shortcut: a warning outline."
+locked = "A fixed shortcut: it shows its keys and cannot be recorded."
+
+[keyboard]
+Tab = "Moves the focus to the recorder."
+Space = "Starts recording."
+Escape = "Stops recording without a change."
+Backspace = "While recording, clears the shortcut."
+"Any combination" = "While recording, assigns it."
+
+[a11y]
+gtk_role = "button"
+name = "The shown combination."
+description = "The row title says which command."
+
+[copy]
+off = "Off, never None or Not Set."
+
+[[rules]]
+id = "RU-240"
+kind = "do"
+text = "A recorder pauses the other shortcuts while it listens and resumes them when it stops."
+enforced = "manual"
+
+[[rules]]
+id = "RU-241"
+kind = "do"
+text = "A recorder that loses the keyboard stops without a change."
+enforced = "kit_input"
+
+[[rules]]
+id = "RU-242"
+kind = "do"
+text = "A combination that another command has is marked with the warning outline and offers to swap."
+enforced = "manual"
+
+[tests]
+states = ["set", "off", "recording", "conflict", "locked"]
+densities = ["standard"]
+variants = ["light", "dark"]

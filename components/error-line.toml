@@ -1,0 +1,51 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Error line: written by DS-SPEC-A from the Kit as it draws today (kit_comms.rs measures it).
+schema = 1
+id = "error-line"
+name = "Error line"
+category = "communication"
+status = "beta"
+since = "0.12"
+summary = "Says what is wrong with one field, in one sentence, under it."
+hig = "hig.md section 3 (Behaviour: errors say what to do)"
+
+[implementations.gtk]
+api = "kit::assistant::problem_line"
+css = "label.assistant-problem"
+file = "crates/shell/src/kit/assistant.rs"
+
+[anatomy]
+line = "11 or 13 px, the danger colour, wraps, hidden when empty"
+
+[states]
+shown = "A sentence under the field."
+hidden = "No problem: nothing is drawn and no space is kept."
+
+[keyboard]
+None = "An error line is not interactive and not in the Tab order."
+
+[a11y]
+gtk_role = "alert"
+name = "Its sentence."
+description = "None."
+
+[copy]
+sentence = "Says what to do, not what failed: That name is taken. Try another."
+
+[[rules]]
+id = "RU-580"
+kind = "do"
+text = "An error line says what to do in one sentence and is drawn in the danger colour."
+enforced = "kit_comms"
+
+[[rules]]
+id = "RU-581"
+kind = "dont"
+text = "Do not show an error line before the person has done something."
+enforced = "manual"
+
+[tests]
+states = ["shown", "hidden"]
+densities = ["standard"]
+variants = ["light", "dark"]

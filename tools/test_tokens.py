@@ -52,7 +52,11 @@ class Scale(unittest.TestCase):
             with open(os.path.join(d, fn), "rb") as f:
                 spec = tomllib.load(f)
             for dens, m in spec.get("density", {}).items():
-                self.assertEqual(m["row"], S["density"]["metrics"]["row"][dens], f"{fn} density.{dens}.row")
+                # A spec gives the row that holds it, the control's own height, or both; `row_stack`
+                # (a row with its title above the control) has no token and is the spec's own.
+                for key in ("row", "control"):
+                    if key in m:
+                        self.assertEqual(m[key], S["density"]["metrics"][key][dens], f"{fn} density.{dens}.{key}")
 
 
 if __name__ == "__main__":

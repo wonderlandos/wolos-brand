@@ -1,0 +1,61 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Meter: written by DS-SPEC-A from the Kit as it draws today (kit_comms.rs measures it).
+schema = 1
+id = "meter"
+name = "Meter"
+category = "data"
+status = "beta"
+since = "0.12"
+summary = "Shows a share of a whole (memory, a quota) as a bar in a tone."
+hig = "hig.md section 3 (Behaviour)"
+
+[implementations.gtk]
+api = "kit::data::meter"
+css = "progressbar.meter"
+file = "crates/shell/src/kit/data.rs"
+
+[anatomy]
+track = "the text colour at 12 %, radius 3"
+fill = "the tone colour"
+
+[sizes.regular]
+height = 6
+off_grid = ["height"]
+why = "A track is an optical length, not spacing: 6 px reads between the 4 px progress bar and the 8 px installer bar."
+
+[states]
+accent = "A share, the accent tone."
+success = "A share, the success tone."
+warning = "A share, the warning tone."
+danger = "A share near the limit, the danger tone."
+empty = "Nothing used."
+full = "All used."
+
+[keyboard]
+None = "A meter is not interactive and not in the Tab order."
+
+[a11y]
+gtk_role = "meter"
+name = "The text beside it says what is measured (labelled-by)."
+description = "The value in words."
+
+[copy]
+neighbour = "The value in words next to it: 6.2 GB of 8 GB."
+
+[[rules]]
+id = "RU-600"
+kind = "do"
+text = "A meter is clamped to the whole: a share above 100 % draws full."
+enforced = "kit_comms"
+
+[[rules]]
+id = "RU-601"
+kind = "dont"
+text = "Do not carry meaning by the tone alone; the value is in words beside it."
+enforced = "manual"
+
+[tests]
+states = ["accent", "success", "warning", "danger", "empty", "full"]
+densities = ["standard"]
+variants = ["light", "dark"]

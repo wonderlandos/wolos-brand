@@ -1,0 +1,77 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Colour well: written by DS-SPEC-A from the Kit as it draws today (kit_input.rs measures it).
+schema = 1
+id = "colour-well"
+name = "Colour well"
+category = "input"
+status = "beta"
+since = "0.12"
+summary = "Shows one colour and opens a small palette to change it."
+hig = "hig.md section 1 (Settings-style apps: Appearance)"
+
+[implementations.gtk]
+api = "kit::pickers::ColorWell"
+swatch = "kit::widgets::accent_swatch"
+css = "button.color-well"
+file = "crates/shell/src/kit/pickers.rs"
+
+[anatomy]
+well = "a 22 px disc in the colour, ringed in the line colour; a clear colour sits on a two-tone disc"
+palette = "a popover with swatches and a #rrggbb field"
+
+# The disc is 22 px and the button is a control tall.
+
+[sizes.regular]
+width = 24
+height = 24
+
+[density.compact]
+control = 20
+row = 32
+pad_y = 4
+
+[density.standard]
+control = 24
+row = 40
+pad_y = 6
+
+[density.comfortable]
+control = 32
+row = 48
+pad_y = 8
+
+[states]
+rest = "Closed, showing the colour."
+disabled = "The colour cannot change now."
+
+[keyboard]
+Tab = "Moves the focus to the well."
+Space = "Opens the palette."
+Escape = "Closes it."
+Enter = "In the hex field, applies a valid colour."
+
+[a11y]
+gtk_role = "button"
+name = "The row title and the colour in words or hex."
+description = "None."
+
+[copy]
+tooltip = "The hex value, #rrggbb."
+
+[[rules]]
+id = "RU-250"
+kind = "do"
+text = "A colour is also shown as text (the tooltip), never by the disc alone."
+enforced = "kit_input"
+
+[[rules]]
+id = "RU-251"
+kind = "do"
+text = "The palette reports a valid colour only; a mistyped hex changes nothing."
+enforced = "manual"
+
+[tests]
+states = ["rest", "disabled"]
+densities = ["standard"]
+variants = ["light", "dark"]
