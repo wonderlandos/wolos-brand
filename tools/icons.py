@@ -876,6 +876,8 @@ def build_symbolic():
     sym("drive-harddisk", drive())
     sym("drive-multidisk", drive(1.75, 5.25) + drive(9.0, 5.25))
     sym("drive-removable-media", R(1.75, 5.75, 12.5, 6.5) + L(4.5, 9.0, 6.5, 9.0) + D(11.0, 9.0, 0.9) + L(5.0, 3.0, 11.0, 3.0))
+    # the Federate mark (the network's asterisk logo, MIT): shown in the omnibox for fed:// pages instead of the padlock
+    sym("fed", L(8.0, 2.0, 8.0, 14.0) + L(2.0, 8.0, 14.0, 8.0) + L(3.757, 3.757, 12.243, 12.243) + L(3.757, 12.243, 12.243, 3.757))
     sym("network-server", R(1.75, 1.75, 12.5, 5.0, 1.75) + R(1.75, 9.25, 12.5, 5.0, 1.75) + D(4.5, 4.25, 0.9) + D(4.5, 11.75, 0.9) + L(7.5, 4.25, 11.5, 4.25) + L(7.5, 11.75, 11.5, 11.75))
     sym("network-wired", R(5.75, 1.75, 4.5, 3.5, 1.0) + R(1.75, 10.75, 4.5, 3.5, 1.0) + R(9.75, 10.75, 4.5, 3.5, 1.0) +
         L(8, 5.25, 8, 8.0) + P([(4.0, 10.75), (4.0, 8.0), (12.0, 8.0), (12.0, 10.75)], r=1.0))
