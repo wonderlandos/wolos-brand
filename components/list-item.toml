@@ -1,0 +1,68 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# List item: written by DS-COMPONENTS (M3: Lists); tests/kit_collection.rs builds every case.
+
+schema = 1
+id = "list-item"
+name = "List item"
+category = "containment"
+status = "beta"
+since = "0.12"
+summary = "The content layouts of a list row: one, two or three lines, with a leading glyph, avatar or picture and a trailing control."
+hig = "hig.md section 1 (rows); the row height is the list-row spec's"
+m3 = "Lists"
+
+[implementations.gtk]
+api = "kit::collection::list_item"
+row = "kit::widgets::list_row"
+css = ".list-row"
+file = "crates/shell/src/kit/collection.rs"
+
+[anatomy]
+leading = "nothing, a 16 px glyph, a 32 px avatar or a 32 px picture, 12 px before the text"
+title = "body 13/20"
+supporting = "secondary 11/16; wraps; a three-line item shows two lines and ellipsizes"
+trailing = "a control or a short text at the end, named by the title"
+
+[states]
+"one-line" = "Title only, with a glyph."
+"two-line" = "Title and one supporting line."
+"three-line" = "Title and two supporting lines with a picture."
+avatar = "A person: an avatar, a name and an address."
+trailing = "A trailing switch named by the title."
+
+[keyboard]
+Tab = "Moves to the trailing control, when there is one."
+
+[a11y]
+gtk_role = "generic"
+web_role = "listitem"
+wolkit_role = "list-item"
+name = "The trailing control is labelled by the title and described by the supporting text."
+description = "None."
+
+[copy]
+title = "Sentence case; the supporting text completes it and does not repeat it."
+
+[[rules]]
+id = "RU-410"
+kind = "do"
+text = "A trailing control in a list item is named by the item's title."
+enforced = "kit_collection"
+
+[[rules]]
+id = "RU-411"
+kind = "do"
+text = "A three-line item ellipsizes its supporting text after two lines instead of growing."
+enforced = "kit_collection"
+
+[[rules]]
+id = "RU-412"
+kind = "dont"
+text = "Do not mix one-, two- and three-line items in one list without a reason a person can see."
+enforced = "manual"
+
+[tests]
+states = ["one-line", "two-line", "three-line", "avatar", "trailing"]
+densities = ["standard"]
+variants = ["light", "dark"]

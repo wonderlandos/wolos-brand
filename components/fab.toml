@@ -1,0 +1,66 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Floating action button: written by DS-COMPONENTS (M3: FAB, extended FAB); tests/kit_collection.rs builds every case.
+
+schema = 1
+id = "fab"
+name = "Floating action button"
+category = "actions"
+status = "beta"
+since = "0.12"
+summary = "The one main action of a touch or narrow surface that has no toolbar for it; a glyph alone or extended with words."
+hig = "hig.md section 1 (one primary action per surface)"
+m3 = "FAB, extended FAB"
+
+[implementations.gtk]
+api = "kit::collection::fab"
+css = "button.fab"
+file = "crates/shell/src/kit/collection.rs"
+
+[anatomy]
+container = "40 x 40, radius 12, the accent fill, elevation 2; extended: 40 tall, a pill, 16 px each side"
+glyph = "16 px in the accent ink"
+label = "13 semibold, extended only"
+
+[sizes.regular]
+width = 40
+height = 40
+
+[sizes.extended]
+height = 40
+
+[states]
+regular = "A glyph alone (New Note)."
+extended = "A glyph and the words."
+
+[keyboard]
+Tab = "Moves to it after the content."
+Space = "Runs the action."
+Enter = "Runs the action."
+
+[a11y]
+gtk_role = "button"
+web_role = "button"
+wolkit_role = "button"
+name = "Its label, or its tooltip when it shows a glyph alone."
+description = "None."
+
+[copy]
+label = "A verb phrase in Title Case: New Note."
+
+[[rules]]
+id = "RU-104"
+kind = "do"
+text = "A surface has at most one floating action button, and only when its toolbar does not hold that action."
+enforced = "manual"
+
+[[rules]]
+id = "RU-105"
+kind = "do"
+text = "A floating action button with a glyph alone has a tooltip, which is its name."
+enforced = "kit_collection"
+
+[tests]
+states = ["regular", "extended"]
+densities = ["standard"]
+variants = ["light", "dark"]

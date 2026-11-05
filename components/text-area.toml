@@ -1,0 +1,63 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Text area: written by DS-COMPONENTS (M3: Text field (multi-line)); tests/kit_calendar.rs builds every case.
+
+schema = 1
+id = "text-area"
+name = "Text area"
+category = "input"
+status = "beta"
+since = "0.12"
+summary = "Takes text of several lines (a note, a description) that wraps at the field's width and scrolls when long."
+hig = "hig.md section 1 (forms)"
+m3 = "Text field (multi-line)"
+
+[implementations.gtk]
+api = "kit::text::TextArea"
+css = "scrolledwindow.text-area-field"
+file = "crates/shell/src/kit/text.rs"
+
+[anatomy]
+field = "the control fill, a hairline, radius 8, 8 px inside"
+text = "body 13/20, wraps at word boundaries"
+placeholder = "dim text while empty"
+
+[sizes.regular]
+height = 84
+
+[states]
+empty = "Nothing typed: the placeholder shows."
+filled = "Three lines of text."
+disabled = "The text can be read and not changed."
+
+[keyboard]
+Tab = "Moves the focus into the area (Tab inside it moves on; Ctrl+Tab types a tab)."
+Enter = "A new line."
+"Ctrl+A" = "Selects all."
+
+[a11y]
+gtk_role = "textbox"
+web_role = "textbox"
+wolkit_role = "text-area"
+name = "The row title or the field label (labelled-by)."
+description = "The hint or the error line under it."
+
+[copy]
+placeholder = "An example of what goes in, not the label: A few words about this app."
+
+[[rules]]
+id = "RU-260"
+kind = "do"
+text = "A text area is at least three lines (84 px) tall and grows to the content up to its page."
+enforced = "kit_calendar"
+
+[[rules]]
+id = "RU-261"
+kind = "dont"
+text = "Do not use a text area for one line; use a text field."
+enforced = "manual"
+
+[tests]
+states = ["empty", "filled", "disabled"]
+densities = ["standard"]
+variants = ["light", "dark"]

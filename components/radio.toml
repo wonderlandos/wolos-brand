@@ -1,0 +1,84 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Radio group: written by DS-COMPONENTS (M3: Radio button); tests/kit_choice.rs builds every case.
+
+schema = 1
+id = "radio"
+name = "Radio group"
+category = "selection"
+status = "beta"
+since = "0.12"
+summary = "Picks exactly one of two to six options that are shown at once, each with a dot."
+hig = "hig.md section 1 (forms)"
+m3 = "Radio button"
+
+[implementations.gtk]
+api = "kit::choice::radio_group"
+css = "checkbutton.radio"
+file = "crates/shell/src/kit/choice.rs"
+
+[implementations.view]
+node = "radio-group"
+file = "crates/shared/src/view.rs"
+
+[anatomy]
+ring = "16 px circle, a hairline of the text at 36 percent"
+dot = "the accent disc with a dot of the accent ink when picked"
+label = "body text, 8 px after the ring"
+group = "options one per line, 4 px apart, named by the row title or heading"
+
+[sizes.regular]
+height = 24
+ring = 16
+
+[density.compact]
+control = 20
+
+[density.standard]
+control = 24
+
+[density.comfortable]
+control = 32
+
+[states]
+first = "The first option is picked."
+second = "The second option is picked."
+disabled = "No option can be picked now."
+
+[keyboard]
+Tab = "Moves the focus into the group and out of it."
+"Up and Down" = "Move to the next option and pick it."
+Space = "Picks the focused option."
+
+[a11y]
+gtk_role = "radiogroup"
+web_role = "radiogroup"
+wolkit_role = "radio"
+name = "Each option by its label; the group by the row title (labelled-by)."
+description = "None."
+
+[copy]
+option = "Sentence case, the same grammatical kind in every option, no end punctuation."
+
+[[rules]]
+id = "RU-193"
+kind = "do"
+text = "Use a radio group for two to six exclusive options a person compares; use a dropdown for more."
+enforced = "manual"
+
+[[rules]]
+id = "RU-194"
+kind = "do"
+text = "A radio group always has one option picked, and the group is named by its title."
+enforced = "kit_choice"
+
+[[rules]]
+id = "RU-195"
+kind = "dont"
+text = "Do not use a radio group to start actions; each option is a state."
+enforced = "manual"
+
+[tests]
+states = ["first", "second", "disabled"]
+densities = ["compact", "standard", "comfortable"]
+variants = ["light", "dark"]

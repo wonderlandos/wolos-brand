@@ -1,0 +1,70 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Notice: written by DS-SPEC-A from the Kit as it draws today (kit_comms.rs measures it).
+schema = 1
+id = "notice"
+name = "Notice"
+category = "communication"
+status = "beta"
+since = "0.12"
+summary = "Warns next to its cause, in one sentence, with the ways out as buttons."
+hig = "hig.md section 3 (Behaviour: inline warnings)"
+
+[implementations.gtk]
+api = "kit::form::notice"
+css = ".notice"
+file = "crates/shell/src/kit/form.rs"
+
+[implementations.web]
+element = "wol-badge"
+file = "webapps/kit/wolkit.js"
+
+[anatomy]
+icon = "16 px warning glyph in the warning colour"
+text = "13 px, wraps"
+actions = "buttons on the right, centred on the text"
+
+# One line of 20 px text in a list row (40); wrapped text and buttons make it taller.
+
+[sizes.regular]
+height = 40
+
+[states]
+text = "A warning with no way out on the notice itself."
+actions = "A warning and one or two buttons."
+
+[keyboard]
+Tab = "Moves the focus to the first button."
+Space = "Presses the focused button."
+
+[a11y]
+gtk_role = "alert"
+web_role = "status"
+name = "Its sentence."
+description = "None."
+
+[copy]
+sentence = "Says what is wrong and what can be done, with the names in quotes: Super+Space is used by Show Search."
+
+[[rules]]
+id = "RU-510"
+kind = "do"
+text = "A notice sits next to what it is about, not at the top of the window."
+enforced = "manual"
+
+[[rules]]
+id = "RU-511"
+kind = "do"
+text = "A notice is one sentence and its buttons are verbs."
+enforced = "manual"
+
+[[rules]]
+id = "RU-512"
+kind = "dont"
+text = "Do not use a notice for something that only needs a toast."
+enforced = "manual"
+
+[tests]
+states = ["text", "actions"]
+densities = ["standard"]
+variants = ["light", "dark"]

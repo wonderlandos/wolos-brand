@@ -1,0 +1,55 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Divider: written by DS-COMPONENTS (M3: Divider); tests/kit_collection.rs builds every case.
+
+schema = 1
+id = "divider"
+name = "Divider"
+category = "containment"
+status = "beta"
+since = "0.12"
+summary = "A hairline between groups of content: inset between rows of a card, full between sections."
+hig = "hig.md section 2 (hairline inset, never to the frame edge)"
+m3 = "Divider"
+
+[implementations.gtk]
+api = "kit::collection::divider"
+css = "separator.divider"
+file = "crates/shell/src/kit/collection.rs"
+
+[implementations.view]
+node = "divider"
+file = "crates/shared/src/view.rs"
+
+[anatomy]
+line = "1 px of the line colour; inset 12 px at both ends when inset"
+
+[sizes.line]
+height = 1
+off_grid = ["height"]
+why = "A hairline or a grab handle is drawn thinner than one fen."
+
+[states]
+full = "A full divider between sections."
+inset = "An inset divider between rows."
+
+[keyboard]
+Tab = "Skips it."
+
+[a11y]
+gtk_role = "separator"
+web_role = "separator"
+wolkit_role = "separator"
+name = "None."
+description = "None."
+
+[[rules]]
+id = "RU-420"
+kind = "do"
+text = "A divider inside a card is inset by the card's inset, never drawn to the card edge."
+enforced = "kit_collection"
+
+[tests]
+states = ["full", "inset"]
+densities = ["standard"]
+variants = ["light", "dark"]

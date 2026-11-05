@@ -1,0 +1,76 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Table: written by DS-COMPONENTS (M3: (Data tables)); tests/kit_collection.rs builds every case.
+
+schema = 1
+id = "table"
+name = "Table"
+category = "data"
+status = "beta"
+since = "0.12"
+summary = "Rows of data with column titles, one cell per column; numbers right-aligned in tabular figures."
+hig = "hig.md section 1 (lists and tables)"
+m3 = "(Data tables)"
+
+[implementations.gtk]
+api = "kit::collection::table"
+css = "columnview.table"
+file = "crates/shell/src/kit/collection.rs"
+
+[anatomy]
+header = "column titles in the 11 dim caption, 28 tall"
+row = "32 tall (compact 24, comfortable 40), hairlines between rows"
+cell = "12 px each side; numbers right-aligned"
+selection = "the accent at 18 percent"
+
+[density.compact]
+item = 24
+
+[density.standard]
+item = 32
+
+[density.comfortable]
+item = 40
+
+[states]
+rows = "Four processes with their memory."
+
+[keyboard]
+Tab = "Moves into the table."
+"Up and Down" = "Move between rows."
+"Shift+Up and Shift+Down" = "Extend the selection."
+Enter = "Opens the focused row."
+
+[a11y]
+gtk_role = "treegrid"
+web_role = "grid"
+wolkit_role = "table"
+name = "Column titles; each cell by its text."
+description = "None."
+
+[copy]
+columns = "Title Case nouns, units in the title (Memory, MB) and not in every cell."
+
+[[rules]]
+id = "RU-610"
+kind = "do"
+text = "Number columns are right-aligned in tabular figures."
+enforced = "kit_collection"
+
+[[rules]]
+id = "RU-611"
+kind = "do"
+text = "A table row is 32 px at standard density and follows the density."
+enforced = "kit_collection"
+
+[[rules]]
+id = "RU-612"
+kind = "dont"
+text = "Do not put more than one control in a table cell."
+enforced = "manual"
+
+[tests]
+states = ["rows"]
+densities = ["compact", "standard", "comfortable"]
+variants = ["light", "dark"]
+width = 640

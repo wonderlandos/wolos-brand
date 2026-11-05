@@ -1,0 +1,60 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Rich tooltip: written by DS-COMPONENTS (M3: Tooltips (rich)); tests/kit_sheets.rs builds every case.
+
+schema = 1
+id = "rich-tooltip"
+name = "Rich tooltip"
+category = "communication"
+status = "beta"
+since = "0.12"
+summary = "A tooltip with a title, one or two sentences and at most one text action, which stays while the pointer is over it."
+hig = "hig.md section 1 (tooltips)"
+m3 = "Tooltips (rich)"
+
+[implementations.gtk]
+api = "kit::sheets::rich_tooltip"
+body = "kit::sheets::rich_tooltip_body"
+css = ".rich-tooltip"
+file = "crates/shell/src/kit/sheets.rs"
+
+[anatomy]
+surface = "glass, radius 12, the 12 px inset, elevation 2"
+title = "13 semibold"
+text = "11 secondary, at most 40 characters a line"
+action = "one plain button"
+
+[states]
+text = "A title and a sentence."
+action = "A title, a sentence and a Learn More action."
+
+[keyboard]
+Tab = "From its anchor, moves into the action."
+Escape = "Closes it."
+
+[a11y]
+gtk_role = "tooltip"
+web_role = "tooltip"
+wolkit_role = "tooltip"
+name = "Its title."
+description = "Its text."
+
+[copy]
+text = "One or two sentences that explain, not repeat the label."
+
+[[rules]]
+id = "RU-592"
+kind = "do"
+text = "A rich tooltip holds at most one action and never the only way to do something."
+enforced = "manual"
+
+[[rules]]
+id = "RU-593"
+kind = "dont"
+text = "Do not put a rich tooltip on a control that has a plain tooltip; one or the other."
+enforced = "manual"
+
+[tests]
+states = ["text", "action"]
+densities = ["standard"]
+variants = ["light", "dark"]

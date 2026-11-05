@@ -64,21 +64,36 @@ def problems(spec, name):
         if f is not None and (f.startswith("/") or ".." in f.split("/")):
             say(f"{kit} file is a path inside the repository")
     for size, dims in spec.get("sizes", {}).items():
+        # A length that is not a whole fen (a 6 px meter) is allowed only when the size says which
+        # and why: `off_grid = ["height"]` and `why = "..."`.
+        off = dims.get("off_grid", [])
+        if off and not (isinstance(dims.get("why"), str) and dims["why"].endswith(".")):
+            say(f"sizes.{size} lists off_grid lengths and needs `why`, one sentence with a full stop")
+        for k in off:
+            if k not in ("width", "height"):
+                say(f"sizes.{size}.off_grid names width or height, not {k}")
         for k in ("width", "height", "thumb", "padding"):
             v = dims.get(k)
-            if v is not None and (not isinstance(v, int) or v % FEN and k in ("width", "height")):
+            if v is not None and (not isinstance(v, int) or v % FEN and k in ("width", "height") and k not in off):
                 say(f"sizes.{size}.{k} is a whole fen (a multiple of {FEN} px)")
     for d, m in spec.get("density", {}).items():
         if d not in DENSITIES:
             say(f"density {d} is one of {DENSITIES}")
-        if not isinstance(m.get("row"), int) or m["row"] % FEN:
-            say(f"density.{d}.row is a whole fen")
+        # `row` is the list row that holds the component, `control` the height of the control itself,
+        # `row_stack` a row with its title above the control (a slider row).
+        # `item` the height of the component's own repeated item (a table row), which has no token.
+        if not any(k in m for k in ("row", "control", "row_stack", "item")):
+            say(f"density.{d} gives a row or a control height")
+        for k in ("row", "control", "row_stack", "item"):
+            if k in m and (not isinstance(m[k], int) or m[k] % FEN):
+                say(f"density.{d}.{k} is a whole fen")
     t = spec["tests"]
     for s in t.get("states", []):
         if s not in spec["states"]:
             say(f"tests.states names {s}, which [states] does not describe")
     for d in t.get("densities", []):
-        if d not in spec.get("density", {}):
+        # Standard is the stylesheet as it is: a component with no density metrics tests it without a table.
+        if d not in spec.get("density", {}) and d != "standard":
             say(f"tests.densities names {d}, which [density] does not give")
     for v in t.get("variants", []):
         if v not in VARIANTS:

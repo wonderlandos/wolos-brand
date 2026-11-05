@@ -1,0 +1,81 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Card: written by DS-COMPONENTS (M3: Cards (elevated, filled, outlined)); tests/kit_collection.rs builds every case.
+
+schema = 1
+id = "card"
+name = "Card"
+category = "containment"
+status = "beta"
+since = "0.12"
+summary = "Holds one subject (an app, a photo, a summary) on a surface of its own: elevated, filled or outlined."
+hig = "hig.md section 2 (radius 12, inset 12)"
+m3 = "Cards (elevated, filled, outlined)"
+
+[implementations.gtk]
+api = "kit::collection::card"
+css = ".surface-card"
+file = "crates/shell/src/kit/collection.rs"
+
+[implementations.view]
+node = "card"
+file = "crates/shared/src/view.rs"
+
+[anatomy]
+surface = "radius 12, the inset on all four sides (12; compact 8, comfortable 16)"
+elevated = "the card fill and elevation 1"
+filled = "the control fill, no shadow"
+outlined = "the card fill and a hairline"
+
+[density.compact]
+inset = 8
+row = 32
+
+[density.standard]
+inset = 12
+row = 40
+
+[density.comfortable]
+inset = 16
+row = 48
+
+[states]
+elevated = "An elevated card."
+filled = "A filled card."
+outlined = "An outlined card."
+
+[keyboard]
+Tab = "Moves to the controls inside the card; the card itself takes no focus unless it is one button."
+
+[a11y]
+gtk_role = "group"
+web_role = "group"
+wolkit_role = "group"
+name = "Its title, when it has one."
+description = "None."
+
+[copy]
+title = "Title Case for the card title, sentence case for its text."
+
+[[rules]]
+id = "RU-400"
+kind = "do"
+text = "A card insets its content equally on all four sides by the density's inset."
+enforced = "kit_collection"
+
+[[rules]]
+id = "RU-401"
+kind = "do"
+text = "Use one card style per surface: elevated on the window ground, filled inside another card, outlined in dense lists."
+enforced = "manual"
+
+[[rules]]
+id = "RU-402"
+kind = "dont"
+text = "Do not nest an elevated card in an elevated card."
+enforced = "manual"
+
+[tests]
+states = ["elevated", "filled", "outlined"]
+densities = ["compact", "standard", "comfortable"]
+variants = ["light", "dark"]

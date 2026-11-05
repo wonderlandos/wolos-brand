@@ -1,0 +1,62 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Floating toolbar: written by DS-COMPONENTS (M3 expressive: Toolbars, floating); tests/kit_groups.rs builds every case.
+
+schema = 1
+id = "floating-toolbar"
+name = "Floating toolbar"
+category = "actions"
+status = "beta"
+since = "0.12"
+summary = "A pill that floats over content with the few actions of that content, such as undo, redo and copy in an image editor."
+hig = "hig.md section 1 (toolbars)"
+m3 = "Toolbars (floating)"
+
+[implementations.gtk]
+api = "kit::groups::floating_toolbar"
+css = ".floating-toolbar"
+file = "crates/shell/src/kit/groups.rs"
+
+[anatomy]
+pill = "32 tall, a pill, the glass fill, elevation 3, a hairline"
+action = "a 24 px icon button, a circle on hover"
+primary = "at most one, at the end, in the accent fill"
+
+[sizes.regular]
+height = 32
+
+[states]
+actions = "Three icon buttons."
+primary = "Two icon buttons and a primary one at the end."
+
+[keyboard]
+Tab = "Moves through the actions."
+Space = "Runs the focused action."
+Enter = "Runs the focused action."
+
+[a11y]
+gtk_role = "toolbar"
+web_role = "toolbar"
+wolkit_role = "toolbar"
+name = "The toolbar by what it acts on (Image Tools); every action by its tooltip."
+description = "None."
+
+[copy]
+tooltip = "A verb in Title Case: Rotate."
+
+[[rules]]
+id = "RU-137"
+kind = "do"
+text = "A floating toolbar holds two to five actions, every one with a tooltip, and at most one primary."
+enforced = "kit_groups"
+
+[[rules]]
+id = "RU-138"
+kind = "dont"
+text = "Do not float a toolbar over text a person is reading or typing; keep it for images, maps and canvases."
+enforced = "manual"
+
+[tests]
+states = ["actions", "primary"]
+densities = ["standard"]
+variants = ["light", "dark"]

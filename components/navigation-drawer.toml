@@ -1,0 +1,74 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Navigation drawer: written by DS-COMPONENTS (M3: Navigation drawer, modal); tests/kit_groups.rs builds every case.
+
+schema = 1
+id = "navigation-drawer"
+name = "Navigation drawer"
+category = "navigation"
+status = "beta"
+since = "0.12"
+summary = "The modal drawer of a window too narrow for its sidebar: a title, then the destinations as rows."
+hig = "hig.md section 1 (sidebar 240)"
+m3 = "Navigation drawer"
+
+[implementations.gtk]
+api = "kit::groups::navigation_drawer"
+css = ".navigation-drawer"
+file = "crates/shell/src/kit/groups.rs"
+
+[anatomy]
+drawer = "240 wide, the card fill, radius 12 on the end side, elevation 3, a hairline"
+title = "13 semibold, 8 px in from the edge"
+destination = "a pill row: a 16 px glyph and a 13 label, 12 px apart"
+picked = "the accent at 18 percent with the label in semibold"
+
+[sizes.drawer]
+width = 240
+
+[density.compact]
+item = 28
+
+[density.standard]
+item = 32
+
+[density.comfortable]
+item = 40
+
+[states]
+first = "The first destination is picked."
+last = "The last destination is picked."
+
+[keyboard]
+Tab = "Moves to the picked destination."
+"Up and Down" = "Move between destinations."
+Space = "Opens the focused destination and closes the drawer."
+Escape = "Closes the drawer without moving."
+
+[a11y]
+gtk_role = "navigation"
+web_role = "navigation"
+wolkit_role = "navigation"
+name = "The drawer by its title; each destination by its label."
+description = "The picked one is pressed."
+
+[copy]
+title = "The name of the app or the place: Settings."
+label = "One or two words in Title Case per destination."
+
+[[rules]]
+id = "RU-317"
+kind = "do"
+text = "The drawer opens over the content with a scrim and closes when a destination is picked or Escape is pressed; the wide window shows the sidebar instead, never both."
+enforced = "manual"
+
+[[rules]]
+id = "RU-318"
+kind = "do"
+text = "Every drawer destination has a glyph and a label, and the drawer is named by its title."
+enforced = "kit_groups"
+
+[tests]
+states = ["first", "last"]
+densities = ["compact", "standard", "comfortable"]
+variants = ["light", "dark"]

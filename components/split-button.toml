@@ -1,0 +1,64 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Split button: written by DS-COMPONENTS (M3 expressive: Split button); tests/kit_groups.rs builds every case.
+
+schema = 1
+id = "split-button"
+name = "Split button"
+category = "actions"
+status = "beta"
+since = "0.12"
+summary = "A main action with a menu of related ones beside it: Save, and under the arrow Save As and Save a Copy."
+hig = "hig.md section 1 (toolbars)"
+m3 = "Split button"
+
+[implementations.gtk]
+api = "kit::groups::split_button"
+css = ".split-button"
+file = "crates/shell/src/kit/groups.rs"
+
+[anatomy]
+main = "the primary button: 24 tall, radius 8 on the outer corners, the accent fill"
+arrow = "a 24 wide menu button with a small down arrow, the same fill, radius 8 on the outer corners"
+gap = "2 px between the two, so they read as two targets"
+
+[sizes.regular]
+height = 24
+
+[states]
+rest = "Both parts at rest."
+disabled = "Neither part can act."
+
+[keyboard]
+Tab = "Moves to the main button, then to the arrow."
+Space = "Runs the main action, or opens the menu on the arrow."
+Enter = "Runs the main action, or opens the menu on the arrow."
+Down = "On the arrow, opens the menu."
+
+[a11y]
+gtk_role = "group"
+web_role = "group"
+wolkit_role = "group"
+name = "The main button by its label, the arrow by the name you give it (More Ways to Save)."
+description = "None."
+
+[copy]
+label = "A verb in Title Case: Save."
+arrow = "More Ways to <Verb>: More Ways to Save."
+
+[[rules]]
+id = "RU-133"
+kind = "do"
+text = "The menu under a split button holds variations of the main action, never unrelated commands."
+enforced = "manual"
+
+[[rules]]
+id = "RU-134"
+kind = "do"
+text = "The arrow of a split button is named for assistive technology."
+enforced = "kit_groups"
+
+[tests]
+states = ["rest", "disabled"]
+densities = ["standard"]
+variants = ["light", "dark"]

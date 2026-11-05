@@ -1,0 +1,67 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Bottom app bar: written by DS-COMPONENTS (M3: Bottom app bar); tests/kit_navigation.rs builds every case.
+
+schema = 1
+id = "bottom-app-bar"
+name = "Bottom app bar"
+category = "navigation"
+status = "beta"
+since = "0.12"
+summary = "Two to four actions at the bottom of a narrow window or a touch surface; the toolbar keeps them on a wide window."
+hig = "hig.md section 1 (toolbar 40)"
+m3 = "Bottom app bar"
+
+[implementations.gtk]
+api = "kit::navigation::bottom_app_bar"
+css = ".bottom-app-bar"
+file = "crates/shell/src/kit/navigation.rs"
+
+[anatomy]
+bar = "glass fill, an inset hairline on top, 40 tall, 16 px at each end"
+actions = "icon buttons at the start, 8 px apart"
+primary = "one primary button at the end"
+
+[density.compact]
+row = 32
+
+[density.standard]
+row = 40
+
+[density.comfortable]
+row = 48
+
+[states]
+actions = "Three icon actions."
+primary = "Two icon actions and a primary button."
+
+[keyboard]
+Tab = "Moves through the actions in order."
+Space = "Activates the focused action."
+
+[a11y]
+gtk_role = "toolbar"
+web_role = "toolbar"
+wolkit_role = "toolbar"
+name = "Each action by its tooltip or label."
+description = "None."
+
+[copy]
+actions = "Icon actions have a tooltip in Title Case; the primary button is a verb."
+
+[[rules]]
+id = "RU-335"
+kind = "do"
+text = "A bottom app bar holds at most four actions and at most one primary action, at the end."
+enforced = "kit_navigation"
+
+[[rules]]
+id = "RU-336"
+kind = "dont"
+text = "Do not show a bottom app bar and a toolbar with the same actions at once."
+enforced = "manual"
+
+[tests]
+states = ["actions", "primary"]
+densities = ["compact", "standard", "comfortable"]
+variants = ["light", "dark"]

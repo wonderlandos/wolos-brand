@@ -1,0 +1,58 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Bottom sheet: written by DS-COMPONENTS (M3: Bottom sheets); tests/kit_sheets.rs builds every case.
+
+schema = 1
+id = "bottom-sheet"
+name = "Bottom sheet"
+category = "containment"
+status = "beta"
+since = "0.12"
+summary = "A sheet anchored to the bottom edge of a narrow window or a touch surface, with a grab handle on top."
+hig = "hig.md section 1 (sheets)"
+m3 = "Bottom sheets"
+
+[implementations.gtk]
+api = "kit::sheets::bottom_sheet"
+css = ".bottom-sheet"
+file = "crates/shell/src/kit/sheets.rs"
+
+[anatomy]
+surface = "the card fill, radius 24 at the top corners, a hairline, elevation 2"
+handle = "a 40 x 4 pill of the text at 24 percent, centred"
+content = "rows or details, the 12 px inset at the sides"
+
+[sizes.handle]
+width = 40
+height = 4
+
+[states]
+actions = "A short list of actions."
+
+[keyboard]
+Tab = "Moves through the content."
+Escape = "Closes the sheet."
+
+[a11y]
+gtk_role = "dialog"
+web_role = "dialog"
+wolkit_role = "dialog"
+name = "Its heading."
+description = "None."
+
+[[rules]]
+id = "RU-440"
+kind = "do"
+text = "A bottom sheet is for narrow windows and touch; wide windows use a sheet from the toolbar or a side sheet."
+enforced = "manual"
+
+[[rules]]
+id = "RU-441"
+kind = "do"
+text = "A bottom sheet closes with Escape and shows its grab handle."
+enforced = "kit_sheets"
+
+[tests]
+states = ["actions"]
+densities = ["standard"]
+variants = ["light", "dark"]

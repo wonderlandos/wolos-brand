@@ -1,0 +1,59 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Range slider: written by DS-COMPONENTS (M3: Slider (range)); tests/kit_choice.rs builds every case.
+
+schema = 1
+id = "range-slider"
+name = "Range slider"
+category = "selection"
+status = "beta"
+since = "0.12"
+summary = "Picks a range with two knobs on one track (a price from and to); neither knob can pass the other."
+hig = "hig.md section 1 (filters)"
+m3 = "Slider (range)"
+
+[implementations.gtk]
+api = "kit::choice::RangeSlider"
+css = ".range-slider"
+file = "crates/shell/src/kit/choice.rs"
+
+[anatomy]
+track = "4 px, the control fill"
+range = "the part between the knobs in the accent"
+knobs = "two 16 px white circles, each its own slider for the keyboard"
+
+[states]
+narrow = "A short range in the middle of the track."
+wide = "The range covers most of the track."
+disabled = "The range cannot change now."
+
+[keyboard]
+Tab = "Moves to the low knob, then the high knob."
+"Left and Right" = "Move the focused knob; it stops at the other one."
+
+[a11y]
+gtk_role = "slider"
+web_role = "slider"
+wolkit_role = "slider"
+name = "Each knob by its own name (Lowest price, Highest price)."
+description = "None."
+
+[copy]
+names = "The two knob names say which end they are: Lowest and Highest, or From and To, with the quantity."
+
+[[rules]]
+id = "RU-102"
+kind = "do"
+text = "Each knob of a range slider is a slider of its own with its own name."
+enforced = "kit_choice"
+
+[[rules]]
+id = "RU-103"
+kind = "do"
+text = "The low knob never passes the high knob."
+enforced = "kit_choice"
+
+[tests]
+states = ["narrow", "wide", "disabled"]
+densities = ["standard"]
+variants = ["light", "dark"]

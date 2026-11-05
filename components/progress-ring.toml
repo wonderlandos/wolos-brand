@@ -1,0 +1,61 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Progress ring: written by DS-SPEC-A from the Kit as it draws today (kit_comms.rs measures it).
+schema = 1
+id = "progress-ring"
+name = "Progress ring"
+category = "communication"
+status = "beta"
+since = "0.12"
+summary = "Shows a job's progress in 24 px, beside a name in a tile or a row."
+hig = "hig.md section 3 (Behaviour: long work)"
+
+[implementations.gtk]
+api = "kit::widgets::progress_ring"
+determinate = "kit::widgets::ring_with"
+css = "progress-ring"
+file = "crates/shell/src/kit/widgets.rs"
+
+[anatomy]
+track = "the accent at 20 %, 3 px"
+fill = "the accent, round caps, from the top clockwise"
+
+[sizes.regular]
+width = 24
+height = 24
+
+[states]
+empty = "0 % done."
+half = "50 % done."
+full = "100 % done."
+busy = "Running with no known end: an arc turns."
+
+[keyboard]
+None = "A ring is not interactive and not in the Tab order."
+
+[a11y]
+gtk_role = "progressbar"
+name = "The tile or row it sits in names the job."
+description = "The percentage."
+
+[copy]
+neighbour = "The row says what installs: Installing."
+
+[[rules]]
+id = "RU-560"
+kind = "do"
+text = "A ring with a known value shows it from the top, clockwise."
+enforced = "manual"
+
+[[rules]]
+id = "RU-561"
+kind = "do"
+text = "A ring exposes its value and a name to assistive technology."
+enforced = "manual"
+
+# busy has no picture: the arc turns.
+
+[tests]
+states = ["empty", "half", "full", "busy"]
+densities = ["standard"]
+variants = ["light", "dark"]

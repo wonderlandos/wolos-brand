@@ -1,0 +1,72 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Toast: written by DS-SPEC-A from the Kit as it draws today (kit_comms.rs measures it).
+schema = 1
+id = "toast"
+name = "Toast"
+category = "communication"
+status = "beta"
+since = "0.12"
+summary = "Says one short thing that just happened, with at most one action to undo it, and leaves on its own."
+hig = "hig.md section 3 (Behaviour)"
+
+[implementations.gtk]
+api = "kit::toast::Toast"
+css = ".toast"
+file = "crates/shell/src/kit/toast.rs"
+
+[anatomy]
+pill = "glass fill, 1 px line, radius 999, elevation 2, 16 px from the bottom edge of the content"
+text = "13 px, one line"
+action = "one plain button in the accent ink, optional"
+
+# With its action: a pill with 4 px around the 28 px button and the hairline.
+
+[sizes.regular]
+height = 40
+
+# A line alone: 20 px of text with 4 px around it and the hairline.
+
+[sizes.text]
+height = 32
+
+[states]
+text = "A line with no action."
+action = "A line and one action (Undo); using it runs the action and hides the toast."
+hidden = "Nothing is shown."
+
+[keyboard]
+Tab = "Moves the focus to the action, when there is one."
+Space = "Runs the action."
+Enter = "Runs the action."
+
+[a11y]
+gtk_role = "status"
+name = "Its line."
+description = "None."
+
+[copy]
+line = "What happened, past tense, no full stop: Theme changed. The action is one verb: Undo."
+
+[[rules]]
+id = "RU-500"
+kind = "do"
+text = "A toast replaces the previous toast and leaves after six seconds, longer when Give me more time is set."
+enforced = "kit_comms"
+
+[[rules]]
+id = "RU-501"
+kind = "dont"
+text = "Do not put a decision or an error that needs reading in a toast; use a notice or a sheet."
+enforced = "manual"
+
+[[rules]]
+id = "RU-502"
+kind = "do"
+text = "A toast has at most one action, and using it hides the toast."
+enforced = "kit_comms"
+
+[tests]
+states = ["text", "action", "hidden"]
+densities = ["standard"]
+variants = ["light", "dark"]

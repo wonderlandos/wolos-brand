@@ -1,0 +1,69 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Gauge: written by DS-SPEC-A from the Kit as it draws today (kit_comms.rs measures it).
+schema = 1
+id = "gauge"
+name = "Gauge"
+category = "data"
+status = "beta"
+since = "0.12"
+summary = "Shows a share of a whole as a ring with its value in the middle."
+hig = "hig.md section 3 (Behaviour)"
+
+[implementations.gtk]
+api = "kit::data::Gauge"
+css = ".gauge"
+file = "crates/shell/src/kit/data.rs"
+
+[anatomy]
+ring = "track at 18 %, fill in the tone, round caps, from the top clockwise"
+value = "in the middle, or a glyph"
+caption = "11 px secondary under the ring, one line"
+
+# A widget card cell.
+
+[sizes.small]
+width = 40
+height = 40
+
+[sizes.medium]
+width = 56
+height = 56
+
+[sizes.large]
+width = 88
+height = 88
+
+[states]
+small = "40 px."
+medium = "56 px."
+large = "88 px."
+danger = "56 px near the limit, the danger tone."
+
+[keyboard]
+None = "A gauge is not interactive and not in the Tab order."
+
+[a11y]
+gtk_role = "meter"
+name = "Its caption."
+description = "Its value."
+
+[copy]
+caption = "What is measured: Memory."
+
+[[rules]]
+id = "RU-602"
+kind = "do"
+text = "A gauge shows its value in words as well as in the ring."
+enforced = "kit_comms"
+
+[[rules]]
+id = "RU-603"
+kind = "do"
+text = "A gauge exposes its caption and value to assistive technology."
+enforced = "manual"
+
+[tests]
+states = ["small", "medium", "large", "danger"]
+densities = ["standard"]
+variants = ["light", "dark"]

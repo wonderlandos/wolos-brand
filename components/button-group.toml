@@ -1,0 +1,62 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Button group: written by DS-COMPONENTS (M3 expressive: Button groups); tests/kit_groups.rs builds every case.
+
+schema = 1
+id = "button-group"
+name = "Button group"
+category = "actions"
+status = "beta"
+since = "0.12"
+summary = "Buttons that belong together, joined into one block: Zoom Out, Zoom In, Full Screen. Each acts alone."
+hig = "hig.md section 1 (toolbars)"
+m3 = "Button groups"
+
+[implementations.gtk]
+api = "kit::groups::button_group"
+css = ".button-group"
+file = "crates/shell/src/kit/groups.rs"
+
+[anatomy]
+block = "24 tall, radius 8 on the outer corners only, the control fill"
+divider = "a 1 px hairline between neighbours"
+item = "a glyph or one word; the same height as a button"
+
+[sizes.regular]
+height = 24
+
+[states]
+glyphs = "Three glyph buttons (Zoom Out, Zoom In, Full Screen)."
+words = "Two buttons with words (Day, Week)."
+
+[keyboard]
+Tab = "Moves through the buttons one by one."
+Space = "Runs the focused button."
+Enter = "Runs the focused button."
+
+[a11y]
+gtk_role = "group"
+web_role = "group"
+wolkit_role = "group"
+name = "The group by what its buttons do (Text Style); every button by its label or tooltip."
+description = "None."
+
+[copy]
+label = "One word, or a glyph with a tooltip, per button."
+
+[[rules]]
+id = "RU-135"
+kind = "do"
+text = "A button group has two to five buttons; for exactly one choice from several use the segmented control."
+enforced = "manual"
+
+[[rules]]
+id = "RU-136"
+kind = "do"
+text = "A button group is named for assistive technology, and every glyph button in it has a tooltip."
+enforced = "kit_groups"
+
+[tests]
+states = ["glyphs", "words"]
+densities = ["standard"]
+variants = ["light", "dark"]

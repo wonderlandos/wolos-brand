@@ -1,0 +1,84 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Checkbox: written by DS-COMPONENTS (M3: Checkbox); tests/kit_choice.rs builds every case.
+
+schema = 1
+id = "checkbox"
+name = "Checkbox"
+category = "selection"
+status = "beta"
+since = "0.12"
+summary = "Turns one option of a list on or off, where several can be on at once and nothing applies until the list is used."
+hig = "hig.md section 1 (forms) and section 3 (Behaviour)"
+m3 = "Checkbox"
+
+[implementations.gtk]
+api = "kit::choice::checkbox"
+mixed = "kit::choice::set_mixed"
+css = "checkbutton.checkbox"
+file = "crates/shell/src/kit/choice.rs"
+
+[implementations.view]
+node = "checkbox"
+file = "crates/shared/src/view.rs"
+
+[anatomy]
+box = "16 px square, radius 4, a hairline of the text at 36 percent; card fill"
+check = "the accent fill with the check mark in the accent ink (or a dash when mixed)"
+label = "body text 13/20, 8 px after the box"
+
+[sizes.regular]
+height = 24
+box = 16
+
+[density.compact]
+control = 20
+
+[density.standard]
+control = 24
+
+[density.comfortable]
+control = 32
+
+[states]
+off = "The option is off."
+on = "The option is on."
+mixed = "Some of the options the box stands for are on; a click turns them all on."
+disabled = "The option cannot change now; the text near it says why."
+
+[keyboard]
+Tab = "Moves the focus to the box."
+Space = "Turns it on or off."
+
+[a11y]
+gtk_role = "checkbox"
+web_role = "checkbox"
+wolkit_role = "checkbox"
+name = "Its own label."
+description = "The row subtitle, when the box sits in a row."
+
+[copy]
+label = "Sentence case, a noun phrase or a short clause that is true when the box is on: Show hidden files."
+
+[[rules]]
+id = "RU-190"
+kind = "do"
+text = "Use a checkbox for an option among several that can be on together; for one setting that applies at once use a switch."
+enforced = "manual"
+
+[[rules]]
+id = "RU-191"
+kind = "do"
+text = "A checkbox carries its label and the label toggles it too."
+enforced = "kit_choice"
+
+[[rules]]
+id = "RU-192"
+kind = "dont"
+text = "Do not phrase a checkbox label as a negative (Do not show); say what is true when it is on."
+enforced = "manual"
+
+[tests]
+states = ["off", "on", "mixed", "disabled"]
+densities = ["compact", "standard", "comfortable"]
+variants = ["light", "dark"]

@@ -1,0 +1,71 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Spinner: written by DS-SPEC-A from the Kit as it draws today (kit_comms.rs measures it).
+schema = 1
+id = "spinner"
+name = "Spinner"
+category = "communication"
+status = "beta"
+since = "0.12"
+summary = "Shows that work is running when its length is not known."
+hig = "hig.md section 3 (Behaviour: long work)"
+
+[implementations.gtk]
+api = "kit::widgets::busy_spinner"
+large = "kit::widgets::spinner"
+css = "spinner"
+file = "crates/shell/src/kit/widgets.rs"
+
+[anatomy]
+wheel = "the toolkit spinner in the text colour"
+
+# Beside a control that waits (busy_spinner).
+
+[sizes.regular]
+width = 16
+height = 16
+
+# In the middle of a page that loads (spinner).
+
+[sizes.large]
+width = 32
+height = 32
+
+[states]
+regular = "16 px, beside a control that waits."
+large = "32 px, centred on a page that loads."
+
+[keyboard]
+None = "A spinner is not interactive and not in the Tab order."
+
+[a11y]
+gtk_role = "progressbar"
+web_role = "progressbar"
+name = "The text beside it says what runs."
+description = "None."
+
+[copy]
+beside = "A line next to a large spinner says what runs: Loading apps."
+
+[[rules]]
+id = "RU-540"
+kind = "do"
+text = "A spinner shows only while work runs and is hidden and still otherwise."
+enforced = "kit_comms"
+
+[[rules]]
+id = "RU-541"
+kind = "dont"
+text = "Do not show a spinner for work whose progress is known; use a progress bar."
+enforced = "manual"
+
+[[rules]]
+id = "RU-542"
+kind = "do"
+text = "Work longer than a second shows a spinner, and longer than ten seconds says what runs."
+enforced = "manual"
+
+[tests]
+states = ["regular", "large"]
+densities = ["standard"]
+variants = ["light", "dark"]

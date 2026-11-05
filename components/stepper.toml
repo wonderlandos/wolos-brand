@@ -1,0 +1,79 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Stepper: written by DS-SPEC-A from the Kit as it draws today (kit_actions.rs measures it).
+schema = 1
+id = "stepper"
+name = "Stepper"
+category = "selection"
+status = "beta"
+since = "0.12"
+summary = "Changes a number one step at a time with Less and More buttons."
+hig = "hig.md section 3 (Behaviour)"
+
+[implementations.gtk]
+api = "kit::form::stepper_row"
+css = ".stepper"
+file = "crates/shell/src/kit/form.rs"
+
+[anatomy]
+value = "the formatted number, right aligned, 6 characters wide"
+less = "icon button, list-remove"
+more = "icon button, list-add"
+
+# Two 24 px icon buttons; the value label is as high.
+
+[sizes.regular]
+height = 24
+
+[density.compact]
+row = 32
+pad_y = 4
+
+[density.standard]
+row = 40
+pad_y = 6
+
+[density.comfortable]
+row = 48
+pad_y = 8
+
+[states]
+rest = "A value inside the range; both buttons work."
+min = "At the minimum: Less waits."
+max = "At the maximum: More waits."
+
+[keyboard]
+Tab = "Moves the focus to Less, then More."
+Space = "Steps the focused button once."
+Enter = "Steps the focused button once."
+
+[a11y]
+gtk_role = "spinbutton"
+name = "The row title (labelled-by)."
+description = "None."
+
+[copy]
+value = "The number with its unit (12 pt); a unit is never dropped."
+
+[[rules]]
+id = "RU-160"
+kind = "do"
+text = "A button that would leave the range waits instead of doing nothing."
+enforced = "kit_actions"
+
+[[rules]]
+id = "RU-161"
+kind = "dont"
+text = "Do not use a stepper for a range of more than about 30 steps; use a slider."
+enforced = "manual"
+
+[[rules]]
+id = "RU-162"
+kind = "do"
+text = "A stepper exposes its value, minimum and maximum to assistive technology."
+enforced = "manual"
+
+[tests]
+states = ["rest", "min", "max"]
+densities = ["standard"]
+variants = ["light", "dark"]

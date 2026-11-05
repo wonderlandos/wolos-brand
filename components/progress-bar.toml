@@ -1,0 +1,78 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Progress bar: written by DS-SPEC-A from the Kit as it draws today (kit_comms.rs measures it).
+schema = 1
+id = "progress-bar"
+name = "Progress bar"
+category = "communication"
+status = "beta"
+since = "0.12"
+summary = "Shows how much of a job is done, or that it runs when that is not known."
+hig = "hig.md section 3 (Behaviour: long work)"
+
+[implementations.gtk]
+api = "kit::widgets::progress"
+installer = "kit::assistant::Progress"
+css = "progressbar"
+file = "crates/shell/src/kit/widgets.rs"
+
+[implementations.wolkit]
+role = "WOLKIT_ROLE_PROGRESS"
+file = "wolos-crystal/shards/wolkit/src/wolkit/lib_wolkit.cr"
+
+[implementations.web]
+element = "wol-progress"
+file = "webapps/kit/wolkit.js"
+
+[anatomy]
+track = "control fill, radius 2"
+fill = "the text colour; the accent in the installer"
+
+# The bar takes the width it is given.
+
+[sizes.regular]
+height = 4
+
+[states]
+empty = "Nothing done yet."
+half = "Half done."
+full = "Done."
+indeterminate = "Running, with no known end: the fill moves."
+
+[keyboard]
+None = "A progress bar is not interactive and not in the Tab order."
+
+[a11y]
+gtk_role = "progressbar"
+web_role = "progressbar"
+wolkit_role = "progress"
+name = "The line beside it says what runs (labelled-by)."
+description = "The percentage."
+
+[copy]
+line = "What runs and, when known, what is left: Copying 12 of 40 files."
+
+[[rules]]
+id = "RU-550"
+kind = "do"
+text = "A progress bar that knows its fraction shows it; one that does not is indeterminate."
+enforced = "kit_comms"
+
+[[rules]]
+id = "RU-551"
+kind = "dont"
+text = "Do not move a bar backwards."
+enforced = "manual"
+
+[[rules]]
+id = "RU-552"
+kind = "do"
+text = "A progress bar has a name and exposes its value to assistive technology."
+enforced = "kit_comms"
+
+# indeterminate has no picture: it moves.
+
+[tests]
+states = ["empty", "half", "full", "indeterminate"]
+densities = ["standard"]
+variants = ["light", "dark"]

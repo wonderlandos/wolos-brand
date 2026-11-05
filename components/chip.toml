@@ -1,0 +1,96 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Chip: written by DS-COMPONENTS (M3: Chips (assist, filter, input, suggestion)); tests/kit_choice.rs builds every case.
+
+schema = 1
+id = "chip"
+name = "Chip"
+category = "selection"
+status = "beta"
+since = "0.12"
+summary = "A compact element that starts a related action, filters a view, stands for something entered, or offers a suggestion."
+hig = "hig.md section 1 (toolbars and filters)"
+m3 = "Chips (assist, filter, input, suggestion)"
+
+[implementations.gtk]
+api = "kit::choice::chip"
+filter = "kit::choice::filter_chip"
+input = "kit::choice::input_chip"
+set = "kit::choice::chip_set"
+css = "button.chip, .chip-input"
+file = "crates/shell/src/kit/choice.rs"
+
+[implementations.view]
+node = "chips"
+file = "crates/shared/src/view.rs"
+
+[anatomy]
+container = "24 px, radius 8, the control fill (suggestion: a hairline, no fill)"
+glyph = "16 px, assist only, in the accent ink; a filter chip that is on shows a check"
+label = "13 medium, one to three words"
+remove = "input chips end in a 20 px close button named Remove <thing>"
+
+[sizes.regular]
+height = 24
+
+[density.compact]
+control = 20
+
+[density.standard]
+control = 24
+
+[density.comfortable]
+control = 32
+
+[states]
+assist = "An assist chip with its glyph (Add to Calendar)."
+"filter-off" = "A filter that is off."
+"filter-on" = "A filter that is on: the accent tint and a check."
+input = "Something the person entered, with its remove button."
+suggestion = "A suggested answer or query."
+disabled = "The chip cannot act now."
+
+[keyboard]
+Tab = "Moves the focus to the chip (and to its remove button)."
+Space = "Activates the chip or flips the filter."
+Enter = "Activates the chip or flips the filter."
+Delete = "On an input chip, the remove button removes it."
+
+[a11y]
+gtk_role = "button"
+web_role = "button"
+wolkit_role = "button"
+name = "Its label; a filter chip is a toggle button with the pressed state; the remove button by its tooltip."
+description = "None."
+
+[copy]
+label = "One to three words in sentence case; a filter names what it keeps (Installed), an assist chip is a verb phrase (Add to Calendar)."
+
+[[rules]]
+id = "RU-196"
+kind = "do"
+text = "Chips appear in a set, 8 px apart, about the content above or below them; never as the main action of a surface."
+enforced = "manual"
+
+[[rules]]
+id = "RU-197"
+kind = "do"
+text = "A filter chip shows a check when it is on, so the state is not colour alone."
+enforced = "kit_choice"
+
+[[rules]]
+id = "RU-198"
+kind = "do"
+text = "An input chip's remove button is named Remove followed by what it removes."
+enforced = "kit_choice"
+
+[[rules]]
+id = "RU-199"
+kind = "dont"
+text = "Do not put more than eight chips in a set; use a dropdown or a search field."
+enforced = "manual"
+
+[tests]
+states = ["assist", "filter-off", "filter-on", "input", "suggestion", "disabled"]
+densities = ["compact", "standard", "comfortable"]
+variants = ["light", "dark"]

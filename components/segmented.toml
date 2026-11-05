@@ -1,0 +1,83 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Segmented control: written by DS-SPEC-A from the Kit as it draws today (kit_actions.rs measures it).
+schema = 1
+id = "segmented"
+name = "Segmented control"
+category = "selection"
+status = "beta"
+since = "0.12"
+summary = "Shows two to four exclusive choices at once and applies the picked one."
+hig = "hig.md section 1 (Settings-style apps: Light / Dark / Auto)"
+
+[implementations.gtk]
+api = "kit::widgets::segmented"
+row = "kit::form::segmented_row"
+css = ".segmented"
+file = "crates/shell/src/kit/widgets.rs"
+
+[anatomy]
+track = "control fill, radius 8, padding 4"
+segment = "one toggle button per option; the picked one has the card fill and elevation 1"
+
+# A 24 px segment with 4 px of track around it (brand-ui.md section 2: segmented h 24, padding 8 across).
+
+[sizes.regular]
+height = 32
+padding = 4
+
+[density.compact]
+row = 32
+pad_y = 4
+
+[density.standard]
+row = 40
+pad_y = 6
+
+[density.comfortable]
+row = 48
+pad_y = 8
+
+[states]
+first = "The first option is picked."
+last = "The last option is picked."
+disabled = "No option can be picked now."
+
+[keyboard]
+Tab = "Moves the focus into the control and out of it."
+Space = "Picks the focused segment."
+Enter = "Picks the focused segment."
+
+[a11y]
+gtk_role = "radiogroup"
+web_role = "radiogroup"
+name = "The row title (labelled-by)."
+description = "The row subtitle (described-by), when there is one."
+
+[copy]
+segment = "One or two words in Title Case, the same grammatical kind in every segment."
+
+[[rules]]
+id = "RU-140"
+kind = "do"
+text = "A segmented control holds two to four options and applies the pick at once."
+enforced = "kit_actions"
+
+[[rules]]
+id = "RU-141"
+kind = "dont"
+text = "Do not use a segmented control for more than four options or for options that start actions; use a dropdown or buttons."
+enforced = "manual"
+
+[[rules]]
+id = "RU-142"
+kind = "do"
+text = "A segmented control in a row is named by the row title for assistive technology."
+enforced = "kit_actions"
+
+# Rows follow density (32/40/48); the case list grows to three densities with DS-GTK-1.
+
+[tests]
+states = ["first", "last", "disabled"]
+densities = ["standard"]
+variants = ["light", "dark"]

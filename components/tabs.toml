@@ -1,0 +1,90 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Tabs: written by DS-COMPONENTS (M3: Tabs (primary, secondary, scrollable)); tests/kit_navigation.rs builds every case.
+
+schema = 1
+id = "tabs"
+name = "Tabs"
+category = "navigation"
+status = "beta"
+since = "0.12"
+summary = "Switches between views of the same subject at one level; primary tabs change the whole pane, secondary tabs a part of it."
+hig = "hig.md section 1 (navigation)"
+m3 = "Tabs (primary, secondary, scrollable)"
+
+[implementations.gtk]
+api = "kit::navigation::Tabs"
+css = "button.tab, .tab-list"
+file = "crates/shell/src/kit/navigation.rs"
+
+[implementations.view]
+node = "tabs"
+file = "crates/shared/src/view.rs"
+
+[anatomy]
+"tab list" = "a hairline under the whole list"
+tab = "label 13 medium, 12 px each side; dim until picked"
+indicator = "primary: a 2 px accent line and the accent ink; secondary: a 2 px line and the label in the text colour"
+panels = "the picked tab's panel, 12 px under the list"
+
+[sizes.tab]
+height = 40
+
+[density.compact]
+row = 32
+
+[density.standard]
+row = 40
+
+[density.comfortable]
+row = 48
+
+[states]
+primary = "Primary tabs, the second picked."
+secondary = "Secondary tabs inside a pane, the first picked."
+scrollable = "Eight tabs in a scroller narrower than them."
+
+[keyboard]
+Tab = "Moves the focus to the picked tab, then into its panel."
+"Left and Right" = "Move between tabs."
+Space = "Picks the focused tab."
+Enter = "Picks the focused tab."
+
+[a11y]
+gtk_role = "tablist"
+web_role = "tablist"
+wolkit_role = "tab-list"
+name = "Each tab by its label; the panel is labelled by its tab and the tab controls it."
+description = "The picked tab has the selected state."
+
+[copy]
+tab = "One or two words in Title Case; nouns for views (Overview, Details), never verbs."
+
+[[rules]]
+id = "RU-300"
+kind = "do"
+text = "Tabs hold two to six views of one subject; more than six scroll and say so with the cut-off tab."
+enforced = "manual"
+
+[[rules]]
+id = "RU-301"
+kind = "do"
+text = "The picked tab is shown by the indicator line and the label colour, never colour alone."
+enforced = "kit_navigation"
+
+[[rules]]
+id = "RU-302"
+kind = "do"
+text = "Each tab panel is labelled by its tab and each tab controls its panel for assistive technology."
+enforced = "kit_navigation"
+
+[[rules]]
+id = "RU-303"
+kind = "dont"
+text = "Do not nest primary tabs; inside a tab use secondary tabs or a segmented control."
+enforced = "manual"
+
+[tests]
+states = ["primary", "secondary", "scrollable"]
+densities = ["compact", "standard", "comfortable"]
+variants = ["light", "dark"]

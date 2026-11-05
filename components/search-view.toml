@@ -1,0 +1,62 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Search view: written by DS-COMPONENTS (M3: Search (bar and view)); tests/kit_sheets.rs builds every case.
+
+schema = 1
+id = "search-view"
+name = "Search view"
+category = "input"
+status = "beta"
+since = "0.12"
+summary = "The search field with what it found under it as rows, or one quiet line when nothing matches."
+hig = "hig.md section 1 (search rightmost in the toolbar)"
+m3 = "Search (bar and view)"
+
+[implementations.gtk]
+api = "kit::sheets::search_view"
+field = "kit::widgets::search_field"
+rows = "kit::widgets::list_button"
+css = ".search-view"
+file = "crates/shell/src/kit/sheets.rs"
+
+[anatomy]
+field = "the search field (search-field spec)"
+results = "list buttons on a card, 4 px inside"
+none = "one secondary line that says nothing matched, in words"
+
+[states]
+results = "Three rows match."
+none = "Nothing matches."
+
+[keyboard]
+Tab = "Moves from the field to the first result."
+Down = "Moves into the results."
+Enter = "Opens the focused result."
+Escape = "Clears the field, then closes the view."
+
+[a11y]
+gtk_role = "list"
+web_role = "listbox"
+wolkit_role = "list"
+name = "The field by its placeholder; each result by its title."
+description = "None."
+
+[copy]
+none = "Say what was searched: No apps match, never No results."
+
+[[rules]]
+id = "RU-290"
+kind = "do"
+text = "When nothing matches, the view says so in a sentence fragment that names what was searched."
+enforced = "kit_sheets"
+
+[[rules]]
+id = "RU-291"
+kind = "dont"
+text = "Do not open a search view on its own; it opens from the search field a person typed in."
+enforced = "manual"
+
+[tests]
+states = ["results", "none"]
+densities = ["standard"]
+variants = ["light", "dark"]

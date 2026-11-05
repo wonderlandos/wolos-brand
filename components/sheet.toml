@@ -1,0 +1,68 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Sheet: written by DS-COMPONENTS (M3: Dialogs); tests/kit_sheets.rs builds every case.
+
+schema = 1
+id = "sheet"
+name = "Sheet"
+category = "containment"
+status = "beta"
+since = "0.12"
+summary = "A question or a short task that slides from the toolbar over the window it belongs to (our dialog)."
+hig = "hig.md section 1 (sheets) and RU-046 (no floating dialogs)"
+m3 = "Dialogs"
+
+[implementations.gtk]
+api = "kit::sheets::question_sheet"
+sheet = "kit::widgets::sheet"
+css = ".sheet"
+file = "crates/shell/src/kit/sheets.rs"
+
+[anatomy]
+surface = "the card fill, radius 12, 16 px inside, elevation 2"
+title = "13 semibold, wraps"
+text = "one or two sentences"
+buttons = "at the end, 8 px apart, the default one last; destructive in the destructive style"
+
+[states]
+question = "A question with Cancel and a default action."
+destructive = "A destructive question: Cancel and a destructive action."
+
+[keyboard]
+Tab = "Moves between the buttons."
+Enter = "The default action."
+Escape = "Cancels and closes the sheet."
+
+[a11y]
+gtk_role = "dialog"
+web_role = "dialog"
+wolkit_role = "dialog"
+name = "The title (labelled-by)."
+description = "The text (described-by)."
+
+[copy]
+title = "A question or a statement of what will happen: Move 3 items to the Trash?"
+buttons = "Verbs in Title Case: Move to Trash, never Yes or OK."
+
+[[rules]]
+id = "RU-430"
+kind = "do"
+text = "A sheet's buttons are verbs that say what happens, the default one last."
+enforced = "kit_sheets"
+
+[[rules]]
+id = "RU-431"
+kind = "do"
+text = "A sheet is a dialog for assistive technology, named by its title and described by its text."
+enforced = "kit_sheets"
+
+[[rules]]
+id = "RU-432"
+kind = "dont"
+text = "Do not stack a sheet on a sheet; finish or cancel the first."
+enforced = "manual"
+
+[tests]
+states = ["question", "destructive"]
+densities = ["standard"]
+variants = ["light", "dark"]

@@ -1,0 +1,55 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# On-screen display: written by DS-COMPONENTS (M3: (no M3 equivalent; WolOS)); tests/kit_sheets.rs builds every case.
+
+schema = 1
+id = "osd"
+name = "On-screen display"
+category = "communication"
+status = "beta"
+since = "0.12"
+summary = "A glass pill near the bottom of the screen that shows a level while a key changes it (volume, brightness)."
+hig = "brand-screens.md (OSD)"
+m3 = "(no M3 equivalent; WolOS)"
+
+[implementations.gtk]
+api = "kit::sheets::osd_pill"
+surface = "ui::panels::Osd"
+css = ".osd-pill"
+file = "crates/shell/src/kit/sheets.rs"
+
+[anatomy]
+pill = "glass, radius 999, the same 8 px inside on all four sides, at least 216 wide"
+glyph = "16 px, the level's icon"
+bar = "a 4 px progress bar"
+
+[states]
+low = "Volume at 20 percent."
+full = "Volume at 100 percent."
+
+[keyboard]
+"(none)" = "It never takes the keyboard."
+
+[a11y]
+gtk_role = "progressbar"
+web_role = "progressbar"
+wolkit_role = "progress"
+name = "The level's name (Volume)."
+description = "None."
+
+[[rules]]
+id = "RU-535"
+kind = "do"
+text = "The on-screen display never takes the keyboard from the app in front."
+enforced = "manual"
+
+[[rules]]
+id = "RU-536"
+kind = "do"
+text = "The level is a bar and a glyph, never colour alone."
+enforced = "kit_sheets"
+
+[tests]
+states = ["low", "full"]
+densities = ["standard"]
+variants = ["light", "dark"]

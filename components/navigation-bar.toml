@@ -1,0 +1,62 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Navigation bar: written by DS-COMPONENTS (M3: Navigation bar); tests/kit_navigation.rs builds every case.
+
+schema = 1
+id = "navigation-bar"
+name = "Navigation bar"
+category = "navigation"
+status = "beta"
+since = "0.12"
+summary = "Three to five destinations at the bottom of a narrow window, in place of the sidebar."
+hig = "hig.md section 1 (sidebar collapses under 640)"
+m3 = "Navigation bar"
+
+[implementations.gtk]
+api = "kit::navigation::navigation_bar"
+css = ".navigation-bar"
+file = "crates/shell/src/kit/navigation.rs"
+
+[anatomy]
+bar = "glass fill with a hairline on top, 52 tall"
+destination = "a 16 px glyph in a 24 x 48 pill over an 11 px label; equal shares of the width"
+picked = "the pill takes the accent at 18 percent and the glyph the accent ink"
+
+[sizes.bar]
+height = 60
+
+[states]
+first = "The first destination is picked."
+last = "The last destination is picked."
+
+[keyboard]
+Tab = "Moves to the picked destination."
+"Left and Right" = "Move between destinations."
+Space = "Opens the focused destination."
+
+[a11y]
+gtk_role = "navigation"
+web_role = "navigation"
+wolkit_role = "navigation"
+name = "Each destination by its label."
+description = "The picked one is pressed."
+
+[copy]
+label = "One word in Title Case per destination: Library, Store, Updates."
+
+[[rules]]
+id = "RU-310"
+kind = "do"
+text = "A navigation bar shows only when the window is narrower than 640 px; wider windows use the sidebar."
+enforced = "manual"
+
+[[rules]]
+id = "RU-311"
+kind = "do"
+text = "Every destination has a glyph and a label; never a glyph alone."
+enforced = "kit_navigation"
+
+[tests]
+states = ["first", "last"]
+densities = ["standard"]
+variants = ["light", "dark"]
