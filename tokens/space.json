@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "unit": "px",
+  "note": "The fen is 4 px; every length is a whole number of fen (the named lengths past 24 are 40, 60, 84). Held by crates/shared/tests/tokens_design.rs to shared::theme, kit.css :root and kit/widgets.rs.",
+  "fen": 4,
+  "space": {"s1": 4, "s2": 8, "s3": 12, "s4": 16, "s6": 24, "s10": 40, "s15": 60, "s21": 84},
+  "inset": 12,
+  "radius": {"control": 8, "card": 12, "panel": 16, "sheet": 24, "window": 12, "pill": 999},
+  "icon": {"row": 16, "tool": 18, "m": 32, "l": 48, "xl": 64},
+  "surface": {
+    "menubar": 28,
+    "toolbar": 40,
+    "toolbar-compositor": 52,
+    "toolbar-padding": 16,
+    "sidebar": 240,
+    "control-center": 336,
+    "searchbar": 576,
+    "dock-tile": 60,
+    "app": [900, 600],
+    "app-narrow": [480, 360],
+    "narrow-column": 640
+  },
+  "blur": 24
+}

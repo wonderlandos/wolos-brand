@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "unit": "px",
+  "note": "Roles of the Kit (crates/shell/src/kit/kit.css). size/line on the 4 px line. Families stay in colors.json (font). Type never changes with density.",
+  "roles": {
+    "caption": {"size": 11, "line": 16, "weight": 400, "tracking": 0},
+    "eyebrow": {"size": 11, "line": 16, "weight": 600, "tracking": 0.4},
+    "body": {"size": 13, "line": 20, "weight": 400, "tracking": 0},
+    "title": {"size": 13, "line": 20, "weight": 600, "tracking": 0},
+    "heading": {"size": 16, "line": 24, "weight": 600, "tracking": 0},
+    "empty-state": {"size": 24, "line": 36, "weight": 600, "tracking": 0},
+    "large-title": {"size": 27, "line": 40, "weight": 700, "tracking": -0.5}
+  },
+  "theme-contract": {
+    "note": "shared::theme::SCALE: --font-size is the body; --font-size-title is the title role of libWolkit (wolkit style_tokens.rs), not the Kit's 13 semibold title.",
+    "font-size": 13,
+    "font-size-title": 17
+  }
+}

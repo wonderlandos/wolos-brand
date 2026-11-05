@@ -1,0 +1,135 @@
+{
+ "components": [
+  {
+   "a11y": {
+    "description": "The row subtitle (described-by), when there is one.",
+    "gtk_role": "switch",
+    "name": "The row title (labelled-by).",
+    "web_role": "switch",
+    "wolkit_role": "toggle"
+   },
+   "anatomy": {
+    "thumb": "white, elevation 1, a circle inset by the padding",
+    "track": "control-off when off, accent when on; a pill"
+   },
+   "category": "selection",
+   "copy": {
+    "title": "The row title names the setting, not the action: Bluetooth, never Turn On Bluetooth."
+   },
+   "density": {
+    "comfortable": {
+     "pad_y": 8,
+     "row": 48
+    },
+    "compact": {
+     "pad_y": 4,
+     "row": 32
+    },
+    "standard": {
+     "pad_y": 6,
+     "row": 40
+    }
+   },
+   "hig": "hig.md section 1 (Settings-style apps) and section 3 (Behaviour)",
+   "id": "switch",
+   "implementations": {
+    "gtk": {
+     "api": "kit::widgets::toggle",
+     "css": "switch.toggle",
+     "file": "crates/shell/src/kit/widgets.rs",
+     "pending": "kit::form::pending_toggle_row",
+     "row": "kit::form::toggle_row"
+    },
+    "view": {
+     "file": "crates/shared/src/view.rs",
+     "node": "toggle"
+    },
+    "web": {
+     "element": "wol-switch",
+     "file": "webapps/kit/wolkit.js"
+    },
+    "wolkit": {
+     "element": "toggle",
+     "file": "wolos-crystal/shards/wolkit/src/wolkit/dsl/tables.cr",
+     "kind": "WOLKIT_KIND_TOGGLE",
+     "role": "WOLKIT_ROLE_TOGGLE"
+    }
+   },
+   "keyboard": {
+    "Enter": "Flips it.",
+    "Space": "Flips it.",
+    "Tab": "Moves the focus to the switch."
+   },
+   "name": "Switch",
+   "rules": [
+    {
+     "enforced": "manual",
+     "id": "RU-110",
+     "kind": "do",
+     "text": "A switch applies its change at once; no Save or Apply button follows it."
+    },
+    {
+     "enforced": "manual",
+     "id": "RU-111",
+     "kind": "dont",
+     "text": "Do not use a switch to start an action such as Install or Restart; use a button."
+    },
+    {
+     "enforced": "RH-011",
+     "id": "RU-112",
+     "kind": "do",
+     "text": "A change that leaves the process uses the pending switch: it waits, then shows the confirmed state (RC-01)."
+    },
+    {
+     "enforced": "kit_components",
+     "id": "RU-113",
+     "kind": "do",
+     "text": "A switch in a row is named by the row title and described by its subtitle for assistive technology."
+    }
+   ],
+   "schema": 1,
+   "since": "0.12",
+   "sizes": {
+    "regular": {
+     "height": 24,
+     "padding": 2,
+     "thumb": 20,
+     "width": 44
+    },
+    "small": {
+     "height": 16,
+     "padding": 2,
+     "thumb": 12,
+     "use": "compact density, and the Control Center detail header",
+     "width": 28
+    }
+   },
+   "states": {
+    "disabled": "The setting cannot change now; the row subtitle says why.",
+    "off": "The setting is off.",
+    "on": "The setting is on.",
+    "pending": "The change runs: the switch waits, a 16 px spinner turns beside it, a failure flips it back."
+   },
+   "status": "stable",
+   "summary": "Turns one setting on or off, and the change applies at once.",
+   "tests": {
+    "densities": [
+     "compact",
+     "standard",
+     "comfortable"
+    ],
+    "states": [
+     "off",
+     "on",
+     "disabled",
+     "pending"
+    ],
+    "variants": [
+     "light",
+     "dark"
+    ]
+   }
+  }
+ ],
+ "schema": 1
+}

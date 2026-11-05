@@ -67,7 +67,7 @@ ALIASES = {
     "archive": "org.gnome.FileRoller file-roller utilities-file-archiver",
     "disk-usage": "org.gnome.baobab baobab utilities-disk-usage",
     # the system browser: today's desktop file id, and the id it takes when it ships as Atlas
-    "atlas": "helium org.wolos.atlas",
+    "atlas": "atlas helium org.wolos.atlas",
 }
 
 # Names inside the places, devices and mimetypes sets (the file in design/icons/<context>/): what
