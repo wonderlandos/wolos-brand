@@ -47,7 +47,7 @@ Specimen `ui/primitives/{current,proposed}-{light,dark}.svg` and layout trees; s
 | radius card (`--glass-radius-s`, `.module`) | 10 | 12 | 3 |
 | radius panel (`--glass-radius-m`) | 16 | 16 | 4 |
 | radius shelf and big panel (`--glass-radius`) | 24 | 24 | 6 |
-| switch | 30 x 18, padding 2, knob 14 | 40 x 24, padding 2, knob 20 | 10 x 6 |
+| switch | 30 x 18, padding 2, knob 14 | 36 x 24, padding 2, knob 20 (3:2, the same number as `brand-screens` 1.1 and `kit.css`; GtkSwitch draws 44 x 28 today, a known deviation of the design system) | 9 x 6 |
 | compact switch (detail head) | 28 x 12 | 24 x 16 | 6 x 4 |
 | slider trough / knob | 4 / 16 | 4 / 16 | 1 / 4 |
 | fat slider | 24 | 24 | 6 |
