@@ -18,7 +18,7 @@
     "dock-tile": 60,
     "app": [900, 600],
     "app-narrow": [480, 360],
-    "narrow-column": 640
+    "narrow-column": 720
   },
   "blur": 24
 }
