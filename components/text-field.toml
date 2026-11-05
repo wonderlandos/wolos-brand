@@ -1,0 +1,105 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Text field: written by DS-SPEC-A from the Kit as it draws today (kit_input.rs measures it).
+schema = 1
+id = "text-field"
+name = "Text field"
+category = "input"
+status = "beta"
+since = "0.12"
+summary = "Takes one line of text; the change applies on Enter or when the field loses the keyboard."
+hig = "hig.md section 3 (Behaviour)"
+
+[implementations.gtk]
+api = "kit::widgets::text_field"
+row = "kit::form::entry_row"
+pending = "kit::form::pending_entry_row"
+css = "entry.text-field"
+file = "crates/shell/src/kit/widgets.rs"
+
+[implementations.wolkit]
+element = "text_field"
+kind = "WOLKIT_KIND_TEXT_INPUT"
+role = "WOLKIT_ROLE_TEXTBOX"
+file = "wolos-crystal/shards/wolkit/src/wolkit/dsl/tables.cr"
+
+[implementations.view]
+node = "text_field"
+file = "crates/shared/src/view.rs"
+
+[anatomy]
+field = "control fill, 1 px line, radius 8, padding 0 8"
+placeholder = "dim text that says what to type"
+text = "13 px body"
+
+# Brand-ui.md section 2: control height 24.
+
+[sizes.regular]
+height = 24
+
+[density.compact]
+control = 20
+row = 32
+pad_y = 4
+
+[density.standard]
+control = 24
+row = 40
+pad_y = 6
+
+[density.comfortable]
+control = 32
+row = 48
+pad_y = 8
+
+[states]
+empty = "No text: the placeholder shows."
+filled = "Text typed or loaded; nothing to save until it changes."
+disabled = "The text cannot change now."
+pending = "The commit runs: the field waits, a failure or a cancel puts it back and Enter commits the same text again."
+
+[keyboard]
+Tab = "Moves the focus into the field."
+Enter = "Commits a changed text."
+Escape = "Leaves the field."
+
+[a11y]
+gtk_role = "textbox"
+web_role = "textbox"
+wolkit_role = "textbox"
+name = "The row title (labelled-by)."
+description = "None."
+
+[copy]
+placeholder = "An example or the kind of text, never the label again."
+
+[[rules]]
+id = "RU-210"
+kind = "do"
+text = "A text field commits once on Enter or when it loses the keyboard with a changed text, never on every key."
+enforced = "kit_input"
+
+[[rules]]
+id = "RU-211"
+kind = "do"
+text = "A commit that can fail or be cancelled uses the pending field, which waits and lets Enter commit the same text again (QA-SET-12)."
+enforced = "kit_input"
+
+[[rules]]
+id = "RU-212"
+kind = "do"
+text = "A text field in a row is named by the row title for assistive technology."
+enforced = "kit_input"
+
+[[rules]]
+id = "RU-213"
+kind = "dont"
+text = "Do not use a placeholder as the only label of a field."
+enforced = "manual"
+
+# Rows follow density (32/40/48): the case list grows to three densities with DS-GTK-1.
+
+[tests]
+states = ["empty", "filled", "disabled", "pending"]
+densities = ["standard"]
+variants = ["light", "dark"]

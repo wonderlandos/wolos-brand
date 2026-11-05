@@ -1,0 +1,78 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Avatar: written by DS-SPEC-A from the Kit as it draws today (kit_comms.rs measures it).
+schema = 1
+id = "avatar"
+name = "Avatar"
+category = "communication"
+status = "beta"
+since = "0.12"
+summary = "Shows a person as a coloured disc with their initials."
+hig = "hig.md section 3 (Behaviour)"
+
+[implementations.gtk]
+api = "kit::widgets::avatar"
+tone = "kit::assistant::tone_class"
+css = "label.avatar"
+file = "crates/shell/src/kit/widgets.rs"
+
+[anatomy]
+disc = "a gradient in the person's tone, radius 999"
+initials = "white, semibold, one or two letters"
+
+# Lists and rows.
+
+[sizes.small]
+width = 32
+height = 32
+
+# Setup and the user panel.
+
+[sizes.large]
+width = 64
+height = 64
+
+# The lock and login screens (brand-screens.md).
+
+[sizes.xl]
+width = 84
+height = 84
+
+[states]
+small = "32 px."
+large = "64 px."
+xl = "84 px."
+
+[keyboard]
+None = "An avatar is not interactive and not in the Tab order."
+
+[a11y]
+gtk_role = "img"
+name = "The person's name, in full."
+description = "None."
+
+[copy]
+initials = "The first letters of the first two words of the name."
+
+[[rules]]
+id = "RU-572"
+kind = "do"
+text = "An avatar is square, so it draws a circle."
+enforced = "kit_comms"
+
+[[rules]]
+id = "RU-573"
+kind = "do"
+text = "The same name always gets the same tone."
+enforced = "kit_comms"
+
+[[rules]]
+id = "RU-574"
+kind = "do"
+text = "An avatar is named by the person's full name for assistive technology, not by its initials."
+enforced = "manual"
+
+[tests]
+states = ["small", "large", "xl"]
+densities = ["standard"]
+variants = ["light", "dark"]

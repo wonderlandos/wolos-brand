@@ -74,6 +74,19 @@ class Schema(unittest.TestCase):
         ids = [r["id"] for c in cat["components"] for r in c["rules"]]
         self.assertEqual(len(ids), len(set(ids)))
 
+    def test_a_stacked_row_is_a_density_too(self):
+        s = copy.deepcopy(spec())
+        s["density"]["compact"] = {"row_stack": 52}
+        self.assertEqual(components.problems(s, "switch.toml"), [])
+        s["density"]["compact"] = {"row_stack": 50}
+        self.assertTrue(any("row_stack is a whole fen" in p for p in components.problems(s, "switch.toml")))
+
+    def test_standard_density_needs_no_table(self):
+        s = copy.deepcopy(spec())
+        s.pop("density")
+        s["tests"]["densities"] = ["standard"]
+        self.assertEqual(components.problems(s, "switch.toml"), [])
+
     def test_a_rule_id_stays_in_its_category_block(self):
         # RU-100..199 actions and selection, 200..299 input, 500..599 communication (ARCHITECTURE 5).
         blocks = {"actions": (100, 199), "selection": (100, 199), "input": (200, 299), "communication": (500, 599)}
@@ -115,7 +128,8 @@ class RulesMd(unittest.TestCase):
 
     def test_rows_are_sorted_by_id(self):
         cat = self.cat()
-        cat["components"][0]["rules"].reverse()
+        for c in cat["components"]:
+            c["rules"].reverse()
         ids = [l.split(" | ")[0] for l in components.rules_md(cat).splitlines() if l.startswith("| RU-")]
         self.assertEqual(ids, sorted(ids))
 

@@ -1,0 +1,52 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Tooltip: written by DS-SPEC-A from the Kit as it draws today (kit_comms.rs measures it).
+schema = 1
+id = "tooltip"
+name = "Tooltip"
+category = "communication"
+status = "beta"
+since = "0.12"
+summary = "Names a control that has no words, after the pointer rests on it."
+hig = "hig.md section 1 (Toolbar: icon-only buttons need a tooltip)"
+
+[implementations.gtk]
+api = "gtk::Widget::set_tooltip_text"
+css = "tooltip"
+file = "crates/shell/src/kit/kit.css"
+
+[anatomy]
+bubble = "glass fill, 1 px line, radius 8"
+text = "11 px, one line"
+
+[states]
+owner = "The control that owns the tooltip; the bubble itself cannot be mounted headless, so the case holds the contract on its owner."
+
+[keyboard]
+Tab = "A focused control shows its tooltip like a hover (the toolkit does this)."
+
+[a11y]
+gtk_role = "tooltip"
+web_role = "tooltip"
+name = "None; it names the control, it is not named."
+description = "None."
+
+[copy]
+text = "A name, three words at most, Title Case, no full stop: Show Sidebar."
+
+[[rules]]
+id = "RU-590"
+kind = "do"
+text = "A tooltip is a name of at most three words in Title Case with no full stop."
+enforced = "kit_comms"
+
+[[rules]]
+id = "RU-591"
+kind = "dont"
+text = "Do not hide information in a tooltip that a person needs to act; tooltips name, they do not explain."
+enforced = "manual"
+
+[tests]
+states = ["owner"]
+densities = ["standard"]
+variants = ["light", "dark"]

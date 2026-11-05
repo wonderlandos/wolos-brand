@@ -1,0 +1,77 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Menu button: written by DS-SPEC-A from the Kit as it draws today (kit_actions.rs measures it).
+schema = 1
+id = "menu-button"
+name = "Menu button"
+category = "actions"
+status = "beta"
+since = "0.12"
+summary = "Opens a short menu of actions for one row or one surface."
+hig = "hig.md section 1 (Toolbar: the rest in a menu)"
+
+[implementations.gtk]
+api = "kit::form::actions_button"
+menu = "kit::widgets::menu"
+css = "menubutton"
+file = "crates/shell/src/kit/form.rs"
+
+[anatomy]
+button = "the view-more glyph, no frame"
+menu = "a popover of action rows, destructive last"
+
+# A framed-less menu button is as high as a control.
+
+[sizes.regular]
+height = 24
+
+[density.compact]
+control = 20
+
+[density.standard]
+control = 24
+
+[density.comfortable]
+control = 32
+
+[states]
+rest = "Closed, the glyph alone."
+disabled = "The menu cannot open now."
+
+[keyboard]
+Tab = "Moves the focus to the button."
+Space = "Opens the menu."
+Enter = "Opens the menu."
+Escape = "Closes the menu."
+
+[a11y]
+gtk_role = "button"
+web_role = "button"
+name = "The tooltip text (accessible label)."
+description = "None."
+
+[copy]
+tooltip = "More, or the name of the thing the actions are for."
+
+[[rules]]
+id = "RU-180"
+kind = "do"
+text = "A menu button with no actions is not built."
+enforced = "kit_actions"
+
+[[rules]]
+id = "RU-181"
+kind = "do"
+text = "A menu button has a tooltip and opens with Space and Enter."
+enforced = "kit_actions"
+
+[[rules]]
+id = "RU-182"
+kind = "dont"
+text = "Do not hide the one action people need most behind a menu button."
+enforced = "manual"
+
+[tests]
+states = ["rest", "disabled"]
+densities = ["standard"]
+variants = ["light", "dark"]

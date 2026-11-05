@@ -1,0 +1,96 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# WolOS Design System component spec (schema 1); see design/components/switch.toml for the template.
+# Dropdown: written by DS-SPEC-A from the Kit as it draws today (kit_actions.rs measures it).
+schema = 1
+id = "dropdown"
+name = "Dropdown"
+category = "selection"
+status = "beta"
+since = "0.12"
+summary = "Picks one option from a short list in a pop-up menu."
+hig = "hig.md section 1 (Settings-style apps)"
+
+[implementations.gtk]
+api = "kit::widgets::dropdown"
+row = "kit::form::picker_row"
+search = "kit::form::search_picker_row"
+pending = "kit::form::pending_picker"
+css = "dropdown.dropdown"
+file = "crates/shell/src/kit/widgets.rs"
+
+[anatomy]
+button = "control fill, 1 px line, radius 8, the picked option and a chevron"
+list = "pop-up menu of the options"
+search = "a search field on top of the list when there are many options"
+
+# Brand-ui.md section 2: control height 24.
+
+[sizes.regular]
+height = 24
+
+[density.compact]
+control = 20
+row = 32
+pad_y = 4
+
+[density.standard]
+control = 24
+row = 40
+pad_y = 6
+
+[density.comfortable]
+control = 32
+row = 48
+pad_y = 8
+
+[states]
+first = "The first option is picked."
+last = "The last option is picked."
+search = "A long list: the pop-up has a search field."
+disabled = "The choice cannot change now."
+
+[keyboard]
+Tab = "Moves the focus to the dropdown."
+Space = "Opens the list."
+Enter = "Opens the list."
+Up = "Moves in the open list."
+Down = "Moves in the open list."
+Escape = "Closes the list without a change."
+
+[a11y]
+gtk_role = "combobox"
+web_role = "combobox"
+name = "The row title (labelled-by)."
+description = "The row subtitle (described-by), when there is one."
+
+[copy]
+option = "One to three words in Title Case; the list is ordered by how often people pick."
+
+[[rules]]
+id = "RU-170"
+kind = "do"
+text = "A dropdown reports its pick once and applies it at once."
+enforced = "kit_actions"
+
+[[rules]]
+id = "RU-171"
+kind = "do"
+text = "A list of more than about twelve options has a search field."
+enforced = "manual"
+
+[[rules]]
+id = "RU-172"
+kind = "do"
+text = "A change that leaves the process uses the pending dropdown, which waits and puts the confirmed choice back on failure (RC-01)."
+enforced = "manual"
+
+[[rules]]
+id = "RU-173"
+kind = "dont"
+text = "Do not use a dropdown for two or three options that fit on screen; use a segmented control."
+enforced = "manual"
+
+[tests]
+states = ["first", "last", "search", "disabled"]
+densities = ["standard"]
+variants = ["light", "dark"]
