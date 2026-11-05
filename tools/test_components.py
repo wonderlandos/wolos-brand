@@ -44,7 +44,7 @@ class Schema(unittest.TestCase):
             "kind is do or dont": lambda s: s["rules"][0].update(kind="should"),
             "says what enforces it": lambda s: s["rules"][0].pop("enforced"),
             "a path inside the repository": lambda s: s["implementations"]["gtk"].update(file="/usr/lib/x"),
-            "is in RU-100..999": lambda s: s["rules"][0].update(id="RU-099"),
+            "is in RU-100..699": lambda s: s["rules"][0].update(id="RU-099"),
             "has no | and no line break": lambda s: s["rules"][0].update(text="A | B."),
             "enforced is manual, an RH-nnn": lambda s: s["rules"][0].update(enforced="Some Test"),
             "density.compact.control is a whole fen": lambda s: s["density"]["compact"].update(control=22),

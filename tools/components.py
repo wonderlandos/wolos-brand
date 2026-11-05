@@ -32,7 +32,7 @@ REQUIRED = ("schema", "id", "name", "category", "status", "summary", "implementa
             "states", "keyboard", "a11y", "rules", "tests")
 KEBAB = re.compile(r"^[a-z][a-z0-9]*(-[a-z0-9]+)*$")
 RULE = re.compile(r"^RU-\d{3}$")
-RULE_FIRST, RULE_LAST = 100, 999  # RU-001..099 are the shell's own rules (rules_ui.rs)
+RULE_FIRST, RULE_LAST = 100, 699  # RU-001..099 and RU-700..799 (the layout lint) are the shell's own rules (rules_ui.rs)
 ENFORCED = re.compile(r"^(manual|RH-\d{3}|[a-z][a-z0-9_]*)$")  # manual, a ratchet id, or a test file
 FEN = 4
 DOC = os.path.normpath(os.path.join(D, "..", "docs", "RULES-ui.md"))
@@ -102,7 +102,7 @@ def problems(spec, name):
         if not RULE.match(r.get("id", "")):
             say(f"rule id {r.get('id')!r} is RU-nnn")
         elif not RULE_FIRST <= int(r["id"][3:]) <= RULE_LAST:
-            say(f"rule id {r['id']} is in RU-{RULE_FIRST}..{RULE_LAST} (RU-001..099 belong to rules_ui.rs)")
+            say(f"rule id {r['id']} is in RU-{RULE_FIRST}..{RULE_LAST} (RU-001..099 and RU-700..799 belong to rules_ui.rs)")
         if r.get("kind") not in ("do", "dont"):
             say(f"rule {r.get('id')} kind is do or dont")
         if not r.get("text", "").endswith("."):
