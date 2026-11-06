@@ -119,8 +119,9 @@ def build(DESIGN, SITE=None):
     if SITE:
         S = SITE
         LIGHT_C = (ACC, "#4B2FD6", "#33208A", LIGHT)
-        for name in ("wolos-mark.svg", "wolos-mark-on-dark.svg", "wolos-glyph-symbolic.svg", "wolos-wordmark.svg",
-                     "wolos-wordmark-dark.svg", "wolos-boot.svg"):
+        # -mono-white: the mark on the Cryswol share cards (site scripts/og.mjs), white on the orange ground
+        for name in ("wolos-mark.svg", "wolos-mark-on-dark.svg", "wolos-mark-mono-white.svg", "wolos-glyph-symbolic.svg",
+                     "wolos-wordmark.svg", "wolos-wordmark-dark.svg", "wolos-boot.svg"):
             w(f"{S}/brand/{name}", open(f"{B}/{name}").read())
         w(f"{S}/icons/wolos-mark.svg", open(f"{B}/wolos-mark.svg").read())
         w(f"{S}/img/wolos-rabbit.svg", open(f"{I}/white-rabbit.svg").read())
