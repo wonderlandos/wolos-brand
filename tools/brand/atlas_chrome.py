@@ -2,7 +2,7 @@
 # Copyright (c) 2026 Julia Klee
 """Atlas chrome mock frames: the new tab page and the first run, drawn with the WolOS tokens
 (tokens/colors.json), the HIG scaffold (36 px toolbar under the 28 px strip, 220 px sidebar, rows 28 px,
-radius 6 / 10 / 12, spacing 4 8 12 16 24, Inter 13 / 11 / 26) and the symbolic icons of the theme.
+radius 8 / 12 / 16 / 12, spacing 4 8 12 16 24, Inter 13 / 11 / 26) and the symbolic icons of the theme.
 They are illustrations for review, not a UI: the text is real SVG text (Inter), the names are invented.
 
   python3 -I atlas_chrome.py <design dir>            write brand/atlas/chrome/atlas-{newtab,firstrun}.svg + .png
@@ -20,18 +20,22 @@ import atlas  # noqa: E402
 DESIGN = atlas.DESIGN
 T = atlas._T
 FONT = "Inter, Cantarell, 'Noto Sans', 'DejaVu Sans', sans-serif"
-# The 13 theme tokens of the two built-in WolOS themes, as shipped: crates/core/src/theme/builtin/wol-light.json
+# The 13 theme tokens of the two built-in WolOS themes (wolos commit 0d5cd894, the brand pass), as shipped: crates/core/src/theme/builtin/wol-light.json
 # and wol-dark.json (atlas_check.py compares them with those files when the design repo sits in the tree).
 THEME = {
-    "light": {"surface": "#F3F1F8", "sidebar": "rgba(233,231,241,0.92)", "card": "#FFFFFF", "line": "rgba(34,27,54,0.10)",
-              "text": "#181521", "dim": "#686575", "accent": "#7C5CFF", "accentText": "#FFFFFF",
-              "glass": "rgba(245,244,251,0.84)", "control": "#E9E9F3", "success": "#1C9A6E", "warning": "#D9541E",
-              "danger": "#CF3A68"},
-    "dark": {"surface": "#1B1924", "sidebar": "rgba(39,37,49,0.92)", "card": "#2A2834", "line": "rgba(237,232,255,0.10)",
-             "text": "#F6F5FB", "dim": "#AAA7B6", "accent": "#8B6CFF", "accentText": "#FFFFFF",
-             "glass": "rgba(35,33,45,0.84)", "control": "#393647", "success": "#5BE3B0", "warning": "#FF8A55",
-             "danger": "#F2678F"},
+    "light": {"surface": "#F1F1FA", "sidebar": "rgba(235,235,243,0.92)", "card": "#FFFFFF",
+              "line": "rgba(21,21,32,0.12)", "text": "#151520", "dim": "#565563", "accent": "#7452F5",
+              "accentText": "#FFFFFF", "glass": "rgba(241,241,250,0.84)", "control": "#EBEBF3", "success": "#00863C",
+              "warning": "#C06400", "danger": "#BB3F27"},
+    "dark": {"surface": "#15151D", "sidebar": "rgba(32,32,42,0.92)", "card": "#292932",
+             "line": "rgba(248,248,252,0.12)", "text": "#F8F8FC", "dim": "#B4B4BB", "accent": "#7452F5",
+             "accentText": "#FFFFFF", "glass": "rgba(41,41,50,0.84)", "control": "#383741", "success": "#6BC681",
+             "warning": "#F2944C", "danger": "#EE7E66"},
 }
+# The two design-palette tokens the mocks read (tokens/colors.json of the OS design repository on wolos wave3/int,
+# commit 097d2e6; this branch still carries the older palette): the menu bar fill and the selection pill.
+OS_PALETTE = {"light": {"menubar": "rgba(241,241,250,0.72)", "selection": "rgba(116,82,245,0.22)"},
+              "dark": {"menubar": "rgba(21,21,29,0.62)", "selection": "rgba(145,129,255,0.3)"}}
 KEY = "b"               # the direction the mocks wear: B, Folio, the one the lead chose (2026-11-03)
 
 
@@ -73,9 +77,9 @@ def over(fg, bg):
 
 class Frame:
     def __init__(self, mode, uid):
-        self.m, self.d, self.uid = mode, T[mode], uid
+        self.m, self.d, self.uid = mode, dict(T[mode], **OS_PALETTE[mode]), uid
         th = dict(THEME[mode])
-        th["selection"] = T[mode]["selection"]          # the accent tint pill: alpha(accent, 22% / 30%), a design token
+        th["selection"] = OS_PALETTE[mode]["selection"]  # the selection pill, a design-palette token
         self.t = th
         self.defs, self.out = [], []
 
@@ -147,9 +151,9 @@ def omnibox(f, x, y, w, text, focused=False, locked=False, placeholder=True):
     t = f.t
     h = 26
     if focused:
-        f.rect(x - 2, y - 2, w + 4, h + 4, t["accent"], 8, .9)
-    f.rect(x, y, w, h, t["control"], 6)
-    f.add(f'<rect x="{x + .5}" y="{y + .5}" width="{w - 1}" height="{h - 1}" rx="5.5" fill="none" '
+        f.rect(x - 2, y - 2, w + 4, h + 4, t["accent"], 10, .9)
+    f.rect(x, y, w, h, t["control"], 8)
+    f.add(f'<rect x="{x + .5}" y="{y + .5}" width="{w - 1}" height="{h - 1}" rx="7.5" fill="none" '
           f'stroke="{col(t["line"])[0]}" stroke-opacity="{col(t["line"])[1]}"/>')
     f.sym("system-lock-screen" if locked else "system-search", x + 8, y + 5, 16, t["dim"])
     f.text(x + 32, y + 18, text, 13, c=t["dim"] if placeholder else t["text"])
@@ -180,7 +184,7 @@ def sidebar(f, x, y, h, selected=1):
     def row(icon, label, sel=False, dim=False):
         nonlocal yy
         if sel:
-            f.rect(x + 8, yy, sw - 16, 28, t["selection"], 6)
+            f.rect(x + 8, yy, sw - 16, 28, t["selection"], 8)
         f.sym(icon, x + 16, yy + 6, 16, t["accent"] if sel else t["dim"])
         f.text(x + 40, yy + 19, label, 13, 500 if sel else 400, t["text"] if not dim else t["dim"])
         yy += 28
@@ -221,8 +225,8 @@ def newtab(mode="light"):
     f.badge(mid - 36, y + 120, 72)
     f.text(mid, y + 240, "Atlas", 26, 700, anchor="middle")
     # search field (large)
-    f.rect(mid - 280, y + 264, 560, 40, t["card"], 10)
-    f.add(f'<rect x="{mid - 279.5}" y="{y + 264.5}" width="559" height="39" rx="9.5" fill="none" '
+    f.rect(mid - 280, y + 264, 560, 40, t["card"], 12)
+    f.add(f'<rect x="{mid - 279.5}" y="{y + 264.5}" width="559" height="39" rx="11.5" fill="none" '
           f'stroke="{col(t["line"])[0]}" stroke-opacity="{col(t["line"])[1]}"/>')
     f.sym("system-search", mid - 264, y + 276, 16, t["dim"])
     f.text(mid - 240, y + 289, "Search or enter an address", 13, c=t["dim"])
@@ -233,8 +237,8 @@ def newtab(mode="light"):
     gx = mid - 328
     for i, (cat, sy, label) in enumerate(tiles):
         tx = gx + i * 112
-        f.rect(tx, y + 366, 96, 88, t["card"], 10)
-        f.add(f'<rect x="{tx + .5}" y="{y + 366.5}" width="95" height="87" rx="9.5" fill="none" '
+        f.rect(tx, y + 366, 96, 88, t["card"], 12)
+        f.add(f'<rect x="{tx + .5}" y="{y + 366.5}" width="95" height="87" rx="11.5" fill="none" '
               f'stroke="{col(t["line"])[0]}" stroke-opacity="{col(t["line"])[1]}"/>')
         card_row_icon(f, tx + 32, y + 378, cat, sy)
         f.text(tx + 48, y + 438, label, 11, c=t["dim"], anchor="middle")
@@ -242,8 +246,8 @@ def newtab(mode="light"):
     f.text(mid - 328, y + 496, "Pick up where you left off", 15, 600)
     for i, (title, sub) in enumerate((("Release notes", "Opened 20 minutes ago"), ("Atlas manual", "Opened yesterday"))):
         tx = gx + i * 336
-        f.rect(tx, y + 510, 320, 64, t["card"], 10)
-        f.add(f'<rect x="{tx + .5}" y="{y + 510.5}" width="319" height="63" rx="9.5" fill="none" '
+        f.rect(tx, y + 510, 320, 64, t["card"], 12)
+        f.add(f'<rect x="{tx + .5}" y="{y + 510.5}" width="319" height="63" rx="11.5" fill="none" '
               f'stroke="{col(t["line"])[0]}" stroke-opacity="{col(t["line"])[1]}"/>')
         f.sym("text-x-generic", tx + 16, y + 526, 16, t["accent"])
         f.text(tx + 40, y + 539, title, 13, 600)
@@ -266,8 +270,8 @@ def firstrun(mode="dark"):
     f.text(mid, y + 236, "Welcome to Atlas", 26, 700, anchor="middle")
     f.text(mid, y + 262, "Three choices. Each one can be changed later in Settings.", 13, c=t["dim"], anchor="middle")
     cardx, cardw, rowh = mid - 260, 520, 56
-    f.rect(cardx, y + 292, cardw, rowh * 3, t["card"], 10)
-    f.add(f'<rect x="{cardx + .5}" y="{y + 292.5}" width="{cardw - 1}" height="{rowh * 3 - 1}" rx="9.5" fill="none" '
+    f.rect(cardx, y + 292, cardw, rowh * 3, t["card"], 12)
+    f.add(f'<rect x="{cardx + .5}" y="{y + 292.5}" width="{cardw - 1}" height="{rowh * 3 - 1}" rx="11.5" fill="none" '
           f'stroke="{col(t["line"])[0]}" stroke-opacity="{col(t["line"])[1]}"/>')
     rows = (("preferences-system-privacy", "Do Not Track", "Sites are asked not to follow you. On by default.", "toggle"),
             ("folder-download", "Bring your bookmarks", "From another browser on this PC. Nothing leaves it.", "Choose…"),
@@ -284,11 +288,11 @@ def firstrun(mode="dark"):
             f.rect(cardx + cardw - 16 - 20, ry + 20, 18, 18, t["accentText"], 9)
         else:
             bx = cardx + cardw - 16 - 88
-            f.rect(bx, ry + 14, 88, 28, t["control"], 6)
+            f.rect(bx, ry + 14, 88, 28, t["control"], 8)
             f.text(bx + 44, ry + 33, ctl, 13, anchor="middle")
     # the one primary action, right-aligned under the card (HIG: destructive/primary on the right)
     bx = cardx + cardw - 140
-    f.rect(bx, y + 292 + rowh * 3 + 24, 140, 36, t["accent"], 6)
+    f.rect(bx, y + 292 + rowh * 3 + 24, 140, 36, t["accent"], 8)
     f.text(bx + 70, y + 292 + rowh * 3 + 24 + 23, "Start browsing", 13, 600, t["accentText"], "middle")
     f.text(cardx, y + 292 + rowh * 3 + 24 + 23, "You can skip this and decide later.", 11, c=t["dim"])
     return f

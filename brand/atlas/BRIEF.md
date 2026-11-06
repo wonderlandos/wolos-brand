@@ -25,9 +25,9 @@ How the name sits next to the WolOS mark: the mark is a small door into Wonderla
 ## 3. What the identity must be
 
 - Recognisable in a 48 px dock and in a 16 px tab: a silhouette first (icons/LANGUAGE.md section 6), then the light.
-- Of the family: same soft card and lit rim as every WolOS app icon, the WolOS palette (violet `#7C5CFF` / `#8B6CFF`, the web category blue `#1D64B0`, ink `#221B36`), one gold pop (`#FFC94A`) that carries the idea, and the Cryswol-style single white glyph in facet tones (95 percent where the light falls, 58 to 62 percent in shade).
+- Of the family: same soft card and lit rim as every WolOS app icon, the WolOS palette (violet `#7452F5`, the web category blue `#1D64B0`, ink `#221B36`), one gold pop (`#FFC94A`) that carries the idea, and the Cryswol-style single white glyph in facet tones (95 percent where the light falls, 58 to 62 percent in shade).
 - Honest: nothing in the identity says more than the product does.
-- Calm on both grounds (`#F3F1F8` light, `#191720` dark).
+- Calm on both grounds (`#F1F1FA` light, `#15151D` dark).
 
 ## 4. What it must never look like
 
